@@ -1,5 +1,6 @@
 package com.example.twogether.deck.entity;
 
+import jakarta.persistence.OneToMany;
 import java.util.LinkedList;
 
 public class DeckManager {

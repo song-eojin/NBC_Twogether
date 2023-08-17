@@ -26,21 +26,21 @@ public class DeckController {
 
     private final DeckService deckService;
 
-    @Operation(summary = "덱 생성", description = "DeckRequestDto에 담긴 정보를 토대로 덱을 생성합니다.")
+    @Operation(summary = "덱 생성", description = "덱을 생성할 때 자동으로 가장 끝에 있는 덱의 id를 parentId로 받습니다.")
     @PostMapping("/decks")
     private ResponseEntity<ApiResponseDto> addDeck(@RequestBody String title) {
         deckService.addDeck(title);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 생성"));
     }
 
-    @Operation(summary = "덱 단일 조회", description = "id와 일치하는 덱의 title과 덱의 id를 가지고 있는 카드들을 같이 반환합니다.")
+    @Operation(summary = "덱 단일 조회")
     @GetMapping("/decks/{id}")
     private ResponseEntity<DeckResponseDto> getDeck(@PathVariable Long id) {
         DeckResponseDto responseDto = deckService.getDeck(id);
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @Operation(summary = "덱 title 수정", description = "id와 일치하는 덱의 title을 수정합니다.")
+    @Operation(summary = "덱 title 수정")
     @PutMapping("/decks/{id}")
     private ResponseEntity<ApiResponseDto> editDeck(@PathVariable Long id, @RequestBody String title) {
         deckService.editDeck(id, title);
@@ -54,7 +54,7 @@ public class DeckController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 보관/복구"));
     }
 
-    @Operation(summary = "덱 삭제", description = "id와 일치하는 덱을 삭제합니다.")
+    @Operation(summary = "덱 삭제")
     @DeleteMapping("/decks/{id}")
     private ResponseEntity<ApiResponseDto> deleteDeck(@PathVariable Long id) {
         deckService.deleteDeck(id);
@@ -62,5 +62,11 @@ public class DeckController {
     }
 
     // 덱 이동
-
+    @Operation(summary = "덱 이동", description = "id와 일치하는 덱(a)의 parentId를 지정한 덱(b)의 id로 수정하고, "
+        + "원래 그 id가 parentId였던 덱(c)의 parentId를 a의 id로 수정한다.")
+    @PatchMapping("/decks/{id}/move/{parentId}")
+    private ResponseEntity<ApiResponseDto> moveDeck(@PathVariable Long id, @PathVariable Long parentId) {
+        deckService.moveDeck(id, parentId);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 이동"));
+    }
 }
