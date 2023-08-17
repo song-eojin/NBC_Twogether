@@ -1,18 +1,14 @@
 package com.example.twogether.common.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 public class ApiResponseDto {
-    private String message;
-    private Integer statusCode;
+    private int statusCode;
+    private String statusMessage;
 
-    public ApiResponseDto(String message, Integer statusCode) {
-        this.message = message;
+    public ApiResponseDto(int statusCode, String statusMessage) {
         this.statusCode = statusCode;
+        this.statusMessage = statusMessage;
     }
 }

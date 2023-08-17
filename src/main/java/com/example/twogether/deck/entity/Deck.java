@@ -39,4 +39,8 @@ public class Deck {
 //    @Builder.Default
 //    @OneToMany(mappedBy = "deck")
 //    private List<Card> cardList = new ArrayList<>();
+
+    public void editTitle(String title) {
+        this.title = title;
+    }
 }
