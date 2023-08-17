@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @Entity
@@ -43,6 +42,7 @@ public class Deck extends Timestamped {
 
     public Deck(String title) {
         this.title = title;
+        this.parentId = 0l;
     }
 
     public void editTitle(String title) {
@@ -55,5 +55,9 @@ public class Deck extends Timestamped {
         } else {
             this.deleted = true;
         }
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }
