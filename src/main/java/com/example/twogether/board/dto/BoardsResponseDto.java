@@ -10,10 +10,10 @@ import lombok.Getter;
 public class BoardsResponseDto {
     private List<BoardResponseDto> boards;
 
-//    public static BoardsResponseDto of(List<Board> boards){
-//        List<BoardResponseDto> boardsResponseDto = boards.stream().map(BoardResponseDto::of).toList();
-//        return BoardsResponseDto.builder()
-//            .boards(boardsResponseDto)
-//            .build();
-//    }
+    public static BoardsResponseDto of(List<Board> boards){
+        List<BoardResponseDto> boardsResponseDto = boards.stream().map(BoardResponseDto::of).toList();
+        return BoardsResponseDto.builder()
+            .boards(boardsResponseDto)
+            .build();
+    }
 }

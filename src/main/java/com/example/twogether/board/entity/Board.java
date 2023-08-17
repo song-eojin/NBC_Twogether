@@ -1,6 +1,8 @@
 package com.example.twogether.board.entity;
 
 import com.example.twogether.board.dto.BoardRequestDto;
+import com.example.twogether.common.entity.Timestamped;
+import com.example.twogether.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,15 +28,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(name = "boards")
-//public class Board extends Timestamped {
-public class Board {
+public class Board extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "author_id", nullable = false)
-//    private User author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String name;
@@ -45,14 +47,9 @@ public class Board {
     @Column
     private String info;
 
-
-    @Builder.Default
-    @OneToMany(mappedBy = "board", orphanRemoval = true)
-    private List<BoardUser> boardUsers = new ArrayList<>();
-
 //    @Builder.Default
 //    @OneToMany(mappedBy = "board", orphanRemoval = true)
-//    private List<Area> areas = new ArrayList<>();
+//    private List<BoardUser> boardUsers = new ArrayList<>();
 
     public void updateName(BoardRequestDto boardRequestDto) {
         this.name = boardRequestDto.getName();

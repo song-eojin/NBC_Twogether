@@ -1,6 +1,7 @@
 package com.example.twogether.board.dto;
 
 import com.example.twogether.board.entity.Board;
+import com.example.twogether.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +14,12 @@ public class BoardRequestDto {
     private String color;
     private String info;
 
-    public Board toEntity(User author) {
+    public Board toEntity(User user) {
         return Board.builder()
             .name(this.name)
             .color(this.color)
             .info(this.info)
-            .author(author)
+            .user(user)
             .build();
     }
 }

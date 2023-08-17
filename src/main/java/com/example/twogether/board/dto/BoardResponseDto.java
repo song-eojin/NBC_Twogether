@@ -21,30 +21,24 @@ public class BoardResponseDto {
     private String message;
     private Integer statusCode;
 
+    /*협업자 관련*/
 //    private List<UserResponseDto> collaborators;
-    private List<BoardUserResponseDto> boardUsers;
-//    private List<AreaResponseDto> areas;
+//    private List<BoardUserResponseDto> boardUsers;
 
-//    public static BoardResponseDto of(Board board) {
+    public static BoardResponseDto of(Board board) {
 //        List<UserResponseDto> boardUsers = new ArrayList<>();
-//        List<AreaResponseDto> areaResponseDtos = new ArrayList<>();
 //        if (board.getBoardUsers().size() != 0) {
 //            boardUsers = board.getBoardUsers().stream().map(BoardUser::getCollaborator)
 //                .toList().stream().map(UserResponseDto::of).toList();
 //        }
-//        if (board.getAreas().size() !=0) {
-//            areaResponseDtos = board.getAreas().stream().map(AreaResponseDto::of).toList();
-//        }
-//        return BoardResponseDto.builder()
-//            .id(board.getId())
-//            .name(board.getName())
+        return BoardResponseDto.builder()
+            .id(board.getId())
+            .name(board.getName())
 //            .author(board.getAuthor().getUsername())
-//            .color(board.getColor())
-//            .info(board.getInfo())
+            .color(board.getColor())
+            .info(board.getInfo())
 //            .collaborators(boardUsers)
-//            .areas(areaResponseDtos)
 //            .boardUsers(board.getBoardUsers().stream().map(BoardUserResponseDto::of).toList())
-//            //.areas(board.getAreas().stream().map(AreaResponseDto::of).toList())
-//            .build();
-//    }
+            .build();
+    }
 }
