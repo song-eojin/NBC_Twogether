@@ -1,8 +1,6 @@
 package com.example.twogether.board.dto;
 
 import com.example.twogether.board.entity.Board;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardResponseDto {
     private Long id;
-    private String name;
-    private String author;
+    private String nickname;
+    private String title;
     private String color;
     private String info;
-    private String message;
-    private Integer statusCode;
 
     /*협업자 관련*/
 //    private List<UserResponseDto> collaborators;
@@ -33,8 +29,8 @@ public class BoardResponseDto {
 //        }
         return BoardResponseDto.builder()
             .id(board.getId())
-            .name(board.getName())
-//            .author(board.getAuthor().getUsername())
+            .nickname(board.getBoardAuthor().getNickname())
+            .title(board.getTitle())
             .color(board.getColor())
             .info(board.getInfo())
 //            .collaborators(boardUsers)

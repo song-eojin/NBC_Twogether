@@ -21,8 +21,9 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ApiResponseDto> handlerValicationException(
+    public ResponseEntity<ApiResponseDto> handlerValidationException(
         MethodArgumentNotValidException ex) {
+
         // Validation 예외처리
         StringBuilder errorMessage = new StringBuilder();
         for (FieldError fieldError : ex.getFieldErrors()) {

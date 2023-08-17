@@ -27,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "boards")
+@Table(name = "board")
 public class Board extends Timestamped {
 
     @Id
@@ -35,11 +35,11 @@ public class Board extends Timestamped {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User boardAuthor;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column
     private String color;
@@ -51,8 +51,8 @@ public class Board extends Timestamped {
 //    @OneToMany(mappedBy = "board", orphanRemoval = true)
 //    private List<BoardUser> boardUsers = new ArrayList<>();
 
-    public void updateName(BoardRequestDto boardRequestDto) {
-        this.name = boardRequestDto.getName();
+    public void updateTitle(BoardRequestDto boardRequestDto) {
+        this.title = boardRequestDto.getTitle();
     }
 
     public void updateColor(BoardRequestDto boardRequestDto) {

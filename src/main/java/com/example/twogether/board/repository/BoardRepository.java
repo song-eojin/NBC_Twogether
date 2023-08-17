@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findAllByUserOrderByCreatedAtDesc(User user);
+    List<Board> findAllByBoardAuthorOrderByCreatedAtDesc(User user);
 }

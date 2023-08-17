@@ -18,9 +18,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,7 +34,7 @@ public class BoardController {
     private final UserService userService;
 
     // 보드 생성
-    @Operation(summary = "칸반 보드 생성", description = "")
+    @Operation(summary = "칸반 보드 생성")
     @PostMapping("/boards")
     public ResponseEntity<BoardResponseDto> createBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -43,8 +43,8 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    // 보드 전체 조회 (본인이 생성한 보드) - Test 용
-    @Operation(summary = "모든 칸반 보드 조회", description = "")
+    // 보드 전체 조회 - Test 용
+    @Operation(summary = "칸반 보드 전체 조회")
     @GetMapping("/boards")
     public ResponseEntity<BoardsResponseDto> getAllBoards(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -52,8 +52,8 @@ public class BoardController {
         return ResponseEntity.ok().body(boards);
     }
 
-    // 보드 단건 조회 (본인이 생성한 보드)
-    @Operation(summary = "소유한 칸반 보드 단건 조회", description = "")
+    // 보드 단건 조회
+    @Operation(summary = "칸반 보드 단건 조회")
     @GetMapping("/boards/{id}")
     public ResponseEntity<BoardResponseDto> getBoardById(
         @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
@@ -61,8 +61,23 @@ public class BoardController {
         return ResponseEntity.ok().body(result);
     }
 
-    // 보드 삭제 (본인이 생성한 보드)
-    @Operation(summary = "칸반 보드 삭제", description = "")
+    // 보드 수정
+    @Operation(summary = "칸반 보드 수정", description = "")
+    @PatchMapping("/boards/{id}")
+    public ResponseEntity<ApiResponseDto> updateBoard(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long id,
+        @RequestBody BoardRequestDto boardRequestDto
+    ) {
+        Board board = boardService.findBoard(userDetails.getUser(), id);
+        boardService.updateBoard(board, boardRequestDto);
+
+        return ResponseEntity.ok()
+            .body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드가 수정되었습니다."));
+    }
+
+    // 보드 삭제
+    @Operation(summary = "칸반 보드 삭제")
     @DeleteMapping("/boards/{id}")
     public ResponseEntity<ApiResponseDto> deleteBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
@@ -71,48 +86,10 @@ public class BoardController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드 삭제 성공"));
     }
 
-    // 보드 이름 수정
-    @Operation(summary = "칸반 보드 이름 수정", description = "")
-    @PutMapping("/boards/names/{id}")
-    public ResponseEntity<ApiResponseDto> updateBoardName(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long id,
-        @RequestBody BoardRequestDto boardRequestDto
-    ) {
-        Board board = boardService.findBoard(userDetails.getUser(), id);
-        boardService.updateBoardName(board, boardRequestDto);
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드의 이름이 수정되었습니다."));
-    }
-
-    // 보드 배경색상 수정
-    @Operation(summary = "칸반 보드 배경색상 수정", description = "")
-    @PutMapping("/boards/colors/{id}")
-    public ResponseEntity<ApiResponseDto> updateBoardColor(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long id,
-        @RequestBody BoardRequestDto boardRequestDto
-    ) {
-        Board board = boardService.findBoard(userDetails.getUser(), id);
-        boardService.updateBoardColor(board, boardRequestDto);
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드의 색상이 수정되었습니다."));
-    }
-
-    // 보드 설명 수정
-    @Operation(summary = "칸반 보드 설명 수정", description = "")
-    @PutMapping("/boards/infos/{id}")
-    public ResponseEntity<ApiResponseDto> updateBoardInfo(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id,
-        @RequestBody BoardRequestDto boardRequestDto) {
-        Board board = boardService.findBoard(userDetails.getUser(), id);
-        boardService.updateBoardInfo(board, boardRequestDto);
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드의 설명이 수정되었습니다."));
-    }
 
     /*
     협업자 관련
+
 
     // 보드 전체 조회 (협업 초대 받은 보드)
     @Operation(summary = "get collaborator's boards", description = "협업하고 있는 칸반 보드 전체 조회")

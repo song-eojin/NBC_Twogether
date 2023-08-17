@@ -10,16 +10,16 @@ import lombok.Getter;
 @Builder
 public class BoardRequestDto {
     @NotBlank
-    private String name;
+    private String title;
     private String color;
     private String info;
 
-    public Board toEntity(User user) {
+    public Board toEntity(User boardAuthor) {
         return Board.builder()
-            .name(this.name)
+            .title(this.title)
             .color(this.color)
             .info(this.info)
-            .user(user)
+            .boardAuthor(boardAuthor)
             .build();
     }
 }
