@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,15 +42,18 @@ public class DeckController {
     }
 
     @Operation(summary = "덱 title 수정", description = "id와 일치하는 덱의 title을 수정합니다.")
-    @PutMapping("/decks/{id}/edit")
+    @PutMapping("/decks/{id}")
     private ResponseEntity<ApiResponseDto> editDeck(@PathVariable Long id, @RequestBody String title) {
         deckService.editDeck(id, title);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 수정"));
     }
 
-    // 덱 보관
-
-    // 덱 복구
+    @Operation(summary = "덱 보관/복구", description = "id와 일치하는 덱이 deleted 상태면 복구하고, 아니면 deleted 상태로 만듭니다.")
+    @PatchMapping("/decks/{id}/archive")
+    private ResponseEntity<ApiResponseDto> archiveDeck(@PathVariable Long id) {
+        deckService.archiveDeck(id);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 보관/복구"));
+    }
 
     @Operation(summary = "덱 삭제", description = "id와 일치하는 덱을 삭제합니다.")
     @DeleteMapping("/decks/{id}")

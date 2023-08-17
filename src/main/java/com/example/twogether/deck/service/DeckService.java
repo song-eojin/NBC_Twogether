@@ -46,4 +46,10 @@ public class DeckService {
             throw new RuntimeException("덱이 deleted 상태일 때만 삭제 가능합니다.");
         }
     }
+
+    @Transactional
+    public void archiveDeck(Long id) {
+        Deck deck = findDeckById(id);
+        deck.archive();
+    }
 }
