@@ -29,7 +29,7 @@ public class Deck {
     private Long parentId;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private boolean deleted;
 
 //    @Builder.Default
 //    @ManyToOne(fetch = FetchType.LAZY)

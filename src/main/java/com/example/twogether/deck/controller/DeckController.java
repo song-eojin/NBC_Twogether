@@ -51,7 +51,6 @@ public class DeckController {
 
     // 덱 복구
 
-    // 덱 삭제
     @Operation(summary = "덱 삭제", description = "id와 일치하는 덱을 삭제합니다.")
     @DeleteMapping("/decks/{id}")
     private ResponseEntity<ApiResponseDto> deleteDeck(@PathVariable Long id) {
