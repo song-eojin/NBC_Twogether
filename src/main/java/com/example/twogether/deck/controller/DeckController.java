@@ -44,7 +44,7 @@ public class DeckController {
     @PutMapping("/decks/{id}/edit")
     private ResponseEntity<ApiResponseDto> editDeck(@PathVariable Long id, @RequestBody String title) {
         deckService.editDeck(id, title);
-        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 생성"));
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 수정"));
     }
 
     // 덱 보관

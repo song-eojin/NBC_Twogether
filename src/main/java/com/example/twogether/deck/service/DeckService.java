@@ -6,6 +6,7 @@ import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class DeckService {
         deckRepository.save(deck);
     }
 
+    @Transactional(readOnly = true)
     public DeckResponseDto getDeck(Long id) {
         Deck deck = findDeckById(id);
         return new DeckResponseDto(deck);
@@ -30,6 +32,7 @@ public class DeckService {
         return deck;
     }
 
+    @Transactional
     public void editDeck(Long id, String title) {
         Deck deck = findDeckById(id);
         deck.editTitle(title);
