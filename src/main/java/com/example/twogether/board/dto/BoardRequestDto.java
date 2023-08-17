@@ -18,7 +18,7 @@ public class BoardRequestDto {
         return Board.builder()
             .title(this.title)
             .color(this.color)
-            .info(this.info)
+            .info("This is " + boardAuthor.getNickname() + "'s \"" + this.title + "\" board.")
             .boardAuthor(boardAuthor)
             .build();
     }

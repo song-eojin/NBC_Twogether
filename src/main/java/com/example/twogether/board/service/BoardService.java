@@ -41,6 +41,7 @@ public class BoardService {
             List<Board> boards = boardRepository.findAllByBoardAuthorOrderByCreatedAtDesc(boardAuthor);
             return BoardsResponseDto.of(boards);
         } catch (Exception e) {
+            log.error("칸반 보드 전체 조회를 실패했습니다. 이유: ", e.getMessage(), e);
             throw new RuntimeException("모든 칸반 보드 조회를 실패했습니다. 이유: " + e.getMessage(), e);
         }
     }
@@ -52,6 +53,7 @@ public class BoardService {
             Board board = findBoard(boardAuthor, id);
             return BoardResponseDto.of(board);
         } catch (Exception e) {
+            log.error("칸반 보드 단건 조회를 실패했습니다. 이유: ", e.getMessage(), e);
             throw new RuntimeException("칸반 보드 조회를 실패했습니다. 이유: " + e.getMessage(), e);
         }
     }
@@ -74,7 +76,7 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Board board, User boardAuthor) {
         try {
-            if (!board.getBoardAuthor().equals(boardAuthor)) {
+            if (!board.getBoardAuthor().getEmail().equals(boardAuthor.getEmail())) {
                 throw new RejectedExecutionException("칸반 보드는 작성자만 삭제 가능합니다.");
             }
             boardRepository.delete(board);

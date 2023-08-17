@@ -49,7 +49,7 @@ public class BoardController {
     public ResponseEntity<BoardsResponseDto> getAllBoards(
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         BoardsResponseDto boards = boardService.getAllBoards(userDetails.getUser());
-        return ResponseEntity.ok().body(boards);
+        return ResponseEntity.status(HttpStatus.OK).body(boards);
     }
 
     // 보드 단건 조회
@@ -58,32 +58,26 @@ public class BoardController {
     public ResponseEntity<BoardResponseDto> getBoardById(
         @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         BoardResponseDto result = boardService.getBoardById(userDetails.getUser(), id);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 보드 수정
     @Operation(summary = "칸반 보드 수정", description = "")
     @PatchMapping("/boards/{id}")
-    public ResponseEntity<ApiResponseDto> updateBoard(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @PathVariable Long id,
-        @RequestBody BoardRequestDto boardRequestDto
-    ) {
+    public ResponseEntity<ApiResponseDto> updateBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id, @RequestBody BoardRequestDto boardRequestDto) {
         Board board = boardService.findBoard(userDetails.getUser(), id);
         boardService.updateBoard(board, boardRequestDto);
 
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드가 수정되었습니다."));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드가 수정되었습니다."));
     }
 
     // 보드 삭제
     @Operation(summary = "칸반 보드 삭제")
     @DeleteMapping("/boards/{id}")
-    public ResponseEntity<ApiResponseDto> deleteBoard(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
+    public ResponseEntity<ApiResponseDto> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         Board board = boardService.findBoard(userDetails.getUser(), id);
         boardService.deleteBoard(board, userDetails.getUser());
-        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드 삭제 성공"));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto(HttpStatus.OK.value(), "칸반 보드 삭제 성공"));
     }
 
 
