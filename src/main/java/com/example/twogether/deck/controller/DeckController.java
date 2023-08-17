@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,12 @@ public class DeckController {
     // 덱 복구
 
     // 덱 삭제
+    @Operation(summary = "덱 삭제", description = "id와 일치하는 덱을 삭제합니다.")
+    @DeleteMapping("/decks/{id}")
+    private ResponseEntity<ApiResponseDto> deleteDeck(@PathVariable Long id) {
+        deckService.deleteDeck(id);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 삭제"));
+    }
 
     // 덱 이동
 

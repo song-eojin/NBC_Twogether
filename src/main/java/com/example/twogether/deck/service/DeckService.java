@@ -34,4 +34,9 @@ public class DeckService {
         Deck deck = findDeckById(id);
         deck.editTitle(title);
     }
+
+    public void deleteDeck(Long id) {
+        Deck deck = findDeckById(id);
+        deckRepository.delete(deck);
+    }
 }
