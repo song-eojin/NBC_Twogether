@@ -43,7 +43,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    // 보드 전체 조회 (본인이 생성한 보드)
+    // 보드 전체 조회 (본인이 생성한 보드) - Test 용
     @Operation(summary = "모든 칸반 보드 조회", description = "")
     @GetMapping("/boards")
     public ResponseEntity<BoardsResponseDto> getAllBoards(
