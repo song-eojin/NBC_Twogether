@@ -11,13 +11,13 @@ public class DeckRequestDto {
 
     private String title;
     private Long parentId;
-    private boolean isDeleted;
+    private boolean deleted;
 
     public Deck toEntity() {
         return Deck.builder()
             .title(this.title)
             .parentId(this.parentId)
-            .isDeleted(this.isDeleted)
+            .deleted(this.deleted)
             .build();
     }
 
