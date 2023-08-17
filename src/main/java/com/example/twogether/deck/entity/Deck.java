@@ -41,6 +41,10 @@ public class Deck extends Timestamped {
 //    @OneToMany(mappedBy = "deck")
 //    private List<Card> cardList = new ArrayList<>();
 
+    public Deck(String title) {
+        this.title = title;
+    }
+
     public void editTitle(String title) {
         this.title = title;
     }

@@ -1,6 +1,5 @@
 package com.example.twogether.deck.service;
 
-import com.example.twogether.deck.dto.DeckRequestDto;
 import com.example.twogether.deck.dto.DeckResponseDto;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
@@ -14,22 +13,14 @@ public class DeckService {
 
     private final DeckRepository deckRepository;
 
-    public void addDeck(DeckRequestDto requestDto) {
-        Deck deck =  requestDto.toEntity();
-        deckRepository.save(deck);
+    public void addDeck(String title) {
+        deckRepository.save(new Deck(title));
     }
 
     @Transactional(readOnly = true)
     public DeckResponseDto getDeck(Long id) {
         Deck deck = findDeckById(id);
         return new DeckResponseDto(deck);
-    }
-
-    private Deck findDeckById(Long id) {
-        Deck deck = deckRepository.findById(id).orElseThrow(() ->
-            new IllegalArgumentException()
-        );
-        return deck;
     }
 
     @Transactional
@@ -51,5 +42,12 @@ public class DeckService {
     public void archiveDeck(Long id) {
         Deck deck = findDeckById(id);
         deck.archive();
+    }
+
+    private Deck findDeckById(Long id) {
+        Deck deck = deckRepository.findById(id).orElseThrow(() ->
+            new IllegalArgumentException()
+        );
+        return deck;
     }
 }

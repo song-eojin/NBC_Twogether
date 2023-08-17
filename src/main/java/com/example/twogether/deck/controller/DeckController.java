@@ -1,7 +1,6 @@
 package com.example.twogether.deck.controller;
 
 import com.example.twogether.common.dto.ApiResponseDto;
-import com.example.twogether.deck.dto.DeckRequestDto;
 import com.example.twogether.deck.dto.DeckResponseDto;
 import com.example.twogether.deck.service.DeckService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +28,8 @@ public class DeckController {
 
     @Operation(summary = "덱 생성", description = "DeckRequestDto에 담긴 정보를 토대로 덱을 생성합니다.")
     @PostMapping("/decks")
-    private ResponseEntity<ApiResponseDto> addDeck(@RequestBody DeckRequestDto requestDto) {
-        deckService.addDeck(requestDto);
+    private ResponseEntity<ApiResponseDto> addDeck(@RequestBody String title) {
+        deckService.addDeck(title);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 생성"));
     }
 
