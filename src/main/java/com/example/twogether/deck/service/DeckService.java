@@ -37,6 +37,10 @@ public class DeckService {
 
     public void deleteDeck(Long id) {
         Deck deck = findDeckById(id);
-        deckRepository.delete(deck);
+        if (deck.isDeleted()) {
+            deckRepository.delete(deck);
+        } else {
+            throw new RuntimeException("덱이 deleted 상태일 때만 삭제 가능합니다.");
+        }
     }
 }
