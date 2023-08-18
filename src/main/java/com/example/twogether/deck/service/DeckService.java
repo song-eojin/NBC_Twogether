@@ -2,6 +2,8 @@ package com.example.twogether.deck.service;
 
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.common.error.CustomErrorCode;
+import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.deck.dto.DeckResponseDto;
 import com.example.twogether.deck.dto.MoveDeckRequestDto;
 import com.example.twogether.deck.entity.Deck;
@@ -48,7 +50,7 @@ public class DeckService {
         if (deck.isDeleted()) {
             deckRepository.delete(deck);
         } else {
-            throw new RuntimeException("덱이 deleted 상태일 때만 삭제 가능합니다.");
+            throw new CustomException(CustomErrorCode.DECK_IS_NOT_ARCHIVE);
         }
     }
 
@@ -75,11 +77,15 @@ public class DeckService {
     }
 
     private Deck findDeckById(Long id) {
-        return deckRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return deckRepository.findById(id).orElseThrow(() ->
+            new CustomException(CustomErrorCode.DECK_NOT_FOUND)
+        );
     }
 
     private Board findBoardById(Long id) {
-        return boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return boardRepository.findById(id).orElseThrow(() ->
+            new CustomException(CustomErrorCode.BOARD_NOT_FOUND)
+        );
     }
 
     private float findMaxPosition(Long boardId) {
