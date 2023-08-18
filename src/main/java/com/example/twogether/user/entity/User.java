@@ -1,6 +1,7 @@
 package com.example.twogether.user.entity;
 
 import com.example.twogether.board.entity.Board;
+import com.example.twogether.board.entity.BoardMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,9 +47,14 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
     @Builder.Default
     @OneToMany(mappedBy = "boardAuthor", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "boardCollabo", orphanRemoval = true)
+    private List<BoardMember> boardMembers = new ArrayList<>();
 
     /**
      * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
@@ -57,6 +63,7 @@ public class User {
     /**
      * 연관관계 - Foreign Key 값을 따로 컬럼으로 정의하지 않고 연관 관계로 정의합니다.
      */
+  
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserPassword> userPasswords = new ArrayList<>();
