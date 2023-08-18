@@ -12,22 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "board")
 public class Board extends Timestamped {
 
     @Id
@@ -47,9 +43,10 @@ public class Board extends Timestamped {
     @Column
     private String info;
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "board", orphanRemoval = true)
-//    private List<BoardUser> boardUsers = new ArrayList<>();
+    // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
+    @Builder.Default
+    @OneToMany(mappedBy = "board", orphanRemoval = true)
+    private List<BoardMember> boardMembers = new ArrayList<>();
 
     public void updateTitle(BoardRequestDto boardRequestDto) {
         this.title = boardRequestDto.getTitle();
