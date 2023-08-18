@@ -28,7 +28,8 @@ public class DeckController {
 
     private final DeckService deckService;
 
-    @Operation(summary = "덱 생성", description = "덱을 생성할 때 자동으로 가장 끝에 있는 덱의 id를 parentId로 받습니다.")
+    @Operation(summary = "덱 생성", description = "덱을 생성할 때 자동으로 가장 끝에 있는 덱의 "
+        + "position + cycle(128)으로 position을 설정한다.")
     @PostMapping("/decks")
     private ResponseEntity<ApiResponseDto> addDeck(@RequestParam Long boardId, @RequestBody String title) {
         deckService.addDeck(boardId, title);
@@ -64,8 +65,8 @@ public class DeckController {
     }
 
     // 덱 이동
-    @Operation(summary = "덱 이동", description = "id와 일치하는 덱(a)의 parentId를 지정한 덱(b)의 id로 수정하고, "
-        + "원래 그 id가 parentId였던 덱(c)의 parentId를 a의 id로 수정한다.")
+    @Operation(summary = "덱 이동", description = "덱을 이동하면 position 값을 이동하고자 하는 덱과 덱 사이의 "
+        + "position 중간 값으로 설정")
     @PatchMapping("/decks/{id}/move")
     private ResponseEntity<ApiResponseDto> moveDeck(@PathVariable Long id, @RequestBody
         MoveDeckRequestDto requestDto) {
