@@ -1,5 +1,6 @@
 package com.example.twogether.user.entity;
 
+import com.example.twogether.board.entity.Board;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,6 +45,11 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "boardAuthor", orphanRemoval = true)
+    private List<Board> boards = new ArrayList<>();
+
     /**
      * 생성자 - 약속된 형태로만 생성가능하도록 합니다.
      */
