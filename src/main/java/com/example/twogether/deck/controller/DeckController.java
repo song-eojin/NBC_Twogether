@@ -2,6 +2,7 @@ package com.example.twogether.deck.controller;
 
 import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.deck.dto.DeckResponseDto;
+import com.example.twogether.deck.dto.MoveDeckRequestDto;
 import com.example.twogether.deck.service.DeckService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,8 +30,8 @@ public class DeckController {
 
     @Operation(summary = "덱 생성", description = "덱을 생성할 때 자동으로 가장 끝에 있는 덱의 id를 parentId로 받습니다.")
     @PostMapping("/decks")
-    private ResponseEntity<ApiResponseDto> addDeck(@RequestBody String title) {
-        deckService.addDeck(title);
+    private ResponseEntity<ApiResponseDto> addDeck(@RequestParam Long boardId, @RequestBody String title) {
+        deckService.addDeck(boardId, title);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 생성"));
     }
 
@@ -64,9 +66,10 @@ public class DeckController {
     // 덱 이동
     @Operation(summary = "덱 이동", description = "id와 일치하는 덱(a)의 parentId를 지정한 덱(b)의 id로 수정하고, "
         + "원래 그 id가 parentId였던 덱(c)의 parentId를 a의 id로 수정한다.")
-    @PatchMapping("/decks/{id}/move/{parentId}")
-    private ResponseEntity<ApiResponseDto> moveDeck(@PathVariable Long id, @PathVariable Long parentId) {
-        deckService.moveDeck(id, parentId);
+    @PatchMapping("/decks/{id}/move")
+    private ResponseEntity<ApiResponseDto> moveDeck(@PathVariable Long id, @RequestBody
+        MoveDeckRequestDto requestDto) {
+        deckService.moveDeck(id, requestDto);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 이동"));
     }
 }

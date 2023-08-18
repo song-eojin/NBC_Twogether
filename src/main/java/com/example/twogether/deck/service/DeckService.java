@@ -1,10 +1,10 @@
 package com.example.twogether.deck.service;
 
 import com.example.twogether.deck.dto.DeckResponseDto;
+import com.example.twogether.deck.dto.MoveDeckRequestDto;
 import com.example.twogether.deck.entity.Deck;
-import com.example.twogether.deck.entity.DeckManager;
 import com.example.twogether.deck.repository.DeckRepository;
-import java.util.LinkedList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DeckService {
 
-    private DeckManager deckManager = new DeckManager();
     private final DeckRepository deckRepository;
+    private final float cycle = 128f;
 
-    public void addDeck(String title) {
-        Deck newDeck = new Deck(title);
-        deckManager.addDeck(newDeck);
-
+    public void addDeck(Long boardId, String title) {
+        float max = findMaxPosition(boardId);
+        Deck newDeck;
+        if(max < 0) {
+            newDeck = new Deck(title, cycle);
+        } else {
+            newDeck = new Deck(title, max + cycle);
+        }
         deckRepository.save(newDeck);
     }
 
@@ -38,7 +42,6 @@ public class DeckService {
     public void deleteDeck(Long id) {
         Deck deck = findDeckById(id);
         if (deck.isDeleted()) {
-            isGone(id);
             deckRepository.delete(deck);
         } else {
             throw new RuntimeException("덱이 deleted 상태일 때만 삭제 가능합니다.");
@@ -52,34 +55,34 @@ public class DeckService {
     }
 
     @Transactional
-    public void moveDeck(Long id, Long parentId) {
-        isGone(id);
-
-        Deck pushed = deckRepository.findByParentId(parentId).orElse(null);
-        if (pushed != null) { // 덱을 맨 끝으로 이동한다면 밀려날 덱이 없으므로 그 경우를 고려한다.
-            pushed.setParentId(id);
-        }
-        // 이동하고자 하는 덱에 의해 밀려나 덱의 parentId를 이동하고자 하는 덱의 id로 바꾸는 작업을 먼저 진행한다.
-        // 이 작업을 나중에 하면 이동하고자 하는 덱과 밀려난 덱이 같은 parentId를 가지기 때문에 findByParentId가 에러를 발생시키기 때문
-
+    public void moveDeck(Long id, MoveDeckRequestDto requestDto) {
         Deck deck = findDeckById(id);
-        deck.setParentId(parentId); // 이동하고자 하는 덱의 parentId를 수정
-    }
 
-    // 이동/삭제하고자 하는 덱의 id를 parentId로 가지고 있던 덱이 있다면, 그 값을 이동하고자 하는 덱의 parentId로 교환해줘야 한다.
-    private void isGone(Long id) {
-        // 이동하고자 하는 덱의 id를 parentId로 가지고 있던 덱이 없는 경우를 고려한다.
-        Deck succeeded = deckRepository.findByParentId(id).orElse(null);
-        if (succeeded != null) {
-            Long parentIdForSucceed = findDeckById(id).getParentId();
-            succeeded.setParentId(parentIdForSucceed);
+        Deck prev = deckRepository.findById(requestDto.getPrevDeckId()).orElse(null);
+        Deck next = deckRepository.findById(requestDto.getNextDeckId()).orElse(null);
+
+        if (prev != null && next != null) { // 두 덱 사이로 옮길 때
+            deck.updatePosition((prev.getPosition() + next.getPosition()) / 2f);
+        } else if (prev == null) { // 맨 처음으로 옮길 때
+            deck.updatePosition(next.getPosition() / 2f);
+        } else { // 맨 마지막으로 옮길 때
+            deck.updatePosition(prev.getPosition() + cycle);
         }
     }
 
     private Deck findDeckById(Long id) {
-        Deck deck = deckRepository.findById(id).orElseThrow(() ->
-            new IllegalArgumentException()
-        );
-        return deck;
+        return deckRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
+
+    private float findMaxPosition(Long boardId) {
+        float max = -1;
+        List<Deck> decks = deckRepository.findAllByBoard_Id(boardId);
+        if (decks.isEmpty()) {
+            return max;
+        } else {
+            for(Deck deck : decks)
+                Math.max(max, deck.getPosition());
+            return max;
+        }
     }
 }
