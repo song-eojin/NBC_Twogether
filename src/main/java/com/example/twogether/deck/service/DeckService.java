@@ -1,5 +1,7 @@
 package com.example.twogether.deck.service;
 
+import com.example.twogether.board.entity.Board;
+import com.example.twogether.board.repository.BoardRepository;
 import com.example.twogether.deck.dto.DeckResponseDto;
 import com.example.twogether.deck.dto.MoveDeckRequestDto;
 import com.example.twogether.deck.entity.Deck;
@@ -14,15 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeckService {
 
     private final DeckRepository deckRepository;
+    private final BoardRepository boardRepository;
     private final float cycle = 128f;
 
     public void addDeck(Long boardId, String title) {
         float max = findMaxPosition(boardId);
+        Board board = findBoardById(boardId);
         Deck newDeck;
         if(max < 0) {
-            newDeck = new Deck(title, cycle);
+            newDeck = new Deck(title, cycle, board);
         } else {
-            newDeck = new Deck(title, max + cycle);
+            newDeck = new Deck(title, max + cycle, board);
         }
         deckRepository.save(newDeck);
     }
@@ -62,16 +66,20 @@ public class DeckService {
         Deck next = deckRepository.findById(requestDto.getNextDeckId()).orElse(null);
 
         if (prev != null && next != null) { // 두 덱 사이로 옮길 때
-            deck.updatePosition((prev.getPosition() + next.getPosition()) / 2f);
+            deck.editPosition((prev.getPosition() + next.getPosition()) / 2f);
         } else if (prev == null) { // 맨 처음으로 옮길 때
-            deck.updatePosition(next.getPosition() / 2f);
+            deck.editPosition(next.getPosition() / 2f);
         } else { // 맨 마지막으로 옮길 때
-            deck.updatePosition(prev.getPosition() + cycle);
+            deck.editPosition(prev.getPosition() + cycle);
         }
     }
 
     private Deck findDeckById(Long id) {
         return deckRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
+
+    private Board findBoardById(Long id) {
+        return boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     private float findMaxPosition(Long boardId) {
@@ -81,7 +89,7 @@ public class DeckService {
             return max;
         } else {
             for(Deck deck : decks)
-                Math.max(max, deck.getPosition());
+                max = max > deck.getPosition() ? max : deck.getPosition();
             return max;
         }
     }
