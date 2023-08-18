@@ -32,16 +32,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+        HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+        throws ServletException, IOException {
         // Header에서 jwt 토큰 받아오기
         String tokenValue = jwtUtil.getTokenFromRequest(req);
 
         if (StringUtils.hasText(tokenValue)) {
+            String contentType = "application/json";
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                res.setContentType("application/json");
-                String result = new ObjectMapper().writeValueAsString(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "INVALID_TOKEN"));
+                res.setContentType(contentType);
+                String result = new ObjectMapper().writeValueAsString(
+                    new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "INVALID_TOKEN"));
 
                 res.getOutputStream().print(result);
                 return;
@@ -53,8 +56,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 // JWT 검증에 실패한 경우 처리
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                res.setContentType("application/json");
-                String result = new ObjectMapper().writeValueAsString(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "INVALID_TOKEN"));
+                res.setContentType(contentType);
+                String result = new ObjectMapper().writeValueAsString(
+                    new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "INVALID_TOKEN"));
 
                 res.getOutputStream().print(result);
                 return;
@@ -65,6 +69,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 // 인증 처리에 실패한 경우 처리
                 log.error(e.getMessage());
+                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                res.setContentType(contentType);
+                String result = new ObjectMapper().writeValueAsString(
+                    new ApiResponseDto(HttpStatus.NOT_FOUND.value(), "USER_NOT_FOUND"));
+
+                res.getOutputStream().print(result);
                 return;
             }
         }
@@ -84,6 +94,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 인증 객체 생성
     private Authentication createAuthentication(String email) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null,
+            userDetails.getAuthorities());
     }
 }
