@@ -1,5 +1,6 @@
 package com.example.twogether.board.entity;
 
+import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.board.dto.BoardRequestDto;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.user.entity.User;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 public class Board extends Timestamped {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Workspace workspace;
+
     @JoinColumn(name = "user_id", nullable = false)
     private User boardAuthor;
 
