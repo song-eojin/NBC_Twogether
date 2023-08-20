@@ -25,7 +25,7 @@ public class BoardMember {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User boardCollabo;
 
     @ManyToOne(fetch = FetchType.LAZY)
