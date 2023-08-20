@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +19,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Deck extends Timestamped {
 
     @Id
@@ -40,9 +41,9 @@ public class Deck extends Timestamped {
     @JoinColumn(name = "board_id")
     private Board board;
 
-//    @Builder.Default
 //    @OneToMany(mappedBy = "deck")
 //    private List<Card> cardList = new ArrayList<>();
+
 
     public void editTitle(String title) {
         this.title = title;
