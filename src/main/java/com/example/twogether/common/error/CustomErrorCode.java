@@ -19,6 +19,10 @@ public enum CustomErrorCode {
     DECK_IS_NOT_ARCHIVE("D002", "덱이 보관된 상태에서만 삭제 가능합니다.")
     ;
 
+    // Workspace
+    WORKSPACE_NOT_FOUND("W001", "존재하지 않는 워크스페이스 입니다."),
+    WORKSPACE_NOT_USER("W002", "본인이 작성한 워크스페이스만 수정/삭제 할 수 있습니다.");
+
     private final String errorCode;
     private final String errorMessage;
 

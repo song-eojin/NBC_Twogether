@@ -4,6 +4,7 @@ import com.example.twogether.board.dto.BoardRequestDto;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.user.entity.User;
+import com.example.twogether.workspace.entity.Workspace;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,10 +32,6 @@ public class Board extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User boardAuthor;
-
     @Column(nullable = false)
     private String title;
 
@@ -44,13 +41,21 @@ public class Board extends Timestamped {
     @Column
     private String info;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workspace_id", nullable = false)
+    private Workspace workspace;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User boardAuthor;
+
     // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
     @Builder.Default
     @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<BoardMember> boardMembers = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", orphanRemoval = true)
     private List<Deck> decks = new ArrayList<>();
 
     public void updateTitle(BoardRequestDto boardRequestDto) {

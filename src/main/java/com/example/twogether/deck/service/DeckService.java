@@ -17,19 +17,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DeckService {
 
+    private final BoardRepository boardRepository;
     private final DeckRepository deckRepository;
     private final BoardRepository boardRepository;
-    private final float cycle = 128f;
+    private static final float CYCLE = 128f;
 
     public void addDeck(Long boardId, String title) {
+        Board board = findBoardById(boardId);
+
         float max = findMaxPosition(boardId);
         Board board = findBoardById(boardId);
         Deck newDeck;
-        if(max < 0) {
-            newDeck = new Deck(title, cycle, board);
-        } else {
-            newDeck = new Deck(title, max + cycle, board);
-        }
+
+        if(max < 0)
+            newDeck = Deck.builder().title(title).position(CYCLE).board(board).build();
+        else
+            newDeck = Deck.builder().title(title).position(max + CYCLE).board(board).build();
+      
         deckRepository.save(newDeck);
     }
 
@@ -47,7 +51,7 @@ public class DeckService {
 
     public void deleteDeck(Long id) {
         Deck deck = findDeckById(id);
-        if (deck.isDeleted()) {
+        if (deck.isArchived()) {
             deckRepository.delete(deck);
         } else {
             throw new CustomException(CustomErrorCode.DECK_IS_NOT_ARCHIVE);
@@ -72,8 +76,12 @@ public class DeckService {
         } else if (prev == null) { // 맨 처음으로 옮길 때
             deck.editPosition(next.getPosition() / 2f);
         } else { // 맨 마지막으로 옮길 때
-            deck.editPosition(prev.getPosition() + cycle);
+            deck.editPosition(prev.getPosition() + CYCLE);
         }
+    }
+
+    private Board findBoardById(Long id) {
+        return boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     private Deck findDeckById(Long id) {
@@ -91,12 +99,10 @@ public class DeckService {
     private float findMaxPosition(Long boardId) {
         float max = -1;
         List<Deck> decks = deckRepository.findAllByBoard_Id(boardId);
-        if (decks.isEmpty()) {
-            return max;
-        } else {
-            for(Deck deck : decks)
-                max = max > deck.getPosition() ? max : deck.getPosition();
-            return max;
+        if (!decks.isEmpty()) {
+            for (Deck deck : decks)
+                max = Math.max(max, deck.getPosition());
         }
+        return max;
     }
 }

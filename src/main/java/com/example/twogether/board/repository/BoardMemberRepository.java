@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardMemberRepository extends JpaRepository<BoardMember, Long> {
 
-    List<BoardMember> findByBoardCollabo(User user);
+    List<BoardMember> findAllByBoardCollabo(User user);
 
-    boolean existsByBoard_IdAndBoardMember_Id(Long boardId, Long id);
+    boolean existsByBoard_IdAndBoardCollabo_Id(Long boardId, Long id);
 }

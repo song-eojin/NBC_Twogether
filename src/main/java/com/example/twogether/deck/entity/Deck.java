@@ -16,8 +16,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Deck extends Timestamped {
 
@@ -31,8 +33,9 @@ public class Deck extends Timestamped {
     @Column
     private float position;
 
-    @Column(name = "is_deleted")
-    private boolean deleted;
+    @Builder.Default
+    @Column(name = "is_archived")
+    private boolean archived = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
@@ -41,18 +44,13 @@ public class Deck extends Timestamped {
 //    @OneToMany(mappedBy = "deck")
 //    private List<Card> cardList = new ArrayList<>();
 
-    public Deck(String title, float position, Board board) {
-        this.title = title;
-        this.position = position;
-        this.board = board;
-    }
 
     public void editTitle(String title) {
         this.title = title;
     }
 
     public void archive() {
-        this.deleted = !this.isDeleted();
+        this.archived = !this.isArchived();
     }
 
     public void editPosition(float position) {
