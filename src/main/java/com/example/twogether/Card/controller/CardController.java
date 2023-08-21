@@ -1,9 +1,11 @@
 package com.example.twogether.Card.controller;
 
+
 import com.example.twogether.Card.dto.CardEditRequestDto;
+import com.example.twogether.Card.dto.CardResponseDto;
+import com.example.twogether.Card.dto.MoveCardRequestDto;
 import com.example.twogether.Card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
-import com.example.twogether.Card.dto.CardResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +62,13 @@ public class CardController {
     private ResponseEntity<ApiResponseDto> archiveCard(@PathVariable Long id) {
         cardService.archiveCard(id);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 보관/복구"));
+    }
+
+    @Operation(summary = "카드 이동", description = "카드를 이동하면 position 값을 이동하고자 하는 카드와 카드 사이의 "
+        + "position 중간 값으로 설정, board 도 바꿀 수 있음.")
+    @PatchMapping("/cards/{id}/move")
+    private ResponseEntity<ApiResponseDto> moveCard(@PathVariable Long id, @RequestBody MoveCardRequestDto requestDto) {
+        cardService.moveCard(id, requestDto);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 이동"));
     }
 }

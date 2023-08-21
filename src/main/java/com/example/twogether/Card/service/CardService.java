@@ -1,6 +1,7 @@
 package com.example.twogether.Card.service;
 
 import com.example.twogether.Card.dto.CardEditRequestDto;
+import com.example.twogether.Card.dto.MoveCardRequestDto;
 import com.example.twogether.Card.entity.Card;
 import com.example.twogether.Card.repository.CardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
@@ -77,9 +78,28 @@ public class CardService {
             throw new CustomException(CustomErrorCode.CARD_IS_NOT_ARCHIVE);
         }
     }
-  
+
+    @Transactional
     public void archiveCard(Long id) {
         Card card = findCardById(id);
         card.archive();
+    }
+
+    @Transactional
+    public void moveCard(Long id, MoveCardRequestDto requestDto) {
+        Card card = findCardById(id);
+        Deck deck = findDeckById(requestDto.getDeckId());
+
+        Card prev = cardRepository.findById(requestDto.getPrevCardId()).orElse(null);
+        Card next = cardRepository.findById(requestDto.getNextCardId()).orElse(null);
+
+        if (requestDto.getDeckId() != null) card.moveToDeck(deck);
+        if (prev != null && next != null) { // 두 카드 사이로 옮길 때
+            card.editPosition((prev.getPosition() + next.getPosition()) / 2f);
+        } else if (prev == null) { // 맨 처음으로 옮길 때
+            card.editPosition(next.getPosition() / 2f);
+        } else { // 맨 마지막으로 옮길 때
+            card.editPosition(prev.getPosition() + CYCLE);
+        }
     }
 }

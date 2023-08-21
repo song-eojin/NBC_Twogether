@@ -1,7 +1,5 @@
 package com.example.twogether.Card.entity;
 
-import com.example.twogether.Card.dto.CardEditRequestDto;
-import com.example.twogether.board.entity.Board;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;
 import jakarta.persistence.Column;
@@ -12,10 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,7 +48,7 @@ public class Card extends Timestamped {
     private String attachment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deck_id")
+    @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
 
 //    @OneToMany(mappedBy = "card")
@@ -76,4 +71,10 @@ public class Card extends Timestamped {
     public void archive() {
         this.archived = !this.isArchived();
     }
+
+    public void editPosition(float position) {
+        this.position = position;
+    }
+
+    public void moveToDeck(Deck deck) {this.deck = deck;}
 }

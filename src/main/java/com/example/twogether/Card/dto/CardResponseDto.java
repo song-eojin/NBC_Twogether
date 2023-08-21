@@ -17,6 +17,7 @@ public class CardResponseDto {
     private String description;
     private LocalDateTime dueDate;
     private String attachment;
+    private float position;
 
     public static CardResponseDto of(Card card) {
         return CardResponseDto.builder()
@@ -25,6 +26,7 @@ public class CardResponseDto {
             .description(card.getDescription())
             .dueDate(card.getDueDate())
             .attachment(card.getAttachment())
+            .position(card.getPosition())
             .build();
     }
 

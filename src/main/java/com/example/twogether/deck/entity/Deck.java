@@ -42,7 +42,7 @@ public class Deck extends Timestamped {
     private boolean archived = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
     @Builder.Default
