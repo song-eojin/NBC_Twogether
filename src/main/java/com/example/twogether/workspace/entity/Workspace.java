@@ -3,7 +3,7 @@ package com.example.twogether.workspace.entity;
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.user.entity.User;
-import com.example.twogether.workspace.dto.WorkspaceRequestDto;
+import com.example.twogether.workspace.dto.WpRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,36 +28,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "workspace")
 public class Workspace extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 워크스페이스 이름
     @Column(nullable = false)
     private String title;
 
-    // 아이콘
     @Column
     private String icon;
 
-    // 워크스페이스 사용자 연관 관계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // 워크스페이스 멤버 리스트
     @Builder.Default
-    @OneToMany(mappedBy = "workspace")
-    private List<WorkspaceMember> workspaceMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "workspace", orphanRemoval = true)
+    private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
 
-    // 보드 리스트
     @Builder.Default
-    @OneToMany(mappedBy = "workspace")
+    @OneToMany(mappedBy = "workspace", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 
-
-    public void update(WorkspaceRequestDto workspaceRequestDto) {
-        this.title = workspaceRequestDto.getTitle();
-        this.icon = workspaceRequestDto.getIcon();
+    public void update(WpRequestDto wpRequestDto) {
+        this.title = wpRequestDto.getTitle();
+        this.icon = wpRequestDto.getIcon();
     }
 }

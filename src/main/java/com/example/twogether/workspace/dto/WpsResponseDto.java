@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkspacesResponseDto {
+public class WpsResponseDto {
 
-    private List<WorkspaceResponseDto> workspaces;
+    private List<WpResponseDto> workspaces;
 
-    public static WorkspacesResponseDto of(List<Workspace> workspaces) {
-        List<WorkspaceResponseDto> workspacesResponseDto = workspaces.stream()
-            .map(WorkspaceResponseDto::of)
+    public static WpsResponseDto of(List<Workspace> workspaces) {
+
+        List<WpResponseDto> workspacesResponseDto = workspaces.stream()
+            .map(WpResponseDto::of)
             .toList();
-        return WorkspacesResponseDto.builder()
+
+        return WpsResponseDto.builder()
             .workspaces(workspacesResponseDto)
             .build();
     }

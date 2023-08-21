@@ -13,32 +13,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
-@Table(name = "workspace_member")
-public class WorkspaceMember {
+@AllArgsConstructor
+public class WorkspaceCollaborator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 워크스페이스 사용자 연관 관계
+    private String email;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
-
-    public WorkspaceMember(User user, Workspace workspace) {
-        this.user = user;
-        this.workspace = workspace;
-    }
-
-
-
 }

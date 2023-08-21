@@ -1,12 +1,12 @@
-package com.example.twogether.Card.service;
+package com.example.twogether.card.service;
 
-import com.example.twogether.Card.dto.CardEditRequestDto;
-import com.example.twogether.Card.dto.MoveCardRequestDto;
-import com.example.twogether.Card.entity.Card;
-import com.example.twogether.Card.repository.CardRepository;
+import com.example.twogether.card.dto.CardEditRequestDto;
+import com.example.twogether.card.dto.MoveCardRequestDto;
+import com.example.twogether.card.entity.Card;
+import com.example.twogether.card.repository.CardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
-import com.example.twogether.Card.dto.CardResponseDto;
+import com.example.twogether.card.dto.CardResponseDto;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
 import java.util.List;

@@ -18,25 +18,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardMember {
+public class BoardCollaborator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String email;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User boardCollabo;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
-
-    public void updateBoardCollabo(User newCollaborator) {
-        if(this.boardCollabo != null) {
-            this.boardCollabo.getBoardMembers().remove(this);
-        }
-        this.boardCollabo = newCollaborator;
-        newCollaborator.getBoardMembers().add(this);
-    }
 }
+

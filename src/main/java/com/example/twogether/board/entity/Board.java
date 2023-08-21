@@ -5,6 +5,8 @@ import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.workspace.entity.Workspace;
+import com.example.twogether.workspace.entity.WorkspaceCollaborator;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,26 +49,25 @@ public class Board extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User boardAuthor;
-
-    // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
-    @Builder.Default
-    @OneToMany(mappedBy = "board", orphanRemoval = true)
-    private List<BoardMember> boardMembers = new ArrayList<>();
+    private User user;
 
     @Builder.Default
     @OneToMany(mappedBy = "board", orphanRemoval = true)
+    private List<BoardCollaborator> boardCollaborators = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Deck> decks = new ArrayList<>();
 
-    public void updateTitle(BoardRequestDto boardRequestDto) {
+    public void editTitle(BoardRequestDto boardRequestDto) {
         this.title = boardRequestDto.getTitle();
     }
 
-    public void updateColor(BoardRequestDto boardRequestDto) {
+    public void editColor(BoardRequestDto boardRequestDto) {
         this.color = boardRequestDto.getColor();
     }
 
-    public void updateInfo(BoardRequestDto boardRequestDto) {
+    public void editInfo(BoardRequestDto boardRequestDto) {
         this.info = boardRequestDto.getInfo();
     }
 }

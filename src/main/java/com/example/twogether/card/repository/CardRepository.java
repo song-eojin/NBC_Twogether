@@ -1,6 +1,6 @@
-package com.example.twogether.Card.repository;
+package com.example.twogether.card.repository;
 
-import com.example.twogether.Card.entity.Card;
+import com.example.twogether.card.entity.Card;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

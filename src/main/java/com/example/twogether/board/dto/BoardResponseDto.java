@@ -1,6 +1,9 @@
 package com.example.twogether.board.dto;
 
 import com.example.twogether.board.entity.Board;
+import com.example.twogether.common.dto.ApiResponseDto;
+import com.example.twogether.workspace.dto.WpColResponseDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,33 +11,23 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class BoardResponseDto {
-    private Long id;
+    private Long boardId;
     private String nickname;
     private String title;
     private String color;
     private String info;
-
-    /*협업자 관련*/
-//    private List<UserResponseDto> collaborators;
-//    private List<BoardUserResponseDto> boardUsers;
+    private List<BoardColResponseDto> boardCollaborators;
 
     public static BoardResponseDto of(Board board) {
-//        List<UserResponseDto> boardUsers = new ArrayList<>();
-//        if (board.getBoardUsers().size() != 0) {
-//            boardUsers = board.getBoardUsers().stream().map(BoardUser::getCollaborator)
-//                .toList().stream().map(UserResponseDto::of).toList();
-//        }
         return BoardResponseDto.builder()
-            .id(board.getId())
-            .nickname(board.getBoardAuthor().getNickname())
+            .boardId(board.getId())
+            .nickname(board.getUser().getNickname())
             .title(board.getTitle())
             .color(board.getColor())
             .info(board.getInfo())
-//            .collaborators(boardUsers)
-//            .boardUsers(board.getBoardUsers().stream().map(BoardUserResponseDto::of).toList())
+            .boardCollaborators(board.getBoardCollaborators().stream().map(
+                BoardColResponseDto::of).toList())
             .build();
     }
 }

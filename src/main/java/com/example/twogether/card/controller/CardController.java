@@ -1,10 +1,10 @@
-package com.example.twogether.Card.controller;
+package com.example.twogether.card.controller;
 
 
-import com.example.twogether.Card.dto.CardEditRequestDto;
-import com.example.twogether.Card.dto.CardResponseDto;
-import com.example.twogether.Card.dto.MoveCardRequestDto;
-import com.example.twogether.Card.service.CardService;
+import com.example.twogether.card.dto.CardEditRequestDto;
+import com.example.twogether.card.dto.CardResponseDto;
+import com.example.twogether.card.dto.MoveCardRequestDto;
+import com.example.twogether.card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

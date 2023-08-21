@@ -1,4 +1,4 @@
-package com.example.twogether.Card.entity;
+package com.example.twogether.card.entity;
 
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;

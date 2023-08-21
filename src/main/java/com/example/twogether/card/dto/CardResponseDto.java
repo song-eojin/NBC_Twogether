@@ -1,6 +1,6 @@
-package com.example.twogether.Card.dto;
+package com.example.twogether.card.dto;
 
-import com.example.twogether.Card.entity.Card;
+import com.example.twogether.card.entity.Card;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

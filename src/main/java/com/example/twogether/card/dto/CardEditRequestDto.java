@@ -1,4 +1,4 @@
-package com.example.twogether.Card.dto;
+package com.example.twogether.card.dto;
 
 import lombok.Getter;
 import lombok.Setter;

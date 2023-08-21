@@ -1,9 +1,8 @@
 package com.example.twogether.user.entity;
 
-import com.example.twogether.workspace.entity.Workspace;
-import com.example.twogether.workspace.entity.WorkspaceMember;
 import com.example.twogether.board.entity.Board;
-import com.example.twogether.board.entity.BoardMember;
+import com.example.twogether.workspace.entity.Workspace;
+import com.example.twogether.workspace.entity.WorkspaceCollaborator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -63,16 +62,12 @@ public class User {
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
-    private List<WorkspaceMember> workspaceMembers = new ArrayList<>();
+    private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
 
     // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
     @Builder.Default
-    @OneToMany(mappedBy = "boardAuthor", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "boardCollabo", orphanRemoval = true)
-    private List<BoardMember> boardMembers = new ArrayList<>();
 
     /**
      * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.
