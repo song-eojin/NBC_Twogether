@@ -5,6 +5,7 @@ import com.example.twogether.Card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.Card.dto.CardResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "카드 API", description = "카드 CRUD, 이동 기능, 카드 라벨 수정, 작업자 할당, 마감일 설정과 관련된 API 정보를 담고 있습니다.")
 public class CardController {
 
     private final CardService cardService;
@@ -39,12 +41,14 @@ public class CardController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @Operation(summary = "덱 수정", description = "requestDto에 title 혹은 description이 null이라면 수정하지 않고 내버려두도록 설정")
     @PatchMapping("/cards/{id}")
     private ResponseEntity<ApiResponseDto> editCard(@PathVariable Long id, @RequestBody CardEditRequestDto requestDto) {
         cardService.editCard(id, requestDto);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 수정"));
     }
 
+    @Operation(summary = "덱 삭제", description = "덱이 보관 상태라면 삭제되지 않도록 설정")
     @DeleteMapping("/cards/{id}")
     private ResponseEntity<ApiResponseDto> deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
