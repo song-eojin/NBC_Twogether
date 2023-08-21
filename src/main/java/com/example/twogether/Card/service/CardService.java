@@ -71,6 +71,15 @@ public class CardService {
 
     public void deleteCard(Long id) {
         Card card = findCardById(id);
-        cardRepository.delete(card);
+        if (card.isArchived()) {
+            cardRepository.delete(card);
+        } else {
+            throw new CustomException(CustomErrorCode.CARD_IS_NOT_ARCHIVE);
+        }
+    }
+  
+    public void archiveCard(Long id) {
+        Card card = findCardById(id);
+        card.archive();
     }
 }

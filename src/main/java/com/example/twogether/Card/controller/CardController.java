@@ -54,4 +54,11 @@ public class CardController {
         cardService.deleteCard(id);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 삭제"));
     }
+
+    @Operation(summary = "덱 보관/복구", description = "덱을 삭제하기 전 보관상태로 만들고, 복구하는 기능")
+    @PatchMapping("/cards/{id}/archive")
+    private ResponseEntity<ApiResponseDto> archiveCard(@PathVariable Long id) {
+        cardService.archiveCard(id);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 보관/복구"));
+    }
 }

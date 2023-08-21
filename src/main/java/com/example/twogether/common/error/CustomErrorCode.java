@@ -20,6 +20,7 @@ public enum CustomErrorCode {
 
     // Card
     CARD_NOT_FOUND("C001", "존재하지 않는 카드입니다."),
+    CARD_IS_NOT_ARCHIVE("C002", "카드가 보관된 상태에서만 삭제 가능합니다."),
 
     // Workspace
     WORKSPACE_NOT_FOUND("W001", "존재하지 않는 워크스페이스 입니다."),

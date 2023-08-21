@@ -72,4 +72,8 @@ public class Card extends Timestamped {
     public void editDescription(String description) {
         this.description = description;
     }
+
+    public void archive() {
+        this.archived = !this.isArchived();
+    }
 }
