@@ -58,6 +58,8 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                 .requestMatchers("/api/decks/**").permitAll()
+                .requestMatchers("/api/boards/{boardId}/decks").permitAll()
+                .requestMatchers("api/cards/**").permitAll()
                 .anyRequest().authenticated()
         );
 

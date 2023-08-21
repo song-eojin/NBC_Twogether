@@ -1,8 +1,9 @@
-package com.example.twogether.deck.entity;
+package com.example.twogether.Card.entity;
 
-import com.example.twogether.Card.entity.Card;
+import com.example.twogether.Card.dto.CardEditRequestDto;
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.common.entity.Timestamped;
+import com.example.twogether.deck.entity.Deck;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Deck extends Timestamped {
+public class Card extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,23 +43,33 @@ public class Deck extends Timestamped {
     @Column(name = "is_archived")
     private boolean archived = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "deck")
-    private List<Card> cardList = new ArrayList<>();
+    @Column
+    private String description;
+
+    @Column
+    private String attachment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deck_id")
+    private Deck deck;
+
+//    @OneToMany(mappedBy = "card")
+//    private List<Comment> commentList = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "card")
+//    private List<CheckList> checkLists = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "card")
+//    private List<CardLabel> cardLabelList = new ArrayList<>();
 
     public void editTitle(String title) {
         this.title = title;
     }
 
-    public void archive() {
-        this.archived = !this.isArchived();
-    }
-
-    public void editPosition(float position) {
-        this.position = position;
+    public void editDescription(String description) {
+        this.description = description;
     }
 }

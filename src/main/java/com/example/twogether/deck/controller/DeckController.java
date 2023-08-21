@@ -30,8 +30,8 @@ public class DeckController {
 
     @Operation(summary = "덱 생성", description = "덱을 생성할 때 자동으로 가장 끝에 있는 덱의 "
         + "position + cycle(128)으로 position을 설정한다.")
-    @PostMapping("/decks")
-    private ResponseEntity<ApiResponseDto> addDeck(@RequestParam Long boardId, @RequestBody String title) {
+    @PostMapping("/boards/{boardId}/decks")
+    private ResponseEntity<ApiResponseDto> addDeck(@PathVariable Long boardId, @RequestBody String title) {
         deckService.addDeck(boardId, title);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 생성"));
     }
