@@ -16,8 +16,7 @@ public enum CustomErrorCode {
 
     // Deck
     DECK_NOT_FOUND("D001", "존재하지 않는 덱입니다."),
-    DECK_IS_NOT_ARCHIVE("D002", "덱이 보관된 상태에서만 삭제 가능합니다.")
-    ;
+    DECK_IS_NOT_ARCHIVE("D002", "덱이 보관된 상태에서만 삭제 가능합니다."),
 
     // Workspace
     WORKSPACE_NOT_FOUND("W001", "존재하지 않는 워크스페이스 입니다."),

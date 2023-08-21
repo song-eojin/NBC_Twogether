@@ -31,7 +31,7 @@ public class WorkspaceMember {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Workspace_id")
+    @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
     public WorkspaceMember(User user, Workspace workspace) {

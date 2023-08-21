@@ -19,12 +19,9 @@ public class DeckService {
 
     private final BoardRepository boardRepository;
     private final DeckRepository deckRepository;
-    private final BoardRepository boardRepository;
     private static final float CYCLE = 128f;
 
     public void addDeck(Long boardId, String title) {
-        Board board = findBoardById(boardId);
-
         float max = findMaxPosition(boardId);
         Board board = findBoardById(boardId);
         Deck newDeck;
@@ -78,10 +75,6 @@ public class DeckService {
         } else { // 맨 마지막으로 옮길 때
             deck.editPosition(prev.getPosition() + CYCLE);
         }
-    }
-
-    private Board findBoardById(Long id) {
-        return boardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     private Deck findDeckById(Long id) {
