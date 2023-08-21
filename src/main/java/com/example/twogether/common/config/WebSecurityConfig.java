@@ -60,6 +60,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/decks/**").permitAll()
                 .requestMatchers("/api/boards/{boardId}/decks").permitAll()
                 .requestMatchers("api/cards/**").permitAll()
+                .requestMatchers("/api/labels/**").permitAll()
                 .anyRequest().authenticated()
         );
 
