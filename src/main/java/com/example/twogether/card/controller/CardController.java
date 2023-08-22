@@ -3,6 +3,7 @@ package com.example.twogether.card.controller;
 
 import com.example.twogether.card.dto.CardEditRequestDto;
 import com.example.twogether.card.dto.CardResponseDto;
+import com.example.twogether.card.dto.DateRequestDto;
 import com.example.twogether.card.dto.MoveCardRequestDto;
 import com.example.twogether.card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
@@ -82,5 +83,12 @@ public class CardController {
         @RequestPart MultipartFile multipartFile) throws IOException {
         cardService.uploadFile(id, multipartFile);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "파일 첨부"));
+    }
+
+    @Operation(summary = "마감일 수정")
+    @PatchMapping("/cards/{id}/date")
+    private ResponseEntity<ApiResponseDto> editDate(@PathVariable Long id, @RequestBody DateRequestDto requestDto) {
+        cardService.editDate(id, requestDto);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "마감일 수정"));
     }
 }

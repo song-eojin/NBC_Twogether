@@ -72,6 +72,8 @@ public class Card extends Timestamped {
         this.description = description;
     }
 
+    public void editDueDate(LocalDateTime dueDate) {this.dueDate = dueDate;}
+
     public void archive() {
         this.archived = !this.isArchived();
     }

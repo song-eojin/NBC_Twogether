@@ -1,14 +1,14 @@
 package com.example.twogether.card.service;
 
 import com.example.twogether.card.dto.CardEditRequestDto;
+import com.example.twogether.card.dto.CardResponseDto;
+import com.example.twogether.card.dto.DateRequestDto;
 import com.example.twogether.card.dto.MoveCardRequestDto;
 import com.example.twogether.card.entity.Card;
 import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.card.repository.CardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
-import com.example.twogether.card.dto.CardResponseDto;
-import com.example.twogether.card.dto.CardResponseDto;
 import com.example.twogether.common.s3.S3Uploader;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
@@ -126,5 +126,11 @@ public class CardService {
         } catch (RejectedExecutionException e) {
             throw new CustomException(CustomErrorCode.S3_FILE_UPLOAD_FAIL);
         }
+    }
+
+    @Transactional
+    public void editDate(Long id, DateRequestDto requestDto) {
+        Card card = findCardById(id);
+        card.editDueDate(requestDto.getDueDate());
     }
 }
