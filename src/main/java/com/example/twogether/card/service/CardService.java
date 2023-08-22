@@ -7,12 +7,18 @@ import com.example.twogether.card.repository.CardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.card.dto.CardResponseDto;
+import com.example.twogether.card.dto.CardResponseDto;
+import com.example.twogether.common.s3.S3Uploader;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +27,9 @@ public class CardService {
     private final CardRepository cardRepository;
     private final DeckRepository deckRepository;
     private static final float CYCLE = 128f;
+
+    @Autowired
+    private S3Uploader s3Uploader;
 
     public void addCard(Long deckId, String title) {
         float max = findMaxPosition(deckId);
@@ -100,6 +109,17 @@ public class CardService {
             card.editPosition(next.getPosition() / 2f);
         } else { // 맨 마지막으로 옮길 때
             card.editPosition(prev.getPosition() + CYCLE);
+        }
+    }
+
+    @Transactional
+    public void uploadFile(Long id, MultipartFile multipartFile) throws IOException {
+        try {
+            String attachment = s3Uploader.upload(multipartFile, "Card");
+            Card card = findCardById(id);
+            card.putAttachment(attachment);
+        } catch (RejectedExecutionException e) {
+            throw new CustomException(CustomErrorCode.S3_FILE_UPLOAD_FAIL);
         }
     }
 }

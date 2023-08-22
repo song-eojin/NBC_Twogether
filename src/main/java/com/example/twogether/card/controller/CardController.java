@@ -8,6 +8,7 @@ import com.example.twogether.card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -70,5 +74,13 @@ public class CardController {
     private ResponseEntity<ApiResponseDto> moveCard(@PathVariable Long id, @RequestBody MoveCardRequestDto requestDto) {
         cardService.moveCard(id, requestDto);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 이동"));
+    }
+
+    @Operation(summary = "파일 첨부", description = "S3를 사용해 이미지 및 멀티파트 파일을 업로드한다.")
+    @PutMapping("/cards/{id}")
+    private ResponseEntity<ApiResponseDto> uploadFile(@PathVariable Long id,
+        @RequestPart MultipartFile multipartFile) throws IOException {
+        cardService.uploadFile(id, multipartFile);
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "파일 첨부"));
     }
 }

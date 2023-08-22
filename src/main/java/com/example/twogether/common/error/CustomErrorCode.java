@@ -44,7 +44,12 @@ public enum CustomErrorCode {
 
     // Label
     LABEL_ALREADY_EXISTS("L001", "이미 존재하는 라벨입니다."),
-    LABEL_NOT_FOUND("L002", "존재하지 않는 라벨입니다."),;
+    LABEL_NOT_FOUND("L002", "존재하지 않는 라벨입니다."),
+
+    // S3
+    S3_FILE_CONVERT_FAIL("S001", "멀티파트 파일 변환 실패"),
+    S3_FILE_UPLOAD_FAIL("S002", "파일 업로드 실패")
+    ;
 
     private final String errorCode;
     private final String errorMessage;

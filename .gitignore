@@ -2,6 +2,7 @@ HELP.md
 .gradle
 application-ds.properties
 application-key.properties
+application-s3.properties
 application-redis.properties
 application-smtp.properties
 build/

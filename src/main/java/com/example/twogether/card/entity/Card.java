@@ -77,4 +77,6 @@ public class Card extends Timestamped {
     }
 
     public void moveToDeck(Deck deck) {this.deck = deck;}
+
+    public void putAttachment(String attachment) {this.attachment = attachment;}
 }
