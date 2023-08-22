@@ -41,14 +41,18 @@ public enum CustomErrorCode {
     // Card
     CARD_NOT_FOUND("C001", "존재하지 않는 카드입니다."),
     CARD_IS_NOT_ARCHIVE("C002", "카드가 보관된 상태에서만 삭제 가능합니다."),
+  
+    // S3
+    S3_FILE_CONVERT_FAIL("S001", "멀티파트 파일 변환 실패"),
+    S3_FILE_UPLOAD_FAIL("S002", "파일 업로드 실패"),
 
     // Label
     LABEL_ALREADY_EXISTS("L001", "이미 존재하는 라벨입니다."),
     LABEL_NOT_FOUND("L002", "존재하지 않는 라벨입니다."),
 
-    // S3
-    S3_FILE_CONVERT_FAIL("S001", "멀티파트 파일 변환 실패"),
-    S3_FILE_UPLOAD_FAIL("S002", "파일 업로드 실패")
+    // CardLabel
+    CARD_LABEL_ALREADY_EXISTS("CL001", "이미 해당 카드에 등록된 라벨입니다."),
+    CARD_LABEL_NOT_FOUND("CL002", "해당 카드에 등록되지 않은 라벨입니다."),
     ;
 
     private final String errorCode;

@@ -3,6 +3,7 @@ package com.example.twogether.card.service;
 import com.example.twogether.card.dto.CardEditRequestDto;
 import com.example.twogether.card.dto.MoveCardRequestDto;
 import com.example.twogether.card.entity.Card;
+import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.card.repository.CardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
@@ -24,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class CardService {
 
-    private final CardRepository cardRepository;
     private final DeckRepository deckRepository;
+    private final CardRepository cardRepository;
+    private final CardLabelRepository cardLabelRepository;
+
     private static final float CYCLE = 128f;
 
     @Autowired
@@ -79,9 +82,11 @@ public class CardService {
         if (requestDto.getDescription() != null) card.editDescription(requestDto.getDescription());
     }
 
+    @Transactional
     public void deleteCard(Long id) {
         Card card = findCardById(id);
         if (card.isArchived()) {
+            cardLabelRepository.deleteAllByCard_Id(id);
             cardRepository.delete(card);
         } else {
             throw new CustomException(CustomErrorCode.CARD_IS_NOT_ARCHIVE);

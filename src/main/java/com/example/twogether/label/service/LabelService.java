@@ -1,6 +1,5 @@
 package com.example.twogether.label.service;
 
-
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.repository.BoardRepository;
 import com.example.twogether.common.error.CustomErrorCode;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LabelService {
+
     private final LabelRepository labelRepository;
     private final BoardRepository boardRepository;
 
@@ -26,6 +26,12 @@ public class LabelService {
 
         List<Label> labels = labelRepository.findAllByBoard_Id(boardId);
         return labels.stream().map(LabelResponseDto::of).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public LabelResponseDto getLabel(Long labelId) {
+        Label label = findLabel(labelId);
+        return LabelResponseDto.of(label);
     }
 
     @Transactional
@@ -44,8 +50,12 @@ public class LabelService {
         Label label = findLabel(labelId);
         findDuplicateLabel(requestDto.getTitle(), label.getBoard().getId());
 
-        if(requestDto.getTitle() != null) label.editTitle(requestDto.getTitle());
-        if(requestDto.getColor() != null) label.editColor(requestDto.getColor());
+        if (requestDto.getTitle() != null) {
+            label.editTitle(requestDto.getTitle());
+        }
+        if (requestDto.getColor() != null) {
+            label.editColor(requestDto.getColor());
+        }
 
         return LabelResponseDto.of(label);
     }
@@ -65,7 +75,9 @@ public class LabelService {
         long cnt = labelRepository.findAllByTitle(title).stream().filter(label ->
             label.getBoard().getId().equals(boardId)
         ).count();
-        if (cnt > 0) throw new CustomException(CustomErrorCode.LABEL_ALREADY_EXISTS);
+        if (cnt > 0) {
+            throw new CustomException(CustomErrorCode.LABEL_ALREADY_EXISTS);
+        }
     }
 
     private Label findLabel(Long labelId) {

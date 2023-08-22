@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,18 +27,25 @@ public class LabelController {
 
     private final LabelService labelService;
 
-    @PostMapping("/labels")
+    @PostMapping("/boards/{boardId}/labels")
     @Operation(summary = "새로운 라벨 생성")
-    public ResponseEntity<ApiResponseDto> createLabel(@RequestBody LabelRequestDto requestDto, @RequestParam("boardId") Long boardId) {
+    public ResponseEntity<ApiResponseDto> createLabel(@PathVariable Long boardId, @RequestBody LabelRequestDto requestDto) {
         labelService.createLabel(requestDto, boardId);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "라벨 생성 완료"));
     }
 
-    @GetMapping("/labels")
-    @Operation(summary = "라벨 리스트 조회")
-    public ResponseEntity<List<LabelResponseDto>> getLabels(@RequestParam Long boardId) {
+    @GetMapping("/boards/{boardId}/labels")
+    @Operation(summary = "특정 보드 내 라벨 전체 조회")
+    public ResponseEntity<List<LabelResponseDto>> getLabels(@PathVariable Long boardId) {
         List<LabelResponseDto> labelResponseDtos = labelService.getLabels(boardId);
         return ResponseEntity.ok().body(labelResponseDtos);
+    }
+
+    @GetMapping("/labels/{labelId}")
+    @Operation(summary = "특정 보드 내 라벨 전체 조회")
+    public ResponseEntity<LabelResponseDto> getLabel(@PathVariable Long labelId) {
+        LabelResponseDto labelResponseDto = labelService.getLabel(labelId);
+        return ResponseEntity.ok().body(labelResponseDto);
     }
 
     @PutMapping("/labels/{labelId}")
