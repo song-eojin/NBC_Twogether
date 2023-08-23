@@ -1,5 +1,6 @@
 package com.example.twogether.card.entity;
 
+import com.example.twogether.comment.entity.Comment;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;
 import jakarta.persistence.Column;
@@ -54,9 +55,9 @@ public class Card extends Timestamped {
     @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
 
-//    @OneToMany(mappedBy = "card")
-//    private List<Comment> commentList = new ArrayList<>();
-//
+    @OneToMany(mappedBy = "card")
+    private List<Comment> commentList = new ArrayList<>();
+
 //    @OneToMany(mappedBy = "card")
 //    private List<CheckList> checkLists = new ArrayList<>();
 
@@ -82,7 +83,11 @@ public class Card extends Timestamped {
         this.position = position;
     }
 
-    public void moveToDeck(Deck deck) {this.deck = deck;}
+    public void moveToDeck(Deck deck) {
+        this.deck = deck;
+    }
 
-    public void putAttachment(String attachment) {this.attachment = attachment;}
+    public void putAttachment(String attachment) {
+        this.attachment = attachment;
+    }
 }

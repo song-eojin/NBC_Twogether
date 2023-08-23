@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface BoardColRepository extends JpaRepository<BoardCollaborator, Long> {
 
     List<BoardCollaborator> findByBoard(Board board);
+
     boolean existsByBoardAndEmail(Board board, String email);
+
     Optional<BoardCollaborator> findByBoardAndEmail(Board board, String email);
+
+    boolean existsByEmail(String email);
 }

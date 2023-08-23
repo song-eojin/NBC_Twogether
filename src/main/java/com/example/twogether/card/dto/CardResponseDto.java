@@ -1,9 +1,11 @@
 package com.example.twogether.card.dto;
 
 import com.example.twogether.card.entity.Card;
+import com.example.twogether.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,7 @@ public class CardResponseDto {
     private LocalDateTime dueDate;
     private String attachment;
     private float position;
+    private List<CommentResponseDto> commentList;
 
     public static CardResponseDto of(Card card) {
         return CardResponseDto.builder()
@@ -30,6 +33,7 @@ public class CardResponseDto {
             .dueDate(card.getDueDate())
             .attachment(card.getAttachment())
             .position(card.getPosition())
+            .commentList(card.getCommentList().stream().map(CommentResponseDto::of).toList())
             .build();
     }
 

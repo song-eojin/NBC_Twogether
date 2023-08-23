@@ -1,6 +1,7 @@
 package com.example.twogether.user.entity;
 
 import com.example.twogether.board.entity.Board;
+import com.example.twogether.comment.entity.Comment;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.entity.WorkspaceCollaborator;
 import jakarta.persistence.Column;
@@ -68,6 +69,10 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
 
     /**
      * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.

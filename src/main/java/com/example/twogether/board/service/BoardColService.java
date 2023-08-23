@@ -35,7 +35,8 @@ public class BoardColService {
         Board foundBoard = findBoard(foundWorkspace, boardId);
 
         // 보드를 생성한 사람만 협업자 초대하기 가능
-        if (!foundBoard.getUser().getId().equals(user.getId()) || !user.getRole().equals(UserRoleEnum.ADMIN)) {
+        if (!foundBoard.getUser().getId().equals(user.getId()) &&
+            !user.getRole().equals(UserRoleEnum.ADMIN)) {
             throw new CustomException(CustomErrorCode.NOT_YOUR_BOARD);
         }
 
@@ -63,8 +64,8 @@ public class BoardColService {
         Board foundBoard = findBoard(foundWorkspace, boardId);
 
         // 보드를 생성한 사람만 협업자 추방하기 가능
-        if (!foundBoard.getUser().getId().equals(user.getId()) || !user.getRole().equals(UserRoleEnum.ADMIN)) {
-
+        if (!foundBoard.getUser().getId().equals(user.getId()) &&
+            !user.getRole().equals(UserRoleEnum.ADMIN)) {
             log.error("보드를 생성한 사람만 협업자 추방할 수 있습니다.");
             throw new CustomException(CustomErrorCode.NOT_YOUR_BOARD);
         }

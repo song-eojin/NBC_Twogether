@@ -7,6 +7,7 @@ import com.example.twogether.card.dto.MoveCardRequestDto;
 import com.example.twogether.card.entity.Card;
 import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.card.repository.CardRepository;
+import com.example.twogether.comment.repository.CommentRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.common.s3.S3Uploader;
@@ -14,9 +15,9 @@ import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +29,10 @@ public class CardService {
     private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
     private final CardLabelRepository cardLabelRepository;
+    private final CommentRepository commentRepository;
+    private final S3Uploader s3Uploader;
 
     private static final float CYCLE = 128f;
-
-    @Autowired
-    private S3Uploader s3Uploader;
 
     public void addCard(Long deckId, String title) {
         float max = findMaxPosition(deckId);
@@ -86,6 +86,7 @@ public class CardService {
     public void deleteCard(Long id) {
         Card card = findCardById(id);
         if (card.isArchived()) {
+            commentRepository.deleteAllByCard_Id(id);
             cardLabelRepository.deleteAllByCard_Id(id);
             cardRepository.delete(card);
         } else {
@@ -111,7 +112,7 @@ public class CardService {
         if (prev != null && next != null) { // 두 카드 사이로 옮길 때
             card.editPosition((prev.getPosition() + next.getPosition()) / 2f);
         } else if (prev == null) { // 맨 처음으로 옮길 때
-            card.editPosition(next.getPosition() / 2f);
+            card.editPosition(Objects.requireNonNull(next).getPosition() / 2f);
         } else { // 맨 마지막으로 옮길 때
             card.editPosition(prev.getPosition() + CYCLE);
         }
