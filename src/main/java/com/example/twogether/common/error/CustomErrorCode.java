@@ -62,11 +62,11 @@ public enum CustomErrorCode {
     NOT_YOUR_COMMENT("C002", "본인이 작성한 댓글이 아닙니다."),
     ;
 
-    private final String errorCode;
+    private final String code;
     private final String errorMessage;
 
-    CustomErrorCode(String errorCode, String errorMessage) {
-        this.errorCode = errorCode;
+    CustomErrorCode(String code, String errorMessage) {
+        this.code = code;
         this.errorMessage = errorMessage;
     }
 }
