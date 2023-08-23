@@ -1,5 +1,6 @@
 package com.example.twogether.card.entity;
 
+import com.example.twogether.checklist.entity.CheckList;
 import com.example.twogether.comment.entity.Comment;
 import com.example.twogether.common.entity.Timestamped;
 import com.example.twogether.deck.entity.Deck;
@@ -56,10 +57,10 @@ public class Card extends Timestamped {
     private Deck deck;
 
     @OneToMany(mappedBy = "card")
-    private List<Comment> commentList = new ArrayList<>();
+    private List<CheckList> checkLists = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "card")
-//    private List<CheckList> checkLists = new ArrayList<>();
+    @OneToMany(mappedBy = "card")
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "card")
