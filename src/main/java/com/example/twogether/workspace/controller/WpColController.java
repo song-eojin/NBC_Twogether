@@ -3,6 +3,8 @@ package com.example.twogether.workspace.controller;
 import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.common.security.UserDetailsImpl;
 import com.example.twogether.workspace.dto.WpColRequestDto;
+import com.example.twogether.workspace.dto.WpResponseDto;
+import com.example.twogether.workspace.dto.WpsResponseDto;
 import com.example.twogether.workspace.service.WpColService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,19 +52,24 @@ public class WpColController {
             "워크스페이스에서 협업자를 추방하였습니다."));
     }
 
-    /*
-    작성 예정
+    @Operation(summary = "초대된 워크스페이스 단건 조회")
+    @GetMapping("/workspaces/{wpId}/invite")
+    public ResponseEntity<WpResponseDto> getInvitedWp(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long wpId
+    ) {
+
+        WpResponseDto invitedWp = wpColService.getWpCol(userDetails.getUser(), wpId);
+        return ResponseEntity.status(HttpStatus.OK).body(invitedWp);
+    }
 
     @Operation(summary = "초대된 워크스페이스 전체 조회")
     @GetMapping("/workspaces/invite")
     public ResponseEntity<WpsResponseDto> getInvitedWps(
-        @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @RequestBody WpColRequestDto wpColRequestDto
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
 
-        WpsResponseDto wpCols = wpColService.getWpCols(userDetails.getUser(), wpColRequestDto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(wpCols);
+        WpsResponseDto invitedWps = wpColService.getWpCols(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(invitedWps);
     }
-     */
 }

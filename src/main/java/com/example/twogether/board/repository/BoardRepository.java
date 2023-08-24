@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<List<Board>> findAllByWorkspace(Workspace workspace);
-
     Optional<Board> findByWorkspaceAndId(Workspace workspace, Long boardId);
-
     Optional<Board> findByWorkspace_IdAndId(Long workspaceId, Long boardId);
+    Optional<Board> findByWorkspace_IdAndIdAndAndBoardCollaborators_Email(Long id, Long boardId, String email);
+    List<Board> findAllBoardsByWorkspace_IdAndBoardCollaborators_Email(Long wpId, String email);
 }

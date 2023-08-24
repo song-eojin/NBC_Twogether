@@ -1,17 +1,23 @@
 package com.example.twogether.board.controller;
 
 import com.example.twogether.board.dto.BoardColRequestDto;
+import com.example.twogether.board.dto.BoardResponseDto;
+import com.example.twogether.board.dto.BoardsResponseDto;
 import com.example.twogether.board.service.BoardColService;
 import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.common.security.UserDetailsImpl;
+import com.example.twogether.workspace.dto.WpResponseDto;
+import com.example.twogether.workspace.dto.WpsResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +55,29 @@ public class BoardColController {
         @RequestBody BoardColRequestDto boardColRequestDto
     ) {
         boardColService.outBoardCol(userDetails.getUser(), wpId, boardId, boardColRequestDto.getEmail());
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "보드에서 협업자를 추방하였습니다."));
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "보드에서 협업자를 추방하였습니다."));
+    }
+
+    @Operation(summary = "초대된 보드 단건 조회")
+    @GetMapping("/workspaces/{wpId}/boards/{boardId}/invite")
+    public ResponseEntity<BoardResponseDto> getInvitedBoard(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long wpId,
+        @PathVariable Long boardId
+    ) {
+
+        BoardResponseDto invitedBoard = boardColService.getBoardCol(userDetails.getUser(), wpId, boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(invitedBoard);
+    }
+
+    @Operation(summary = "초대된 보드 전체 조회")
+    @GetMapping("/workspaces/{wpId}/boards/invite")
+    public ResponseEntity<BoardsResponseDto> getInvitedBoards(
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @PathVariable Long wpId
+    ) {
+
+        BoardsResponseDto invitedBoards = boardColService.getBoardCols(userDetails.getUser(), wpId);
+        return ResponseEntity.status(HttpStatus.OK).body(invitedBoards);
     }
 }

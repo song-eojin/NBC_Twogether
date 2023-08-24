@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "workspace")
 public class Workspace extends Timestamped {
 
     @Id

@@ -24,28 +24,28 @@ public class WpService {
     private final WpRepository wpRepository;
 
     @Transactional
-    public WpResponseDto createWorkspace(User wpAuthor, WpRequestDto wpRequestDto){
+    public WpResponseDto createWorkspace(User user, WpRequestDto wpRequestDto){
 
-        Workspace foundWp = wpRequestDto.toEntity(wpAuthor);
+        Workspace foundWp = wpRequestDto.toEntity(user);
         wpRepository.save(foundWp);
         return WpResponseDto.of(foundWp);
     }
 
     @Transactional
-    public WpResponseDto editWorkspace(User wpAuthor, Long id, WpRequestDto wpRequestDto) {
+    public WpResponseDto editWorkspace(User user, Long id, WpRequestDto wpRequestDto) {
 
         Workspace workspace = findWorkspace(id);
-        if(workspace.getUser().getId().equals(wpAuthor.getId())||wpAuthor.getRole().equals(UserRoleEnum.ADMIN)) {
+        if(workspace.getUser().getId().equals(user.getId())||user.getRole().equals(UserRoleEnum.ADMIN)) {
             workspace.update(wpRequestDto);
             return WpResponseDto.of(workspace);
         } else throw new CustomException(CustomErrorCode.NOT_YOUR_WORKSPACE);
     }
 
     @Transactional
-    public void deleteWorkspace(User wpAuthor, Long id) {
+    public void deleteWorkspace(User user, Long id) {
 
         Workspace workspace = findWorkspace(id);
-        if(workspace.getUser().getId().equals(wpAuthor.getId())||wpAuthor.getRole().equals(UserRoleEnum.ADMIN)) {
+        if(workspace.getUser().getId().equals(user.getId())||user.getRole().equals(UserRoleEnum.ADMIN)) {
 
             wpRepository.delete(workspace);
             /* 워크스페이스, 보드, 카드, 멤버 등 삭제 */
@@ -54,16 +54,16 @@ public class WpService {
     }
 
     @Transactional(readOnly = true)
-    public WpResponseDto getWorkspace(User wpAuthor, Long Id) {
+    public WpResponseDto getWorkspace(Long Id) {
 
         Workspace workspace = findWorkspace(Id);
         return WpResponseDto.of(workspace);
     }
 
     @Transactional(readOnly = true)
-    public WpsResponseDto getWorkspaces(User wpAuthor) {
+    public WpsResponseDto getWorkspaces(User user) {
 
-        List<Workspace> workspaces = wpRepository.findAllByUserOrderByCreatedAtDesc(wpAuthor);
+        List<Workspace> workspaces = wpRepository.findAllByUserOrderByCreatedAtDesc(user);
         return WpsResponseDto.of(workspaces);
     }
 

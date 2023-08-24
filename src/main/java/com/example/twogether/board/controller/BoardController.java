@@ -48,7 +48,6 @@ public class BoardController {
     @Operation(summary = "칸반 보드 수정")
     @PatchMapping("/workspaces/{wpId}/boards/{boardId}")
     public ResponseEntity<ApiResponseDto> editBoard(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, // 이럴 때 고민..
         @PathVariable Long wpId,
         @PathVariable Long boardId,
         @RequestBody BoardRequestDto boardRequestDto
@@ -78,7 +77,6 @@ public class BoardController {
     @Operation(summary = "칸반 보드 단건 조회")
     @GetMapping("/workspaces/{wpId}/boards/{boardId}")
     public ResponseEntity<BoardResponseDto> getBoard(
-        @AuthenticationPrincipal UserDetailsImpl userDetails, // 이럴 때 고민
         @PathVariable Long wpId,
         @PathVariable Long boardId
     ) {

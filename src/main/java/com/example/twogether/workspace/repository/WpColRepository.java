@@ -11,4 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WpColRepository extends JpaRepository<WorkspaceCollaborator, Long> {
     boolean existsByWorkspaceAndEmail(Workspace workspace, String email);
     Optional<WorkspaceCollaborator> findByWorkspaceAndEmail(Workspace workspace, String email);
+
+    List<WorkspaceCollaborator> findByUser(User user);
 }

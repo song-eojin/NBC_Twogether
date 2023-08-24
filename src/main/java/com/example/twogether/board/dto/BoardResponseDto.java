@@ -2,6 +2,7 @@ package com.example.twogether.board.dto;
 
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.deck.dto.DeckResponseDto;
+import com.example.twogether.user.entity.User;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,16 +11,19 @@ import lombok.Getter;
 @Builder
 public class BoardResponseDto {
     private Long boardId;
+    private String email;
     private String nickname;
     private String title;
     private String color;
     private String info;
+
     private List<BoardColResponseDto> boardCollaborators;
     private List<DeckResponseDto> decks;
 
     public static BoardResponseDto of(Board board) {
         return BoardResponseDto.builder()
             .boardId(board.getId())
+            .email(board.getUser().getEmail())
             .nickname(board.getUser().getNickname())
             .title(board.getTitle())
             .color(board.getColor())
