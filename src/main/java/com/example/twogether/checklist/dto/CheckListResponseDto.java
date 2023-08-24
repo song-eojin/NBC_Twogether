@@ -1,6 +1,7 @@
 package com.example.twogether.checklist.dto;
 
 import com.example.twogether.checklist.entity.CheckList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +16,13 @@ public class CheckListResponseDto {
 
     private Long clId;
     private String title;
+    private List<ChlItemResponseDto> chlItems;
 
     public static CheckListResponseDto of(CheckList checkList) {
         return CheckListResponseDto.builder()
             .clId(checkList.getId())
             .title(checkList.getTitle())
-            //.check
+            .chlItems(checkList.getCheckListItemList().stream().map(ChlItemResponseDto::of).toList())
             .build();
     }
 }
