@@ -56,7 +56,7 @@ public enum CustomErrorCode {
 
     // CheckList
     CHECKLIST_NOT_FOUND("CHL001", "등록되지 않은 체크리스트입니다."),
-    
+  
     // CheckListItem
     CHECKLIST_ITEM_NOT_FOUND("CHLI001", "등록되지 않은 체크리스트 아이템입니다."),
 

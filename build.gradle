@@ -22,6 +22,12 @@ repositories {
 }
 
 dependencies {
+    // h2
+    testImplementation 'com.h2database:h2'
+
+    // JSON parser
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
     // AWS
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 

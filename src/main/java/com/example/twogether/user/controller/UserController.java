@@ -45,6 +45,12 @@ public class UserController {
         return null;
     }
 
+    @Operation(summary = "사용자 본인 정보 조회")
+    @GetMapping("/info")
+    public ResponseEntity<UserResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.ok().body(UserResponseDto.of(userDetails.getUser()));
+    }
+
     @Operation(summary = "사용자 정보 수정")
     @PatchMapping("/info")
     public ResponseEntity<ApiResponseDto> editUserInfo(
