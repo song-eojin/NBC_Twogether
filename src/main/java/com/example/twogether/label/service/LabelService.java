@@ -2,6 +2,7 @@ package com.example.twogether.label.service;
 
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.label.dto.LabelRequestDto;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LabelService {
 
     private final LabelRepository labelRepository;
+    private final CardLabelRepository cardLabelRepository;
     private final BoardRepository boardRepository;
 
     @Transactional(readOnly = true)
@@ -63,6 +65,7 @@ public class LabelService {
     @Transactional
     public void deleteLabel(Long labelId) {
         Label label = findLabel(labelId);
+        cardLabelRepository.deleteAllByLabel_Id(labelId);
         labelRepository.delete(label);
     }
 

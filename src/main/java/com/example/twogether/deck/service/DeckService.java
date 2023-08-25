@@ -2,6 +2,11 @@ package com.example.twogether.deck.service;
 
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.card.repository.CardLabelRepository;
+import com.example.twogether.card.repository.CardRepository;
+import com.example.twogether.checklist.repository.CheckListRepository;
+import com.example.twogether.checklist.repository.ChlItemRepository;
+import com.example.twogether.comment.repository.CommentRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.deck.dto.DeckResponseDto;
@@ -19,8 +24,14 @@ public class DeckService {
 
     private final BoardRepository boardRepository;
     private final DeckRepository deckRepository;
+    private final CardLabelRepository cardLabelRepository;
+    private final CommentRepository commentRepository;
+    private final CheckListRepository checkListRepository;
+    private final ChlItemRepository chlItemRepository;
+    private final CardRepository cardRepository;
     private static final float CYCLE = 128f;
 
+    @Transactional
     public void addDeck(Long boardId, String title) {
         float max = findMaxPosition(boardId);
         Board board = findBoardById(boardId);
@@ -46,9 +57,21 @@ public class DeckService {
         deck.editTitle(title);
     }
 
+    @Transactional
     public void deleteDeck(Long id) {
         Deck deck = findDeckById(id);
         if (deck.isArchived()) {
+            cardRepository.findAllByDeck_Id(id).forEach(
+                card -> {
+                    commentRepository.deleteAllByCard_Id(card.getId());
+                    cardLabelRepository.deleteAllByCard_Id(card.getId());
+                    checkListRepository.findAllByCardId(card.getId()).forEach(
+                        checkList -> chlItemRepository.deleteAllByCheckList_Id(checkList.getId())
+                    );
+                    checkListRepository.deleteAllByCard_Id(card.getId());
+                    cardRepository.delete(card);
+                }
+            );
             deckRepository.delete(deck);
         } else {
             throw new CustomException(CustomErrorCode.DECK_IS_NOT_ARCHIVE);

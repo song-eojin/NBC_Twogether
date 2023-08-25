@@ -52,11 +52,11 @@ public class Board extends Timestamped {
     private User user;
 
     @Builder.Default
-    @OneToMany(mappedBy = "board", orphanRemoval = true)
+    @OneToMany(mappedBy = "board")
     private List<BoardCollaborator> boardCollaborators = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Deck> decks = new ArrayList<>();
 
     public void editTitle(BoardRequestDto boardRequestDto) {

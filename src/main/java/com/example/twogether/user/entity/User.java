@@ -65,9 +65,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
 
-    // orphanRemoval 은 테스트 코드 작성 전 수정 예정입니다.
     @Builder.Default
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Board> boards = new ArrayList<>();
 
     @Builder.Default

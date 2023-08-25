@@ -6,8 +6,14 @@ import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.entity.BoardCollaborator;
 import com.example.twogether.board.repository.BoardColRepository;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.card.repository.CardLabelRepository;
+import com.example.twogether.card.repository.CardRepository;
+import com.example.twogether.checklist.repository.CheckListRepository;
+import com.example.twogether.checklist.repository.ChlItemRepository;
+import com.example.twogether.comment.repository.CommentRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
+import com.example.twogether.deck.repository.DeckRepository;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.entity.WorkspaceCollaborator;
@@ -24,6 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final DeckRepository deckRepository;
+    private final CardLabelRepository cardLabelRepository;
+    private final CommentRepository commentRepository;
+    private final CheckListRepository checkListRepository;
+    private final ChlItemRepository chlItemRepository;
+    private final CardRepository cardRepository;
     private final BoardColRepository boardColRepository;
     private final WpRepository wpRepository;
 
@@ -77,6 +89,23 @@ public class BoardService {
             throw new CustomException(CustomErrorCode.NOT_YOUR_BOARD);
         }
 
+        deckRepository.findAllByBoard_Id(boardId).forEach(
+            deck -> {
+                cardRepository.findAllByDeck_Id(deck.getId()).forEach(
+                    card -> {
+                        commentRepository.deleteAllByCard_Id(card.getId());
+                        cardLabelRepository.deleteAllByCard_Id(card.getId());
+                        checkListRepository.findAllByCardId(card.getId()).forEach(
+                            checkList -> chlItemRepository.deleteAllByCheckList_Id(checkList.getId())
+                        );
+                        checkListRepository.deleteAllByCard_Id(card.getId());
+                        cardRepository.delete(card);
+                    }
+                );
+                deckRepository.delete(deck);
+            }
+        );
+        boardColRepository.deleteAllByBoard_Id(boardId);
         boardRepository.delete(foundBoard);
     }
 

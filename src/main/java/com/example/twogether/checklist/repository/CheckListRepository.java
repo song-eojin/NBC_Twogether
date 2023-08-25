@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CheckListRepository extends JpaRepository<CheckList, Long> {
 
     List<CheckList> findAllByCardId(Long cardId);
+
+    void deleteAllByCard_Id(Long id);
 }

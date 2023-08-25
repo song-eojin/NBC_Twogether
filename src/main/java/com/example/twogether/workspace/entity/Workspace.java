@@ -43,11 +43,11 @@ public class Workspace extends Timestamped {
     private User user;
 
     @Builder.Default
-    @OneToMany(mappedBy = "workspace", orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace")
     private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "workspace", orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace")
     private List<Board> boards = new ArrayList<>();
 
     public void update(WpRequestDto wpRequestDto) {

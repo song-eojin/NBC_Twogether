@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChlItemRepository extends JpaRepository<CheckListItem, Long> {
 
+    void deleteAllByCheckList_Id(Long chlId);
 }

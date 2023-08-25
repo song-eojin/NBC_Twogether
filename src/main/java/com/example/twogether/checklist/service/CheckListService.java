@@ -6,6 +6,7 @@ import com.example.twogether.checklist.dto.CheckListRequestDto;
 import com.example.twogether.checklist.dto.CheckListResponseDto;
 import com.example.twogether.checklist.entity.CheckList;
 import com.example.twogether.checklist.repository.CheckListRepository;
+import com.example.twogether.checklist.repository.ChlItemRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import java.util.List;
@@ -19,6 +20,7 @@ public class CheckListService {
 
     private final CheckListRepository chlRepository;
     private final CardRepository cardRepository;
+    private final ChlItemRepository chlItemRepository;
 
     @Transactional
     public CheckListResponseDto createCheckList(Long cardId, CheckListRequestDto chlRequestDto) {
@@ -38,6 +40,7 @@ public class CheckListService {
     @Transactional
     public void deleteCheckList(Long chlId) {
         CheckList checkList = findCheckListById(chlId);
+        chlItemRepository.deleteAllByCheckList_Id(chlId);
         chlRepository.delete(checkList);
     }
 

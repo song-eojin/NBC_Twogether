@@ -7,6 +7,8 @@ import com.example.twogether.card.dto.MoveCardRequestDto;
 import com.example.twogether.card.entity.Card;
 import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.card.repository.CardRepository;
+import com.example.twogether.checklist.repository.CheckListRepository;
+import com.example.twogether.checklist.repository.ChlItemRepository;
 import com.example.twogether.comment.repository.CommentRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
@@ -30,10 +32,13 @@ public class CardService {
     private final CardRepository cardRepository;
     private final CardLabelRepository cardLabelRepository;
     private final CommentRepository commentRepository;
+    private final CheckListRepository checkListRepository;
+    private final ChlItemRepository chlItemRepository;
     private final S3Uploader s3Uploader;
 
     private static final float CYCLE = 128f;
 
+    @Transactional
     public void addCard(Long deckId, String title) {
         float max = findMaxPosition(deckId);
         Deck deck = findDeckById(deckId);
@@ -88,6 +93,10 @@ public class CardService {
         if (card.isArchived()) {
             commentRepository.deleteAllByCard_Id(id);
             cardLabelRepository.deleteAllByCard_Id(id);
+            checkListRepository.findAllByCardId(id).forEach(
+                checkList -> chlItemRepository.deleteAllByCheckList_Id(checkList.getId())
+            );
+            checkListRepository.deleteAllByCard_Id(id);
             cardRepository.delete(card);
         } else {
             throw new CustomException(CustomErrorCode.CARD_IS_NOT_ARCHIVE);
