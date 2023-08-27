@@ -74,7 +74,7 @@ public class BoardController {
     }
 
     // 보드 단건 조회
-    @Operation(summary = "칸반 보드 단건 조회")
+    @Operation(summary = "칸반 보드 단일 조회")
     @GetMapping("/workspaces/{wpId}/boards/{boardId}")
     public ResponseEntity<BoardResponseDto> getBoard(
         @PathVariable Long wpId,

@@ -9,11 +9,11 @@ import lombok.Getter;
 @Getter
 public class DeckResponseDto {
     private String title;
-    private List<CardResponseDto> cardList;
+    private List<CardResponseDto> cards;
 
     public DeckResponseDto(Deck deck) {
         this.title = deck.getTitle();
-        this.cardList = deck.getCardList().stream().map(CardResponseDto::of)
+        this.cards = deck.getCards().stream().map(CardResponseDto::of)
             .sorted(Comparator.comparing(CardResponseDto::getPosition)) // 출력할 때 정렬
             .toList();
     }

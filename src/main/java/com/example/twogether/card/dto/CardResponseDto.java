@@ -1,6 +1,7 @@
 package com.example.twogether.card.dto;
 
 import com.example.twogether.card.entity.Card;
+import com.example.twogether.card.entity.CardCollaborator;
 import com.example.twogether.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -23,7 +24,8 @@ public class CardResponseDto {
     private LocalDateTime dueDate;
     private String attachment;
     private float position;
-    private List<CommentResponseDto> commentList;
+    private List<CommentResponseDto> comments;
+    private List<CardColResponseDto> cardCollaborators;
 
     public static CardResponseDto of(Card card) {
         return CardResponseDto.builder()
@@ -33,7 +35,9 @@ public class CardResponseDto {
             .dueDate(card.getDueDate())
             .attachment(card.getAttachment())
             .position(card.getPosition())
-            .commentList(card.getCommentList().stream().map(CommentResponseDto::of).toList())
+            .comments(card.getComments().stream().map(CommentResponseDto::of).toList())
+            .cardCollaborators(card.getCardCollaborators().stream().map(
+                CardColResponseDto::of).toList())
             .build();
     }
 

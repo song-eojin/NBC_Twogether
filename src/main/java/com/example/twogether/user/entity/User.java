@@ -1,6 +1,8 @@
 package com.example.twogether.user.entity;
 
 import com.example.twogether.board.entity.Board;
+import com.example.twogether.board.entity.BoardCollaborator;
+import com.example.twogether.card.entity.CardCollaborator;
 import com.example.twogether.comment.entity.Comment;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.entity.WorkspaceCollaborator;
@@ -70,6 +72,14 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Board> boards = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<BoardCollaborator> boardCollaborators = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<CardCollaborator> cardCollaborators = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user")

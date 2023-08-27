@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WpColService {
@@ -118,21 +117,6 @@ public class WpColService {
         return WpsResponseDto.of(foundWorkspaces);
     }
 
-    private void checkWorkspacePermissions(Workspace workspace, User user, String email) {
-        if (!workspace.getUser().getId().equals(user.getId()) &&
-            !user.getRole().equals(UserRoleEnum.ADMIN)) {
-            
-            log.error("워크스페이스를 생성한 사람만 협업자 초대/추방할 수 있습니다.");
-            throw new CustomException(CustomErrorCode.NOT_YOUR_WORKSPACE);
-        }
-
-        if (email.equals(user.getEmail())) { // 추후 프론트에서 예외처리되면 삭제될 예정
-            
-            log.error("워크스페이스의 오너는 초대/추방할 수 없습니다.");
-            throw new CustomException(CustomErrorCode.THIS_IS_YOUR_WORKSPACE);
-        }
-    }
-
     private Workspace findWpById(Long wpId) {
 
         return wpRepository.findById(wpId).orElseThrow(() ->
@@ -171,5 +155,18 @@ public class WpColService {
         return boardColRepository.findByBoardAndEmail(foundBoard, foundUser.getEmail())
             .orElseThrow(() ->
                 new CustomException(CustomErrorCode.BOARD_COLLABORATOR_NOT_FOUND));
+    }
+
+    private void checkWorkspacePermissions(Workspace workspace, User user, String email) {
+        if (!workspace.getUser().getId().equals(user.getId()) &&
+            !user.getRole().equals(UserRoleEnum.ADMIN)) {
+
+            throw new CustomException(CustomErrorCode.NOT_YOUR_WORKSPACE);
+        }
+
+        if (email.equals(user.getEmail())) { // 추후 프론트에서 예외처리되면 삭제될 예정
+
+            throw new CustomException(CustomErrorCode.THIS_IS_YOUR_WORKSPACE);
+        }
     }
 }

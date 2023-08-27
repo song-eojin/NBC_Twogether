@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WpResponseDto {
+
     private Long workspaceId;
     private String email;
     private String nickname;

@@ -1,6 +1,5 @@
 package com.example.twogether.card.controller;
 
-
 import com.example.twogether.card.dto.CardEditRequestDto;
 import com.example.twogether.card.dto.CardResponseDto;
 import com.example.twogether.card.dto.DateRequestDto;
@@ -41,28 +40,28 @@ public class CardController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 생성"));
     }
 
-    @Operation(summary = "덱 단일 조회")
+    @Operation(summary = "카드 단일 조회")
     @GetMapping("/cards/{id}")
     private ResponseEntity<CardResponseDto> getCard(@PathVariable Long id) {
         CardResponseDto responseDto = cardService.getCard(id);
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @Operation(summary = "덱 수정", description = "requestDto에 title 혹은 description이 null이라면 수정하지 않고 내버려두도록 설정")
+    @Operation(summary = "카드 수정", description = "requestDto에 title 혹은 description이 null이라면 수정하지 않고 내버려두도록 설정")
     @PatchMapping("/cards/{id}")
     private ResponseEntity<ApiResponseDto> editCard(@PathVariable Long id, @RequestBody CardEditRequestDto requestDto) {
         cardService.editCard(id, requestDto);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 수정"));
     }
 
-    @Operation(summary = "덱 삭제", description = "덱이 보관 상태라면 삭제되지 않도록 설정")
+    @Operation(summary = "카드 삭제", description = "카드가 보관 상태라면 삭제되지 않도록 설정")
     @DeleteMapping("/cards/{id}")
     private ResponseEntity<ApiResponseDto> deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 삭제"));
     }
 
-    @Operation(summary = "덱 보관/복구", description = "덱을 삭제하기 전 보관상태로 만들고, 복구하는 기능")
+    @Operation(summary = "카드 보관/복구", description = "카드를 삭제하기 전 보관상태로 만들고, 복구하는 기능")
     @PatchMapping("/cards/{id}/archive")
     private ResponseEntity<ApiResponseDto> archiveCard(@PathVariable Long id) {
         cardService.archiveCard(id);
@@ -85,7 +84,7 @@ public class CardController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "파일 첨부"));
     }
 
-    @Operation(summary = "마감일 수정")
+    @Operation(summary = "협업 마감일 수정")
     @PatchMapping("/cards/{id}/date")
     private ResponseEntity<ApiResponseDto> editDate(@PathVariable Long id, @RequestBody DateRequestDto requestDto) {
         cardService.editDate(id, requestDto);

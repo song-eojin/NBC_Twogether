@@ -43,7 +43,7 @@ public class DeckController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @Operation(summary = "덱 title 수정")
+    @Operation(summary = "덱 제목 수정")
     @PutMapping("/decks/{id}")
     private ResponseEntity<ApiResponseDto> editDeck(@PathVariable Long id, @RequestBody String title) {
         deckService.editDeck(id, title);

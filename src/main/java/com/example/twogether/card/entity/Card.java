@@ -60,11 +60,15 @@ public class Card extends Timestamped {
     private List<CheckList> checkLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "card")
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "card")
-    private List<CardLabel> cardLabelList = new ArrayList<>();
+    private List<CardLabel> cardLabels = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "card")
+    private List<CardCollaborator> cardCollaborators = new ArrayList<>();
 
     public void editTitle(String title) {
         this.title = title;

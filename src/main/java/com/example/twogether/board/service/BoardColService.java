@@ -7,6 +7,9 @@ import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.entity.BoardCollaborator;
 import com.example.twogether.board.repository.BoardColRepository;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.card.entity.Card;
+import com.example.twogether.card.entity.CardCollaborator;
+import com.example.twogether.card.repository.CardColRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.user.entity.User;
@@ -29,6 +32,7 @@ public class BoardColService {
 
     private final BoardColRepository boardColRepository;
     private final BoardRepository boardRepository;
+    private final CardColRepository cardColRepository;
     private final UserRepository userRepository;
     private final WpRepository wpRepository;
 
@@ -58,11 +62,12 @@ public class BoardColService {
         Board invitingBoard = findBoard(wpId, boardId);
         checkBoardPermissions(invitingBoard, user, email);
 
-        // 보드 협업자 삭제
+        // 보드 협업자 삭제 (자동으로 카드에 할당된 협업자 목록에서도 삭제)
         BoardCollaborator foundBoardCol = findBoardColByEmail(invitingBoard, email);
+        CardCollaborator foundCardCol = findCardColByEmail(email);
         boardColRepository.delete(foundBoardCol);
+        cardColRepository.delete(foundCardCol);
     }
-
 
     // 초대된 보드 단건 조회
     @Transactional(readOnly = true)
@@ -80,21 +85,6 @@ public class BoardColService {
         return BoardsResponseDto.of(foundBoards);
     }
 
-    private void checkBoardPermissions(Board invitingBoard, User user, String email) {
-
-        if (!invitingBoard.getUser().getId().equals(user.getId()) &&
-            !user.getRole().equals(UserRoleEnum.ADMIN)) {
-
-            log.error("보드를 생성한 사람만 협업자 초대/추방할 수 있습니다.");
-            throw new CustomException(CustomErrorCode.NOT_YOUR_BOARD);
-        }
-
-        if (email.equals(user.getEmail())) { // 추후 프론트에서 예외처리되면 삭제될 예정
-            log.error("보드의 오너는 초대/추방할 수 없습니다.");
-            throw new CustomException(CustomErrorCode.THIS_IS_YOUR_BOARD);
-        }
-    }
-
     private Board findBoard(Long wpId, Long boardId) {
 
         Workspace foundWorkspace = wpRepository.findById(wpId).orElseThrow(() ->
@@ -108,6 +98,12 @@ public class BoardColService {
 
         return boardColRepository.findByBoardAndEmail(board, email).orElseThrow(() ->
             new CustomException(CustomErrorCode.BOARD_COLLABORATOR_NOT_FOUND));
+    }
+
+    private CardCollaborator findCardColByEmail(String email) {
+
+        return cardColRepository.findByEmail(email).orElseThrow(() ->
+            new CustomException(CustomErrorCode.CARD_COLLABORATOR_NOT_FOUND));
     }
 
     private List<Board> findAllInvitedBoards(Long wpId, String email) {
@@ -125,5 +121,18 @@ public class BoardColService {
 
         return userRepository.findByEmail(email).orElseThrow(() ->
             new CustomException(CustomErrorCode.USER_NOT_FOUND));
+    }
+
+    private void checkBoardPermissions(Board invitingBoard, User user, String email) {
+
+        if (!invitingBoard.getUser().getId().equals(user.getId()) &&
+            !user.getRole().equals(UserRoleEnum.ADMIN)) {
+
+            throw new CustomException(CustomErrorCode.NOT_YOUR_BOARD);
+        }
+
+        if (email.equals(user.getEmail())) { // 추후 프론트에서 예외처리되면 삭제될 예정
+            throw new CustomException(CustomErrorCode.THIS_IS_YOUR_BOARD);
+        }
     }
 }

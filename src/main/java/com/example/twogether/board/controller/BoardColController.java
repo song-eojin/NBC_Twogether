@@ -42,8 +42,7 @@ public class BoardColController {
     ) {
         boardColService.inviteBoardCol(userDetails.getUser(), wpId, boardId, boardColRequestDto.getEmail());
 
-        return ResponseEntity.ok()
-            .body(new ApiResponseDto(HttpStatus.OK.value(), "보드에 협업자가 등록되었습니다."));
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "보드에 협업자가 등록되었습니다."));
     }
 
     @Operation(summary = "칸반 보드에서 협업자 추방")
@@ -58,7 +57,7 @@ public class BoardColController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "보드에서 협업자를 추방하였습니다."));
     }
 
-    @Operation(summary = "초대된 보드 단건 조회")
+    @Operation(summary = "초대된 보드 단일 조회")
     @GetMapping("/workspaces/{wpId}/boards/{boardId}/invite")
     public ResponseEntity<BoardResponseDto> getInvitedBoard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -67,7 +66,7 @@ public class BoardColController {
     ) {
 
         BoardResponseDto invitedBoard = boardColService.getBoardCol(userDetails.getUser(), wpId, boardId);
-        return ResponseEntity.status(HttpStatus.OK).body(invitedBoard);
+        return ResponseEntity.ok().body(invitedBoard);
     }
 
     @Operation(summary = "초대된 보드 전체 조회")
@@ -78,6 +77,6 @@ public class BoardColController {
     ) {
 
         BoardsResponseDto invitedBoards = boardColService.getBoardCols(userDetails.getUser(), wpId);
-        return ResponseEntity.status(HttpStatus.OK).body(invitedBoards);
+        return ResponseEntity.ok().body(invitedBoards);
     }
 }

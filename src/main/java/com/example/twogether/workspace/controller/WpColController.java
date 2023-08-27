@@ -52,7 +52,7 @@ public class WpColController {
             "워크스페이스에서 협업자를 추방하였습니다."));
     }
 
-    @Operation(summary = "초대된 워크스페이스 단건 조회")
+    @Operation(summary = "초대된 워크스페이스 단일 조회")
     @GetMapping("/workspaces/{wpId}/invite")
     public ResponseEntity<WpResponseDto> getInvitedWp(
         @AuthenticationPrincipal UserDetailsImpl userDetails,

@@ -47,7 +47,7 @@ public class Deck extends Timestamped {
 
     @Builder.Default
     @OneToMany(mappedBy = "deck")
-    private List<Card> cardList = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
     public void editTitle(String title) {
         this.title = title;
@@ -59,9 +59,5 @@ public class Deck extends Timestamped {
 
     public void editPosition(float position) {
         this.position = position;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
     }
 }
