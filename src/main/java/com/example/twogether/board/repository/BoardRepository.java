@@ -14,6 +14,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByWorkspace_IdAndId(Long workspaceId, Long boardId);
     List<Board> findAllByWorkspace_Id(Long id);
     Optional<Board> findByWorkspace_IdAndIdAndAndBoardCollaborators_Email(Long id, Long boardId, String email);
-    List<Board> findAllBoardsByWorkspace_IdAndBoardCollaborators_Email(Long wpId, String email);
+    Optional<List<Board>> findAllBoardsByWorkspace_IdAndBoardCollaborators_Email(Long wpId, String email);
     boolean existsByUser(User user);
 }

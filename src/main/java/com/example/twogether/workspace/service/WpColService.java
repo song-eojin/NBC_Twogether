@@ -16,11 +16,10 @@ import com.example.twogether.workspace.dto.WpsResponseDto;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.entity.WorkspaceCollaborator;
 import com.example.twogether.workspace.repository.WpColRepository;
-import com.example.twogether.workspace.repository.WpColWpRepository;
 import com.example.twogether.workspace.repository.WpRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class WpColService {
     @Transactional
     public void inviteWpCol(User user, Long wpId, String email) {
 
-        Workspace foundWorkspace = findWpById(wpId); 
+        Workspace foundWorkspace = findWpById(wpId);
         checkWorkspacePermissions(foundWorkspace, user, email);
 
         // 이미 등록된 사용자 초대당하기 불가
@@ -112,9 +111,14 @@ public class WpColService {
     // 초대된 워크스페이스 전체 조회
     @Transactional(readOnly = true)
     public WpsResponseDto getWpCols(User user) {
+        List<Workspace> AllWorkspaces = findAllWpsByEmail(user.getEmail());
+        List<Workspace> invitedWorkspaces = new ArrayList<>();
 
-        List<Workspace> foundWorkspaces = findAllWpsByEmail(user.getEmail());
-        return WpsResponseDto.of(foundWorkspaces);
+        // 보드의 협업자 목록에 현재 사용자의 이메일이 포함되어 있다면 보드를 추가
+        for (Workspace workspace : AllWorkspaces) {
+            invitedWorkspaces.add(workspace.editAllWpAndBoards(user.getEmail()));
+        }
+        return WpsResponseDto.of(invitedWorkspaces);
     }
 
     private Workspace findWpById(Long wpId) {

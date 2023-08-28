@@ -54,7 +54,7 @@ public class WpService {
 
         Workspace workspace = findWorkspace(id);
         if(workspace.getUser().getId().equals(user.getId())||user.getRole().equals(UserRoleEnum.ADMIN)) {
-            workspace.update(wpRequestDto);
+            workspace.editPartOfWp(wpRequestDto);
             return WpResponseDto.of(workspace);
         } else throw new CustomException(CustomErrorCode.NOT_YOUR_WORKSPACE);
     }
