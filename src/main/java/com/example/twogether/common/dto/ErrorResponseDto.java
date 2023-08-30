@@ -7,12 +7,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 
 @Getter
 @Builder
 @RequiredArgsConstructor
 public class ErrorResponseDto {
+
     private final int status;
     private final String code;
     private final String message;
@@ -30,6 +30,17 @@ public class ErrorResponseDto {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .code(e.getErrorCode().getCode())
                 .message(e.getErrorCode().getErrorMessage())
+                .build());
+    }
+
+    public static ResponseEntity<ErrorResponseDto> error(HttpStatus status, String code,
+        String message) {
+        return ResponseEntity
+            .status(status)
+            .body(ErrorResponseDto.builder()
+                .status(status.value())
+                .code(code)
+                .message(message)
                 .build());
     }
 }

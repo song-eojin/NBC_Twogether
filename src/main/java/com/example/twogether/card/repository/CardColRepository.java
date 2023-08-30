@@ -10,6 +10,5 @@ public interface CardColRepository extends JpaRepository<CardCollaborator, Long>
 
     List<CardCollaborator> findAlLByCard(Card cardId);
     Optional<CardCollaborator> findByCardAndEmail(Card card, String email);
-    Optional<CardCollaborator> findByEmail(String email);
     boolean existsByCardAndEmail(Card ourCard, String email);
 }

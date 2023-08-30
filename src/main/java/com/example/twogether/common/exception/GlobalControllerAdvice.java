@@ -1,6 +1,5 @@
 package com.example.twogether.common.exception;
 
-import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.common.dto.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,12 +15,13 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler({CustomException.class})
     public ResponseEntity<ErrorResponseDto> handlerCustomException(CustomException e) {
-        log.error("[CustomException] {} : {}",e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage());
+        log.error("[CustomException] {} : {}",
+            e.getErrorCode().getCode(), e.getErrorCode().getErrorMessage());
         return ErrorResponseDto.error(e);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ApiResponseDto> handlerValidationException(
+    public ResponseEntity<ErrorResponseDto> handlerValidationException(
         MethodArgumentNotValidException ex) {
 
         // Validation 예외처리
@@ -32,7 +32,6 @@ public class GlobalControllerAdvice {
                 .append(fieldError.getDefaultMessage()).append(" ");
         }
 
-        return ResponseEntity.badRequest()
-            .body(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), errorMessage.toString()));
+        return ErrorResponseDto.error(HttpStatus.BAD_REQUEST, "V001", errorMessage.toString());
     }
 }
