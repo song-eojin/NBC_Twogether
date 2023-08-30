@@ -13,7 +13,6 @@ import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.deck.repository.DeckRepository;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
-import com.example.twogether.user.repository.UserRepository;
 import com.example.twogether.workspace.dto.WpRequestDto;
 import com.example.twogether.workspace.dto.WpResponseDto;
 import com.example.twogether.workspace.dto.WpsResponseDto;
