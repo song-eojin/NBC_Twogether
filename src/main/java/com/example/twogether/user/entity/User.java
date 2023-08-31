@@ -1,5 +1,7 @@
 package com.example.twogether.user.entity;
 
+import com.example.twogether.alarm.entity.Alarm;
+import com.example.twogether.alarm.entity.AlarmTarget;
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.entity.BoardCollaborator;
 import com.example.twogether.card.entity.CardCollaborator;
@@ -84,6 +86,14 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<Alarm> alarms = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<AlarmTarget> alarmTargets = new ArrayList<>();
 
     /**
      * 연관관계 편의 메소드 - 반대쪽에는 연관관계 편의 메소드가 없도록 주의합니다.

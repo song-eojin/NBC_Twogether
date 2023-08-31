@@ -51,7 +51,7 @@ public class DeckController {
     }
 
     @Operation(summary = "덱 보관/복구", description = "id와 일치하는 덱이 deleted 상태면 복구하고, 아니면 deleted 상태로 만듭니다.")
-    @PatchMapping("/decks/{id}/archive")
+    @PutMapping("/decks/{id}/archive")
     private ResponseEntity<ApiResponseDto> archiveDeck(@PathVariable Long id) {
         deckService.archiveDeck(id);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "덱 보관/복구"));
@@ -67,7 +67,7 @@ public class DeckController {
     // 덱 이동
     @Operation(summary = "덱 이동", description = "덱을 이동하면 position 값을 이동하고자 하는 덱과 덱 사이의 "
         + "position 중간 값으로 설정")
-    @PatchMapping("/decks/{id}/move")
+    @PutMapping("/decks/{id}/move")
     private ResponseEntity<ApiResponseDto> moveDeck(@PathVariable Long id, @RequestBody
         MoveDeckRequestDto requestDto) {
         deckService.moveDeck(id, requestDto);

@@ -74,7 +74,7 @@ INSERT INTO deck (id, title, position, is_archived, board_id, created_at, modifi
 CREATE TABLE IF NOT EXISTS card (
     id LONG PRIMARY KEY,
     title VARCHAR(50),
-    description VARCHAR(50),
+    content VARCHAR(50),
     attachment VARCHAR(50),
     position float,
     is_archived bit,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS card (
 );
 
 -- 더미 card 데이터 삽입
-INSERT INTO card (id, title, description, attachment, position, is_archived, due_date, deck_id, created_at, modified_at) VALUES
+INSERT INTO card (id, title, content, attachment, position, is_archived, due_date, deck_id, created_at, modified_at) VALUES
 (1, 'Card 1-1', 'test', null, 128, false, null, 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
 (2, 'Card 1-2', 'test', null, 256, false, null, 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
 (3, 'Card 1-3', 'test', null, 384, false, null, 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),

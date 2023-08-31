@@ -85,15 +85,15 @@ public class CardServiceTest {
         List<Card> cards = cardRepository.findAll();
         Card target = cards.get(0);
         String editTitle = "edited title";
-        String editDsc = "edited description";
+        String editContent = "edited content";
         CardEditRequestDto requestDto = new CardEditRequestDto();
         requestDto.setTitle(editTitle);
-        requestDto.setDescription(editDsc);
+        requestDto.setContent(editContent);
 
-        cardService.editCard(target.getId(), requestDto);
+        cardService.editCard(target.getDeck().getBoard().getUser(), target.getId(), requestDto);
 
         assertEquals(editTitle, target.getTitle());
-        assertEquals(editDsc, target.getDescription());
+        assertEquals(editContent, target.getContent());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class CardServiceTest {
         DateRequestDto requestDto = new DateRequestDto();
         requestDto.setDueDate(LocalDateTime.now());
 
-        cardService.editDate(target.getId(), requestDto);
+        cardService.editDate(target.getDeck().getBoard().getUser(), target.getId(), requestDto);
 
         assertEquals(requestDto.getDueDate(), target.getDueDate());
     }

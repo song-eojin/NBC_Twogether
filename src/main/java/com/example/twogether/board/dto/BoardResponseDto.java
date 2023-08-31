@@ -7,9 +7,10 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
+@Getter
 public class BoardResponseDto {
+
     private Long boardId;
     private String email;
     private String nickname;

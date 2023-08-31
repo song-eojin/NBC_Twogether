@@ -1,5 +1,6 @@
 package com.example.twogether.workspace.service;
 
+import com.example.twogether.alarm.event.TriggerEventPublisher;
 import com.example.twogether.board.dto.BoardColRequestDto;
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.entity.BoardCollaborator;
@@ -32,6 +33,7 @@ public class WpColService {
     private final BoardColRepository boardColRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final TriggerEventPublisher eventPublisher;
 
     // 워크스페이스 협업자 초대 - 보드 협업자로도 자동 초대
     @Transactional
@@ -46,12 +48,14 @@ public class WpColService {
         }
 
         // 워크스페이스 협업자로 등록
-        User foundUser = findUser(email);
-        WorkspaceCollaborator newWpCol = WpColRequestDto.toEntity(foundUser, foundWorkspace);
+        User invitedUser = findUser(email);
+        WorkspaceCollaborator newWpCol = WpColRequestDto.toEntity(invitedUser, foundWorkspace);
 
         // 아이디 수동 할당 - 데이터가 덮어 씌어지는 문제 방지
         newWpCol.assignNewId();
+
         wpColRepository.save(newWpCol);
+        eventPublisher.publishInviteWpColEvent(user, invitedUser, foundWorkspace);
 
         // 워크스페이스에서 초대한 협업자 모든 하위 보드도 자동 초대
         List<Board> foundAllBoards = findAllBoards(foundWorkspace);
@@ -60,8 +64,8 @@ public class WpColService {
             for (Board foundBoard : foundAllBoards) {
 
                 // 해당 보드에 이미 등록된 협업자인 경우 예외 던지기
-                if (!boardColRepository.existsByBoardAndEmail(foundBoard, foundUser.getEmail())) {
-                    BoardCollaborator boardCollaborator = BoardColRequestDto.toEntity(foundUser, foundBoard);
+                if (!boardColRepository.existsByBoardAndEmail(foundBoard, invitedUser.getEmail())) {
+                    BoardCollaborator boardCollaborator = BoardColRequestDto.toEntity(invitedUser, foundBoard);
                     boardColRepository.save(boardCollaborator);
                 }
             }
@@ -75,7 +79,7 @@ public class WpColService {
         Workspace foundWorkspace = findWpById(wpId);
         checkWorkspacePermissions(foundWorkspace, user, email);
 
-        User foundUser = findUser(email);
+        User invitedUser = findUser(email);
 
         // 워크스페이스 협업자 삭제
         WorkspaceCollaborator foundWpCol = findWpColByEmail(foundWorkspace, email);
@@ -85,7 +89,7 @@ public class WpColService {
         List<Board> foundAllBoards = findAllBoards(foundWorkspace);
         for (Board foundBoard : foundAllBoards) {
 
-            List<BoardCollaborator> boardCollaborators = boardColRepository.findByBoard(foundBoard);
+            List<BoardCollaborator> boardCollaborators = boardColRepository.findAllByBoard(foundBoard);
             if (boardCollaborators != null && !boardCollaborators.isEmpty()) {
 
                 // 이미 추방된 보드 협업자
@@ -94,7 +98,7 @@ public class WpColService {
                 }
 
                 // 보드 협업자 삭제
-                BoardCollaborator foundBoardCol = findBoardCol(foundBoard, foundUser);
+                BoardCollaborator foundBoardCol = findBoardCol(foundBoard, invitedUser);
                 boardColRepository.delete(foundBoardCol);
             }
         }

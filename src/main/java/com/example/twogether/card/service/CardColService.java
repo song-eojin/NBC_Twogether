@@ -1,5 +1,7 @@
 package com.example.twogether.card.service;
 
+import com.example.twogether.alarm.event.TriggerEventPublisher;
+import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.repository.BoardColRepository;
 import com.example.twogether.board.repository.BoardRepository;
 import com.example.twogether.card.dto.CardColEditResponseDto;
@@ -16,6 +18,7 @@ import com.example.twogether.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,7 @@ public class CardColService {
     private final BoardRepository boardRepository;
     private final BoardColRepository boardColRepository;
     private final UserRepository userRepository;
+    private final TriggerEventPublisher eventPublisher;
 
     // 카드를 작업할 협업자 추가
     @Transactional
@@ -44,6 +48,7 @@ public class CardColService {
 
         checkCardColPermissions(addedCard, foundCardCol.getEmail());
         cardColRepository.save(foundCardCol);
+        eventPublisher.publishInvitedCardColEvent(foundUser, addedUser, addedCard);
     }
 
     // 카드에 등록된 협업자 변경

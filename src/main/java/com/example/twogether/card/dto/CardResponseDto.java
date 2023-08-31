@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class CardResponseDto {
     private Long id;
     private String title;
-    private String description;
+    private String content;
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dueDate;
     private String attachment;
@@ -31,7 +31,7 @@ public class CardResponseDto {
         return CardResponseDto.builder()
             .id(card.getId())
             .title(card.getTitle())
-            .description(card.getDescription())
+            .content(card.getContent())
             .dueDate(card.getDueDate())
             .attachment(card.getAttachment())
             .position(card.getPosition())

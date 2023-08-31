@@ -16,7 +16,7 @@ public class BoardRequestDto {
     private String color;
     private String info;
 
-    public Board toEntity(Workspace workspace, User user) {
+    public Board toEntity(User user, Workspace workspace) {
         return Board.builder()
             .title(this.title)
             .color(this.color)

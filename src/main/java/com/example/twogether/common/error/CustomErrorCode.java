@@ -57,13 +57,15 @@ public enum CustomErrorCode {
 
     // CheckList
     CHECKLIST_NOT_FOUND("CHL001", "등록되지 않은 체크리스트입니다."),
-  
-    // CheckListItem
-    CHECKLIST_ITEM_NOT_FOUND("CHLI001", "등록되지 않은 체크리스트 아이템입니다."),
+    CHECKLIST_ITEM_NOT_FOUND("CHL002", "등록되지 않은 체크리스트 아이템입니다."),
 
     // Comment
     COMMENT_NOT_FOUND("C001", "존재하지 않는 댓글입니다."),
-    NOT_YOUR_COMMENT("C002", "본인이 작성한 댓글이 아닙니다.");
+    NOT_YOUR_COMMENT("C002", "본인이 작성한 댓글이 아닙니다."),
+
+    // Alarm
+    ALARM_NOT_FOUND("A001", "존재하지 않는 알림입니다."),
+    FAIL_SEND_ALARM_TO_CLIENT("A002", "클라이언트로의 데이터 전송에 실패했습니다.");
 
     private final String code;
     private final String errorMessage;

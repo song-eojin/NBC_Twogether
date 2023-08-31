@@ -36,6 +36,7 @@ public class CommentController {
         @RequestBody CommentRequestDto requestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
+
         commentService.createComment(boardId, cardId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "댓글 생성 완료"));
     }

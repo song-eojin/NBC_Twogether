@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "checklistitem")
+@Table(name = "checklist_item")
 public class CheckListItem extends Timestamped {
 
     @Id

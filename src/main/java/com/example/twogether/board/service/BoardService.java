@@ -48,7 +48,7 @@ public class BoardService {
         Workspace foundWorkspace = findWorkspace(wpId);
         checkWpPermissions(foundWorkspace, user);
 
-        Board foundBoard = boardRequestDto.toEntity(foundWorkspace, user);
+        Board foundBoard = boardRequestDto.toEntity(user, foundWorkspace);
         boardRepository.save(foundBoard);
         log.info("칸반 보드 생성에 성공했습니다.");
 

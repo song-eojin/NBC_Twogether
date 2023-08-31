@@ -23,8 +23,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@Entity
 @Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card extends Timestamped {
@@ -47,18 +47,23 @@ public class Card extends Timestamped {
     private LocalDateTime dueDate;
 
     @Column
-    private String description;
+    private String content;
 
     @Column
     private String attachment;
+
+    @Column
+    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
 
+    @Builder.Default
     @OneToMany(mappedBy = "card")
     private List<CheckList> checkLists = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "card")
     private List<Comment> comments = new ArrayList<>();
 
@@ -74,8 +79,8 @@ public class Card extends Timestamped {
         this.title = title;
     }
 
-    public void editDescription(String description) {
-        this.description = description;
+    public void editContent(String content) {
+        this.content = content;
     }
 
     public void editDueDate(LocalDateTime dueDate) {this.dueDate = dueDate;}
@@ -86,6 +91,10 @@ public class Card extends Timestamped {
 
     public void editPosition(float position) {
         this.position = position;
+    }
+
+    public void editUrl(String url) {
+        this.url = url;
     }
 
     public void moveToDeck(Deck deck) {

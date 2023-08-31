@@ -1,5 +1,6 @@
 package com.example.twogether.board.service;
 
+import com.example.twogether.alarm.event.TriggerEventPublisher;
 import com.example.twogether.board.dto.BoardColRequestDto;
 import com.example.twogether.board.dto.BoardResponseDto;
 import com.example.twogether.board.dto.BoardsResponseDto;
@@ -7,17 +8,12 @@ import com.example.twogether.board.entity.Board;
 import com.example.twogether.board.entity.BoardCollaborator;
 import com.example.twogether.board.repository.BoardColRepository;
 import com.example.twogether.board.repository.BoardRepository;
-import com.example.twogether.card.entity.Card;
-import com.example.twogether.card.entity.CardCollaborator;
 import com.example.twogether.card.repository.CardColRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
-import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
 import com.example.twogether.user.repository.UserRepository;
-import com.example.twogether.workspace.dto.WpResponseDto;
-import com.example.twogether.workspace.dto.WpsResponseDto;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.repository.WpRepository;
 import java.util.List;
@@ -33,27 +29,28 @@ public class BoardColService {
 
     private final BoardColRepository boardColRepository;
     private final BoardRepository boardRepository;
-    private final CardColRepository cardColRepository;
     private final UserRepository userRepository;
     private final WpRepository wpRepository;
+    private final TriggerEventPublisher eventPublisher;
 
     // 칸반 보드에 협업자 초대 - 허락받아야 초대되는 로직으로 develop 할지 고민 중
     @Transactional
     public void inviteBoardCol(User user, Long wpId, Long boardId, String email) {
 
-        Board invitingBoard = findBoard(wpId, boardId);
+        Board foundBoard = findBoard(wpId, boardId);
         User invitedUser = findUser(email);
 
-        checkBoardPermissions(invitingBoard, user, email);
+        checkBoardPermissions(foundBoard, user, email);
 
         // 이미 등록된 사용자 초대당하기 불가
-        if (boardColRepository.existsByBoardAndEmail(invitingBoard, email)) {
+        if (boardColRepository.existsByBoardAndEmail(foundBoard, email)) {
             throw new CustomException(CustomErrorCode.BOARD_COLLABORATOR_ALREADY_EXISTS);
         }
 
         // 보드 협업자로 등록
-        BoardCollaborator foundBoardCol = BoardColRequestDto.toEntity(invitedUser, invitingBoard);
+        BoardCollaborator foundBoardCol = BoardColRequestDto.toEntity(invitedUser, foundBoard);
         boardColRepository.save(foundBoardCol);
+        eventPublisher.publishInviteBoardColEvent(user, invitedUser, foundBoard);
     }
 
     // 칸반 보드에서 협업자 추방

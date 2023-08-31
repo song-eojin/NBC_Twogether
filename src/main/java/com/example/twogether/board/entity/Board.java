@@ -24,10 +24,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
+@Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Getter
 public class Board extends Timestamped {
 
     @Id
