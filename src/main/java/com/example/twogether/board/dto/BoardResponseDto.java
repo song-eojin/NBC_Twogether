@@ -2,7 +2,6 @@ package com.example.twogether.board.dto;
 
 import com.example.twogether.board.entity.Board;
 import com.example.twogether.deck.dto.DeckResponseDto;
-import com.example.twogether.user.entity.User;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class BoardResponseDto {
             .info(board.getInfo())
             .boardCollaborators(board.getBoardCollaborators().stream().map(
                 BoardColResponseDto::of).toList())
-            .decks(board.getDecks().stream().map(decks -> new DeckResponseDto(decks)).toList())
+            .decks(board.getDecks().stream().map(DeckResponseDto::new).toList())
             .build();
     }
 }

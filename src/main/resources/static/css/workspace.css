@@ -1,0 +1,260 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Header styles */
+#header {
+    background-color: #4d3737; /* Wooden color */
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    color: #705c3b; /* Dark brown text color */
+}
+
+.user-info i {
+    margin-right: 5px;
+}
+
+/* Content style */
+#content {
+    display: flex;
+    height: calc(100vh - 40px); /* Subtract header height from the viewport height */
+    top: 20px;
+}
+
+/* Navigation styles */
+nav {
+    flex: 1.5;
+    background-color: darkgrey;
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#nav-workspaces {
+    list-style: none;
+    padding: 0;
+}
+
+#nav-workspaces li {
+    margin-bottom: 5px;
+}
+
+#create-workspace {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#create-workspace-form {
+    display: none;
+    margin-top: 10px;
+}
+
+#create-workspace-form label,
+#create-workspace-form input,
+#create-workspace-form button {
+    margin-bottom: 5px;
+}
+
+/* Main content styles */
+#main {
+    flex: 8.5;
+    background-color: white;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Section styles */
+section {
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+#logout {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Workspace styles */
+.workspace {
+    background-color: white;
+    color: black;
+    border: 1px solid lightgray;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.workspace header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: lightgray;
+}
+
+.workspace h2 {
+    font-size: 1.5rem;
+}
+
+.workspace h3 {
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+.workspace header i {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.workspace-control-btns button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.workspace-control-btns button:hover {
+    color: lightgray;
+}
+
+/* Invite Collaborator classes styles */
+.invite-collaborator {
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     background-color: #fff;
+     padding: 20px;
+     border: 1px solid #ccc;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+
+.invite-collaborator label,
+.invite-collaborator input,
+.invite-collaborator button {
+    margin: 5px 0;
+}
+
+/* Board Styles */
+.workspace-board-list {
+    display : flex;
+}
+
+.board {
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+    margin: 10px 5px;
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: lightgray;
+    color: black;
+}
+
+.board:hover {
+    background-color: #3e3131;
+    color: white;
+    box-shadow: 5px 5px #724123;
+}
+
+.board h3 {
+    position: absolute;
+    top: 0;
+    left: 5px;
+}
+
+.board-btns {
+    position: absolute;
+    top:0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align buttons to the right */
+}
+
+.board-btns button {
+    margin: 1px 0;
+}
+
+.create-borad-btn {
+    width: 100px;
+    height: 100px;
+    padding: 5px 10px;
+    margin: 10px 5px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #633B3B;
+    color: white;
+    cursor: pointer;
+}
+
+.create-board-form {
+    display: none;
+}
+
+.create-board-form {
+    width: 100px;
+    height: 100px;
+    padding: 5px 10px;
+    margin: 10px 5px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #633B3B;
+    color: white;
+    cursor: pointer;
+}
+
+.create-board-form label,
+.create-board-form input,
+.create-board-form button {
+    margin-bottom: 5px;
+}
+
+.create-board-form input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+.create-board-form button {
+    background-color: lightgray;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+}
+
+.create-board-form button:hover {
+    background-color: #705c3b; /* Dark brown color on hover */
+}
+

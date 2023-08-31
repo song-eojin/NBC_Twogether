@@ -21,15 +21,10 @@ async function login() {
   // then
   .then(async res => {
     if (res.status === 200) {
-      // Cookie
-      let token = res.headers.get('Authorization')
-      console.log(token)
-      document.cookie = 'Authorization' + '=' + res.headers.get('Authorization') + '; path=/'
-
-      token = res.headers.get('Refresh-Token')
-      if (token !== null) {
-        document.cookie = 'Refresh-Token' + '=' + token + '; path=/'
-      }
+      // Cookie todo: AWS 배포 후 에 Cookie 저장 방식 정상 동작 여부에 따라 Cookie 설정 변경하기
+      // e.g. document.cookie = 'Authorization' + '=' + res.headers.get('Authorization') + '; path=/'
+      Cookies.set('Authorization', res.headers.get('Authorization'), { path: '/' })
+      Cookies.set('Refresh-Token', res.headers.get('Refresh-Token'), { path: '/' })
 
       window.location.href = BASE_URL + '/views/workspace'
     } else {

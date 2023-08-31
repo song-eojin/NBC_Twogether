@@ -64,13 +64,13 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/views/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
-                .requestMatchers("/api/boards/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/boards/**").permitAll()
                 .requestMatchers("/api/decks/**").permitAll()
                 .requestMatchers("api/cards/**").permitAll()
                 .requestMatchers("/api/labels/**").permitAll()
                 .requestMatchers("/api/alarms/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/**").permitAll()
                 .anyRequest().authenticated()
         );
 
