@@ -21,19 +21,31 @@
   <!--  js를 jquery와 함께 호출 시 스크립트 실행 순서에 의해 jQuery를 먼저 선언해야 한다. -->
 
   <title>Twogether 로그인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+<div class="logo">
   <h2>Two Gether</h2>
+</div>
+<div class="container">
+  <div class="text-h3">
+    <h3>로그인</h3>
+  </div>
+  <div class="text-h4">
+    <h4>Two Gether에 오신 것을 환영해요 !</h4>
+  </div>
   <div>
-    <label for="email">이메일 주소</label>
     <input type="text" id="email" placeholder="email"/>
   </div>
   <div>
-    <label for="password">비밀번호</label>
     <input type="password" id="password" placeholder="password"/>
   </div>
   <button id="loginBtn" onclick="login()">로그인</button>
+  <div class = "sendSignUpPage">
+    <a href="/views/signup">Twogether가 처음이라면?  회원가입</a>
+  </div>
 </div>
 
 </body>

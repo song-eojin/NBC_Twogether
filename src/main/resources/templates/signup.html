@@ -21,29 +21,45 @@
   <!--  js를 jquery와 함께 호출 시 스크립트 실행 순서에 의해 jQuery를 먼저 선언해야 한다. -->
 
   <title>Twogether 회원가입</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+<div class="logo">
   <h2>Two Gether</h2>
-  <div>
-    <label for="email">이메일 주소</label>
+</div>
+<div class="container">
+  <div class="text-h3">
+    <h3>회원가입</h3>
+  </div>
+  <div class="text-h4">
+    <h4>Two Gether에 오신 것을 환영해요 !</h4>
+  </div>
+  <div id = "send__id">
     <input type="text" id="email" placeholder="user@email.com"/>
     <button class="sendButton" onclick="submitEmail()">전송</button>
   </div>
-  <div>
-    <label for="certificationNumber">인증번호</label>
+  <div id = "send__pw">
     <input type="text" id="certificationNumber" placeholder="123456"/>
     <button class="sendButton" onclick="submitCertificationNumber()">인증</button>
   </div>
   <div>
-    <label for="password">비밀번호</label>
     <input type="password" id="password" placeholder="소문자/숫자/특수문자의 8자 이상"/>
   </div>
   <div>
-    <label for="passwordConfirm">비밀번호 확인</label>
     <input type="password" id="passwordConfirm" placeholder="위의 입력과 동일한 비밀번호"/>
   </div>
-  <button id="signupButton" onclick="signup()">회원 가입</button>
+  <div class = "signupButton">
+    <button id="signupButton" onclick="signup()">회원 가입</button>
+  </div>
+  <div class = "sendLoginPage">
+    <a href="/views/login">Twogether가 처음이 아니라면?  로그인</a>
+  </div>
+  <div class = "sendSocialLoginPage">
+    <a href="/views/login">Twogether을 소셜 로그인으로 사용한다면? 소셜 로그인</a>
+  </div>
 </div>
+
 </body>
 </html>
