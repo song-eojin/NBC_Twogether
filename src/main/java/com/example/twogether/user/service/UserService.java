@@ -2,6 +2,7 @@ package com.example.twogether.user.service;
 
 import com.example.twogether.board.repository.BoardColRepository;
 import com.example.twogether.board.repository.BoardRepository;
+import com.example.twogether.card.entity.Card;
 import com.example.twogether.card.repository.CardLabelRepository;
 import com.example.twogether.card.repository.CardRepository;
 import com.example.twogether.checklist.repository.CheckListRepository;
@@ -9,6 +10,7 @@ import com.example.twogether.checklist.repository.ChlItemRepository;
 import com.example.twogether.comment.repository.CommentRepository;
 import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
+import com.example.twogether.common.s3.S3Uploader;
 import com.example.twogether.deck.repository.DeckRepository;
 import com.example.twogether.user.dto.EditPasswordRequestDto;
 import com.example.twogether.user.dto.EditUserRequestDto;
@@ -20,13 +22,16 @@ import com.example.twogether.user.repository.UserPasswordRepository;
 import com.example.twogether.user.repository.UserRepository;
 import com.example.twogether.workspace.repository.WpColRepository;
 import com.example.twogether.workspace.repository.WpRepository;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +50,7 @@ public class UserService {
     private final BoardColRepository boardColRepository;
     private final WpColRepository wpColRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Uploader s3Uploader;
 
     @Value("${admin.token}")
     private String adminToken;
@@ -130,6 +136,16 @@ public class UserService {
             userPasswordRepository.deleteById(userPasswords.get(0).getId());
 
         return found;
+    }
+
+    @Transactional
+    public void editIcon(MultipartFile multipartFile, User user) throws IOException {
+        try {
+            String icon = s3Uploader.upload(multipartFile, "Icon");
+            user.editIcon(icon);
+        } catch (RejectedExecutionException e) {
+            throw new CustomException(CustomErrorCode.S3_FILE_UPLOAD_FAIL);
+        }
     }
 
     private void findExistingUserByEmail(String email) {

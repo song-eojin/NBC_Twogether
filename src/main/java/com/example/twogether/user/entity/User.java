@@ -50,6 +50,7 @@ public class User {
 
     private String nickname;
     private String introduction;
+    private String icon;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -109,5 +110,9 @@ public class User {
 
     public void editPassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void editIcon(String icon) {
+        this.icon = icon;
     }
 }
