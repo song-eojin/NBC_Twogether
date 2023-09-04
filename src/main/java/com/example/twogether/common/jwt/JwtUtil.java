@@ -9,7 +9,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -58,6 +62,23 @@ public class JwtUtil {
                 .setIssuedAt(date) // 발급일
                 .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                 .compact();
+    }
+
+    public void addJwtToCookie(String token, HttpServletResponse res) {
+        try {
+            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+
+            res.addHeader(AUTHORIZATION_HEADER, token);
+
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+            cookie.setPath("/");
+
+            // Response 객체에 Cookie 추가
+            res.addCookie(cookie);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     // HttpServletRequest 에서 Header Value : JWT 가져오기

@@ -54,6 +54,8 @@ jobs:
           echo "${{ secrets.APPLICATION_S3_YML }}" > ./application-s3.yml
           touch ./application-key.yml
           echo "${{ secrets.APPLICATION_KEY_YML }}" > ./application-key.yml
+          touch ./application-oauth.yml
+          echo "${{ secrets.APPLICATION_OAUTH_YML }}" > ./application-oauth.yml
         shell: bash
 
       # gradle 실행 허가

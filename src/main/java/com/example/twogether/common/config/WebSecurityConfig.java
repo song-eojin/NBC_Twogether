@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/views/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/social/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/boards/**").permitAll()
                 .requestMatchers("/api/decks/**").permitAll()
                 .requestMatchers("api/cards/**").permitAll()

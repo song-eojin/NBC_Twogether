@@ -48,6 +48,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private Long kakaoId;
+    private String naverId;
+
     private String nickname;
     private String introduction;
     private String icon;
@@ -112,6 +115,16 @@ public class User {
         this.password = newPassword;
     }
 
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public User naverIdUpdate(String naverId) {
+        this.naverId = naverId;
+        return this;
+    }
+  
     public void editIcon(String icon) {
         this.icon = icon;
     }
