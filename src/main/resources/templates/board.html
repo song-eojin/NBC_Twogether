@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" type="text/css" href="/css/board.css">
+  <link rel="stylesheet" href="/css/reset.css" />
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+          integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <script src="/js/workspace.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+          crossorigin="anonymous"></script>
+  <!--  js를 jquery와 함께 호출 시 스크립트 실행 순서에 의해 jQuery를 먼저 선언해야 한다. -->
+
+  <title>Twogether</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+</head>
+<body>
+<header id="header">
+  <h2 id='title'>Two Gether</h2>
+  <div class="user-info">
+    <i class="fas fa-user-circle"></i>
+    Email: <span id="email"></span>
+    Nickname: <span id='nickname'></span>
+    Role: <span id="role"></span>
+    <span id='logout' onclick="logout()"><i class="fas fa-sign-out-alt"></i></span>
+  </div>
+</header>
+
+<div id="content">
+  <nav id="nav">
+    <ul id="nav-boards">
+    </ul>
+
+    <button id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
+      Create New Workspace
+    </button>
+
+    <div id="create-workspace-form" style="display:none">
+      <div>
+        <label for="workspace-title">Title</label>
+        <input type="text" id="workspace-title"/>
+      </div>
+      <div>
+        <label for="workspace-description">Description</label>
+        <input type="text" id="workspace-description"/>
+      </div>
+      <button id="create-workspace-btn" onclick="createWorkspace()">Create</button>
+    </div>
+  </nav>
+
+  <!--  임시 id-->
+  <div class="board-canvas">
+    <!--페이지 스크롤바-->
+    <!--    <div id="board" class="board-canvas-scrollbar">-->
+    <div class="deck-list-wrapper-1">
+      <!--    <div class="deck-list-1">-->
+      <div class="deck-list-content">
+        <ul class="deck-list-ul">
+          <li id="1">
+            <div class="deck-list-header">
+              <p class = "list-header-title">Deck 01</p>
+              <!--&lt;!&ndash;          <textarea class="list-header-title">Deck 01</textarea>&ndash;&gt;-->
+              <a class="list-header-3dot" href="#" aria-label="덱 메뉴 생성">
+                <i class="fa-solid fa-ellipsis fa-xl"></i></a>
+            </div>
+            <div class="deck-list-add-card-area">
+              <div class="deck-list-add-card-name-text-area">
+                <form class="add-card-name-text-area-form hidden" action="post">
+                  <input type="text" name="add-cardlist-input" class="add-cardlist-input" placeholder="카드 내용을 입력하세요...">
+                  <div class="horizontal-align">
+                    <button type="submit" class="add-cardlist-submit default-button">카드 추가</button>
+                    <a class="cancel-button cardlist" href="#" aria-label="카드 추가 취소">
+                      <i class="fa-solid fa-xmark fa-xl"></i>
+                    </a>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+      <div class="deck-list-content">
+        <ul class="deck-list-ul">
+          <li id="2">
+            <div class="deck-list-header">
+              <p class = "list-header-title">Deck 02</p>
+              <!--&lt;!&ndash;          <textarea class="list-header-title">Deck 01</textarea>&ndash;&gt;-->
+              <a class="list-header-3dot" href="#" aria-label="덱 메뉴 생성">
+                <i class="fa-solid fa-ellipsis fa-xl"></i></a>
+            </div>
+            <div class="deck-list-add-card-container">
+              <a class="open-add-cardlist-button" href="#" aria-label="카드 생성 열기">
+                <i class="fa-solid fa-plus fa-xl"></i>
+                카드 추가
+              </a>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+      <div class="deck-list-content">
+        <ul class="deck-list-ul">
+          <li id="3">
+            <div class="deck">
+                          <span class="placeholder">
+                            <button class="add-decklist-button" type="button">
+                          <i class="fa-solid fa-plus fa-xl"></i>
+                          덱 추가
+                        </button>
+                          </span>
+
+              <form class="add-decklist-form hidden" action="post">
+                <input type="text" name="add-decklist-input" class="add-decklist-input" placeholder="덱 타이틀을 입력하세요...">
+                <div class="horizontal-align">
+                  <button type="submit" class="add-decklist-submit default-button">덱 추가</button>
+                  <a class="cancel-button decklist" href="#" aria-label="덱 추가 취소">
+                    <i class="fa-solid fa-xmark fa-xl"></i>
+                  </a>
+                </div>
+              </form>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

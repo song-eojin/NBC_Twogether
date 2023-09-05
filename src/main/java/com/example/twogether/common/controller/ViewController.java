@@ -20,4 +20,9 @@ public class ViewController {
     public String workspace() {
         return "workspace";
     }
+
+    @GetMapping("/views/board")
+    public String board() {
+        return "board";
+    }
 }
