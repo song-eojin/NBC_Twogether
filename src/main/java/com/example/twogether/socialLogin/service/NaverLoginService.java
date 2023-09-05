@@ -49,7 +49,7 @@ public class NaverLoginService {
         // 3. 필요시 회원가입 아니라면 바로 user가져오기.
         User naverUser = registerNaverUserIfNeeded(naverUserInfo);
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(naverUser.getNickname(), naverUser.getRole());
+        String createToken = jwtUtil.createToken(naverUser.getEmail(), naverUser.getRole());
 
         log.info("토큰정보"+createToken);
         jwtUtil.addJwtToCookie(createToken, response);

@@ -45,7 +45,7 @@ public class KakaoLoginService {
         // 3. 필요시 회원가입 아니라면 바로 user가져오기.
         User kakaouser = registerKakaoUserIfNeeded(kakaoUserInfo);
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(kakaouser.getNickname(), kakaouser.getRole());
+        String createToken = jwtUtil.createToken(kakaouser.getEmail(), kakaouser.getRole());
 
         log.info("토큰정보"+createToken);
         jwtUtil.addJwtToCookie(createToken, response);

@@ -51,8 +51,11 @@ public class Workspace extends Timestamped {
     @OneToMany(mappedBy = "workspace")
     private List<Board> boards = new ArrayList<>();
 
-    public void editPartOfWp(WpRequestDto wpRequestDto) {
+    public void editTitle(WpRequestDto wpRequestDto) {
         this.title = wpRequestDto.getTitle();
+    }
+
+    public void editIcon(WpRequestDto wpRequestDto) {
         this.icon = wpRequestDto.getIcon();
     }
 
