@@ -146,7 +146,7 @@ nav {
 .board-canvas .deck {
     flex:1;
     /*width: 310px;*/
-    padding:0px 5px;
+    padding: 0 5px;
     box-sizing: border-box;
 }
 /*.placeholder {*/
@@ -189,19 +189,6 @@ nav {
     margin-right: 5px;
 }
 
-/*덱 생성 후*/
-.deck-list {
-    width: 100%;
-    border-radius: 3px;
-    background-color: #ebecf0;
-    box-sizing: border-box;
-}
-
-.deck-list > li {
-    width: 100%;
-    box-sizing: border-box;
-}
-
 .deck {
     /*width:100%;*/
     box-sizing: border-box;
@@ -220,7 +207,7 @@ nav {
     height: 35px;
     text-align: left;
     color:#44546f;
-    padding:0px 10px;
+    padding: 0 10px;
     border:0;
     border-radius: 3px;
     background-color: transparent;
@@ -228,10 +215,15 @@ nav {
     cursor: pointer;
 }
 
+#board {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 /*기존 덱*/
 .deck-list-wrapper-1 {
     display: flex;
-    width: 100%;
     box-sizing: border-box;
 }
 
@@ -242,7 +234,7 @@ nav {
     max-width: 310px;
     min-width: 310px;
     /*width: 310px;*/
-    padding: 0px 5px;
+    padding: 0 5px;
     box-sizing: border-box;
     width: 100%;
     border-radius: 10px;
@@ -252,7 +244,7 @@ nav {
 .deck-list-header {
     /*width: 100%;*/
     display: flex;
-    padding: 0px 5px;
+    padding: 0 5px;
     /*padding: 14px 8px;*/
     box-sizing: border-box;
 }
@@ -268,6 +260,12 @@ nav {
     color: #44546f;
     position: relative;
     padding: 10px 5px;
+}
+.list-header-btns {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 .deck-list-add-card-container {
     display: flex;

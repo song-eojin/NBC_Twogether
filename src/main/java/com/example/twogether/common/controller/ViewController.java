@@ -1,7 +1,9 @@
 package com.example.twogether.common.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ViewController {
@@ -21,8 +23,9 @@ public class ViewController {
         return "workspace";
     }
 
-    @GetMapping("/views/board")
-    public String board() {
+    @GetMapping("/views/boards/{id}")
+    public String board(@PathVariable Long id, Model model) {
+        model.addAttribute("id", id);
         return "board";
     }
 }

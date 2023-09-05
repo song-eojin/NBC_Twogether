@@ -95,9 +95,9 @@ public class WpService {
     }
 
     @Transactional(readOnly = true)
-    public WpResponseDto getWorkspace(Long Id) {
+    public WpResponseDto getWorkspace(Long id) {
 
-        Workspace workspace = findWorkspace(Id);
+        Workspace workspace = findWorkspace(id);
         return WpResponseDto.of(workspace);
     }
 

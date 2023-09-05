@@ -14,6 +14,7 @@ import com.example.twogether.deck.dto.MoveDeckRequestDto;
 import com.example.twogether.deck.entity.Deck;
 import com.example.twogether.deck.repository.DeckRepository;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class DeckService {
     @Transactional(readOnly = true)
     public DeckResponseDto getDeck(Long id) {
         Deck deck = findDeckById(id);
-        return new DeckResponseDto(deck);
+        return DeckResponseDto.of(deck);
     }
 
     @Transactional
@@ -94,7 +95,7 @@ public class DeckService {
         if (prev != null && next != null) { // 두 덱 사이로 옮길 때
             deck.editPosition((prev.getPosition() + next.getPosition()) / 2f);
         } else if (prev == null) { // 맨 처음으로 옮길 때
-            deck.editPosition(next.getPosition() / 2f);
+            deck.editPosition(Objects.requireNonNull(next).getPosition() / 2f);
         } else { // 맨 마지막으로 옮길 때
             deck.editPosition(prev.getPosition() + CYCLE);
         }

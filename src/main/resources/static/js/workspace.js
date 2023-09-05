@@ -61,7 +61,6 @@ function callMyWorkspaces() {
     refreshToken(res)
 
     let workspaces = await res.json()
-    console.log(workspaces['workspaces'])
 
     for (let workspace of workspaces['workspaces']) {
       let wId = workspace['workspaceId']
@@ -99,7 +98,6 @@ function callColWorkspaces() {
     refreshToken(res)
 
     let workspaces = await res.json()
-    console.log(workspaces['workspaces'])
 
     for (let workspace of workspaces['workspaces']) {
       let wId = workspace['workspaceId']
@@ -391,7 +389,7 @@ async function inviteBoardCollaborator(bId) {
 }
 
 function moveToBoard(bId) {
-
+  window.location.href = BASE_URL + '/views/boards/' + bId
 }
 
 // 순수 javascript 동작
@@ -469,8 +467,8 @@ function formMyBoard(board) {
   let color = board['color']
 
   return `
-    <div id="board-${boardId}" class="board" onclick="moveToBoard(${boardId})">
-      <h3>${title}</h3>
+    <div id="board-${boardId}" class="board">
+      <h3 onclick="moveToBoard(${boardId})">${title}</h3>
       <div id="board-${boardId}-btns" class="board-btns">
         <button onclick="editBoardOnOff(${boardId})"><i class="fa-regular fa-pen-to-square"></i></button>
         <div id="edit-board-form-${boardId}" style="display:none">

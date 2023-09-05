@@ -30,7 +30,7 @@ public class BoardResponseDto {
             .info(board.getInfo())
             .boardCollaborators(board.getBoardCollaborators().stream().map(
                 BoardColResponseDto::of).toList())
-            .decks(board.getDecks().stream().map(DeckResponseDto::new).toList())
+            .decks(board.getDecks().stream().map(DeckResponseDto::of).toList())
             .build();
     }
 }

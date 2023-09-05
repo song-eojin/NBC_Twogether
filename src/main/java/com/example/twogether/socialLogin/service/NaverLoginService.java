@@ -41,6 +41,8 @@ public class NaverLoginService {
     @Value("${naver.client.id}")
     private String naverClientId;
 
+    private static final String RESPONSE = "response";
+
     public String naverLogin(String code, HttpServletResponse response) throws JsonProcessingException { //String code는 네이버로부터 받은 인가 코드
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
@@ -119,11 +121,11 @@ public class NaverLoginService {
         );
 
         JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
-        String naverId = jsonNode.get("response")
+        String naverId = jsonNode.get(RESPONSE)
             .get("id").asText();
-        String nickname = jsonNode.get("response")
+        String nickname = jsonNode.get(RESPONSE)
             .get("nickname").asText();
-        String email = jsonNode.get("response")
+        String email = jsonNode.get(RESPONSE)
             .get("email").asText();
 
         log.info("네이버 사용자 정보: " + naverId + ", " + nickname + ", " + email);
