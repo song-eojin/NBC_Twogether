@@ -79,9 +79,8 @@ async function callMyBoard() {
             } else {
                 decks.append(formDeck(deck))
                 for (let card of deck['cards']) {
-                    console.log(card)
-                    // todo: 불러온 덱에서 카드 읽어서 나열하기
-                    // $('#card-list-' + deck['deckId']).append(formCard(card))
+                    if(card['archived']) continue
+                    $('#card-list-' + deck['deckId']).append(formCard(card))
                 }
             }
         }
@@ -251,6 +250,36 @@ async function restoreDeck(dId) {
             return
         }
 
+        callMyBoard() // board 다시 부르기
+    })
+}
+
+async function createCard(deckId) {
+    // given
+    let title = document.getElementById('card-title-input-' + deckId).value
+
+    // when
+    await fetch('/api/decks/' + deckId + '/cards', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: title
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error.message)
+            return
+        }
+
         callMyBoard()
     })
 }
@@ -283,6 +312,7 @@ async function moveDeck(dId, prevId, nextId) {
     })
 }
 
+
 // 순수 javascript 동작
 function logout() {
     resetToken()
@@ -291,6 +321,10 @@ function logout() {
 
 function toggleCreateWorkspace() {
     $('#create-workspace-form').toggle()
+}
+
+function createCardOnOff() {
+    $('#create-card-form').toggle()
 }
 
 function formDeck(deck) {
@@ -314,11 +348,13 @@ function formDeck(deck) {
                     </div>
                     
                     <div class="deck-list-add-card-area">
-                        <div class="card-list-${deckId}"></div>
+                        <div class="card-list-${deckId}" id="card-list-${deckId}">
+                            
+                        </div>
                         
                         <!-- todo: 카드 추가 기능 활성화 -->
                         <div class="deck-list-add-card-container">
-                            <a id="open-add-cardlist-button-${deckId}" class="open-add-cardlist-button" href="#" aria-label="카드 생성 열기">
+                            <a id="open-add-cardlist-button-${deckId}" class="open-add-cardlist-button" aria-label="카드 생성 열기">
                                 <i class="fa-solid fa-plus fa-xl"></i>
                                 카드 추가
                             </a>
@@ -326,20 +362,22 @@ function formDeck(deck) {
                         
                         <!-- todo: 카드 추가 기능 -->
                         <div id="add-card-name-text-area-form-${deckId}" class="deck-list-add-card-name-text-area">
-                            <form class="add-card-name-text-area-form hidden" action="post">
+                            <div class="add-card-name-text-area-form hidden">
                                 <input type="text" name="add-cardlist-input"
                                        class="add-cardlist-input"
+                                       id="card-title-input-${deckId}"
                                        placeholder="카드 내용을 입력하세요...">
                                 <div class="horizontal-align">
                                     <button type="submit"
-                                            class="add-cardlist-submit default-button">카드 추가
+                                            class="add-cardlist-submit default-button"
+                                            onclick="createCard(${deckId})">카드 추가
                                     </button>
-                                    <a class="cancel-button cardlist" href="#"
+                                    <a class="cancel-button cardlist"
                                        aria-label="카드 추가 취소">
                                         <i class="fa-solid fa-xmark fa-xl"></i>
                                     </a>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         
                     </div>
@@ -367,7 +405,91 @@ function formArchived(deck) {
 function formCard(card) {
     let cardId = card['id']
     let title = card['title']
+    let cardLabels = card['cardLabels']
 
+    return `
+            <ul class="list-card-list">
+              <li>
+                <div class="cards-list" id="cards-list-${cardId}">
+                  <span>
+                    <p class="cards-list-title" id="cards-list-title-${cardId}" onclick="editTitle(${cardId})">
+                      ${title}
+                    </p>
+                  </span>
+                </div>
+              </li>
+            </ul>
+    `
+}
+
+function editTitle(cardId) {
+    // 클릭한 제목 요소 가져오기
+    const titleElement = document.getElementById(`cards-list-title-${cardId}`);
+
+    // 현재 제목 내용 가져오기
+    const currentTitle = titleElement.innerText;
+
+    // 수정 가능한 input 요소 생성
+    const inputElement = document.createElement("input");
+    inputElement.value = currentTitle;
+
+    // 제목을 input 요소로 교체
+    titleElement.innerHTML = "";
+    titleElement.appendChild(inputElement);
+
+    // input 요소에 포커스 설정
+    inputElement.focus();
+
+    inputElement.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const newTitle = inputElement.value;
+            titleElement.innerHTML = newTitle;
+            editCardTitle(cardId, newTitle);
+        }
+    });
+
+    // input 요소에서 포커스가 해제되면 수정 완료 처리
+    inputElement.addEventListener("blur", () => {
+        const newTitle = inputElement.value;
+        titleElement.innerHTML = newTitle;
+        editCardTitle(cardId, newTitle);
+    });
+}
+
+function editCardTitle(cardId, newTitle) {
+    // given
+    let title = newTitle
+    if (title === '') {
+        title = null;
+    }
+    let content = null;
+    const request = {
+        title: newTitle,
+        content: content
+    };
+
+    // when
+    fetch('/api/cards/' + cardId, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request),
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+        }
+    })
 }
 
 function toggleEditDeckTitle(deckId) {
