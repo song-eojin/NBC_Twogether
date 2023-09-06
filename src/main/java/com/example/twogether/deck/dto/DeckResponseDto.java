@@ -12,6 +12,7 @@ import lombok.Getter;
 public class DeckResponseDto {
     private Long deckId;
     private String title;
+    private float position;
     private boolean archived;
     private List<CardResponseDto> cards;
 
@@ -19,6 +20,7 @@ public class DeckResponseDto {
         return DeckResponseDto.builder()
             .deckId(deck.getId())
             .title(deck.getTitle())
+            .position(deck.getPosition())
             .archived(deck.isArchived())
             .cards(deck.getCards().stream().map(CardResponseDto::of).
                 sorted(Comparator.comparing(CardResponseDto::getPosition)).toList())

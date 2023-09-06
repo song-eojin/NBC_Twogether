@@ -1,7 +1,5 @@
 package com.example.twogether.deck.dto;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
