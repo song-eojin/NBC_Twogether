@@ -4,10 +4,16 @@ import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Builder
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class SignupRequestDto {
 
     @NotBlank
@@ -22,14 +28,6 @@ public class SignupRequestDto {
 
     private boolean admin;
     private String adminToken;
-
-    @Builder
-    public SignupRequestDto(String email, String password, boolean admin, String adminToken) {
-        this.email = email;
-        this.password = password;
-        this.admin = admin;
-        this.adminToken = adminToken;
-    }
 
     public User toEntity(String password, UserRoleEnum role) {
         String nickname = email.substring(0, email.indexOf("@"));
