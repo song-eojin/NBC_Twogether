@@ -52,9 +52,6 @@ public class Card extends Timestamped {
     @Column
     private String attachment;
 
-    @Column
-    private String url;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
@@ -91,10 +88,6 @@ public class Card extends Timestamped {
 
     public void editPosition(float position) {
         this.position = position;
-    }
-
-    public void editUrl(String url) {
-        this.url = url;
     }
 
     public void moveToDeck(Deck deck) {

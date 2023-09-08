@@ -38,7 +38,7 @@ public class CardController {
     @Operation(summary = "카드 생성", description = "카드를 생성할 때 자동으로 가장 끝에 있는 카드의 "
         + "position + cycle(128)으로 position을 설정한다.")
     @PostMapping("/decks/{deckId}/cards")
-    private ResponseEntity<ApiResponseDto> addCard(
+    public ResponseEntity<ApiResponseDto> addCard(
         @PathVariable Long deckId,
         @RequestBody String title
     ) {
@@ -49,7 +49,7 @@ public class CardController {
 
     @Operation(summary = "카드 수정", description = "requestDto에 title 혹은 description이 null이라면 수정하지 않고 내버려두도록 설정")
     @PatchMapping("/cards/{cardId}")
-    private ResponseEntity<ApiResponseDto> editCard(
+    public ResponseEntity<ApiResponseDto> editCard(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long cardId,
         @RequestBody CardEditRequestDto requestDto
@@ -61,7 +61,7 @@ public class CardController {
 
     @Operation(summary = "협업 마감일 수정")
     @PutMapping("/cards/{cardId}/date")
-    private ResponseEntity<ApiResponseDto> editDate(
+    public ResponseEntity<ApiResponseDto> editDate(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long cardId,
         @RequestBody DateRequestDto requestDto
@@ -73,7 +73,7 @@ public class CardController {
 
     @Operation(summary = "카드 삭제", description = "카드가 보관 상태라면 삭제되지 않도록 설정")
     @DeleteMapping("/cards/{cardId}")
-    private ResponseEntity<ApiResponseDto> deleteCard(@PathVariable Long cardId) {
+    public ResponseEntity<ApiResponseDto> deleteCard(@PathVariable Long cardId) {
 
         cardService.deleteCard(cardId);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 삭제"));
@@ -81,7 +81,7 @@ public class CardController {
 
     @Operation(summary = "카드 보관/복구", description = "카드를 삭제하기 전 보관상태로 만들고, 복구하는 기능")
     @PutMapping("/cards/{cardId}/archive")
-    private ResponseEntity<ApiResponseDto> archiveCard(@PathVariable Long cardId) {
+    public ResponseEntity<ApiResponseDto> archiveCard(@PathVariable Long cardId) {
 
         cardService.archiveCard(cardId);
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드 보관/복구"));
@@ -90,7 +90,7 @@ public class CardController {
     @Operation(summary = "카드 이동", description = "카드를 이동하면 position 값을 이동하고자 하는 카드와 카드 사이의 "
         + "position 중간 값으로 설정, board 도 바꿀 수 있음.")
     @PutMapping("/cards/{cardId}/move")
-    private ResponseEntity<ApiResponseDto> moveCard(
+    public ResponseEntity<ApiResponseDto> moveCard(
         @PathVariable Long cardId,
         @RequestBody MoveCardRequestDto requestDto
     ) {
@@ -101,7 +101,7 @@ public class CardController {
 
     @Operation(summary = "파일 첨부", description = "S3를 사용해 이미지 및 멀티파트 파일을 업로드한다.")
     @PutMapping("/cards/{cardId}/file")
-    private ResponseEntity<ApiResponseDto> uploadFile(
+    public ResponseEntity<ApiResponseDto> uploadFile(
         @PathVariable Long cardId,
         @RequestPart MultipartFile multipartFile
     ) throws IOException {
@@ -112,7 +112,7 @@ public class CardController {
 
     @Operation(summary = "카드 단일 조회")
     @GetMapping("/cards/{cardId}")
-    private ResponseEntity<CardResponseDto> getCard(@PathVariable Long cardId) {
+    public ResponseEntity<CardResponseDto> getCard(@PathVariable Long cardId) {
 
         CardResponseDto responseDto = cardService.getCard(cardId);
         return ResponseEntity.ok().body(responseDto);
