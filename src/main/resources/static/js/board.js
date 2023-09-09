@@ -16,6 +16,27 @@ $(document).ready(function () {
 })
 
 // fetch API 로직
+async function logout() {
+    // when
+    await fetch('/api/users/logout', {
+        method: 'DELETE',
+        headers: {
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        resetToken()
+        window.location.href = BASE_URL + '/views/login'
+    })
+}
+
+
 async function getUserInfo() {
 	// when
 	await fetch('/api/users/info', {
@@ -493,10 +514,6 @@ async function deleteCard(cardId) {
 }
 
 // 순수 javascript 동작
-function logout() {
-	resetToken()
-	window.location.href = BASE_URL + '/views/login'
-}
 
 function toggleCreateWorkspace() {
 	$('#create-workspace-form').toggle()
@@ -507,10 +524,10 @@ function createCardOnOff() {
 }
 
 function formDeck(deck) {
-	let deckId = deck['deckId']
-	let title = deck['title']
+    let deckId = deck['deckId']
+    let title = deck['title']
 
-	return `
+    return `
         <li id="${deckId}" class="deck deck-list-content" draggable="true"
             ondragstart="dragStart(event)">
             <ul class="deck-list-ul">
@@ -533,7 +550,7 @@ function formDeck(deck) {
                         
                         <!-- todo: 카드 추가 기능 활성화 -->
                         <div class="deck-list-add-card-container">
-                            <a id="open-add-cardlist-button-${deckId}" class="open-add-cardlist-button" aria-label="카드 생성 열기">
+                            <a id="open-add-cardlist-button-${deckId}" class="open-add-cardlist-button" href="#" aria-label="카드 생성 열기">
                                 <i class="fa-solid fa-plus fa-xl"></i>
                                 카드 추가
                             </a>
@@ -541,7 +558,7 @@ function formDeck(deck) {
                         
                         <!-- todo: 카드 추가 기능 -->
                         <div id="add-card-name-text-area-form-${deckId}" class="deck-list-add-card-name-text-area">
-                            <div class="add-card-name-text-area-form hidden">
+                            <form class="add-card-name-text-area-form hidden" action="post">
                                 <input type="text" name="add-cardlist-input"
                                        class="add-cardlist-input"
                                        id="card-title-input-${deckId}"
@@ -556,7 +573,7 @@ function formDeck(deck) {
                                         <i class="fa-solid fa-xmark fa-xl"></i>
                                     </a>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                         
                     </div>
@@ -567,10 +584,10 @@ function formDeck(deck) {
 }
 
 function formArchived(deck) {
-	let deckId = deck['deckId']
-	let title = deck['title']
+    let deckId = deck['deckId']
+    let title = deck['title']
 
-	return `
+    return `
         <li id="archive-deck-${deckId}">
             <span class="archive-item-title">${title}</span>
             <div class="archive-btns">
@@ -780,83 +797,80 @@ function closeCard(cardId) {
 }
 
 function toggleEditDeckTitle(deckId) {
-	$('#edit-deck-title-form-' + deckId).toggle()
+    $('#edit-deck-title-form-' + deckId).toggle()
 }
 
 function toggleCreateDeckForm() {
-	$('#create-deck-form').toggle()
+    $('#create-deck-form').toggle()
 }
 
 function openNav() {
-	document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("mySidenav").style.width = "250px";
 }
 
 function closeNav() {
-	document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("mySidenav").style.width = "0";
 }
 
 // drag & drop 관련 로직
 let draggedIndex = null;
 
 function dragStart(event) {
-	const decks = document.querySelectorAll('.deck');
-	draggedIndex = Array.from(decks).indexOf(event.target);
+    const decks = document.querySelectorAll('.deck');
+    draggedIndex = Array.from(decks).indexOf(event.target);
 }
 
 function allowDrop(event) {
-	event.preventDefault();
+    event.preventDefault();
 }
 
 function drop(event) {
-	event.preventDefault();
+    event.preventDefault();
 
-	const deckList = document.getElementById('deck-list');
-	if (deckList.contains(event.target)) {
-		const dropIndex = Array.from(deckList.children).indexOf(event.target);
-		let currentDeck = deckList.children[draggedIndex]
-		let targetDeck = event.target
+    const deckList = document.getElementById('deck-list');
+    if (deckList.contains(event.target)) {
+        const dropIndex = Array.from(deckList.children).indexOf(event.target);
+        let currentDeck = deckList.children[draggedIndex]
+        let targetDeck = event.target
 
-		if (currentDeck.id !== targetDeck.id &&
-			currentDeck.classList.contains('deck') &&
-			targetDeck.classList.contains('deck')) {
-			if (draggedIndex < dropIndex) {
-				let nextDeckId = targetDeck.nextElementSibling === null ? 0
-					: targetDeck.nextElementSibling.id
-				moveDeck(currentDeck.id, targetDeck.id, nextDeckId)
-				.then(() => deckList.insertBefore(currentDeck,
-					targetDeck.nextElementSibling))
-			} else {
-				let prevDeckId = targetDeck.previousElementSibling === null ? 0
-					: targetDeck.previousElementSibling.id
-				moveDeck(currentDeck.id, prevDeckId, targetDeck.id)
-				.then(() => deckList.insertBefore(currentDeck, targetDeck))
-			}
-		}
-	}
+        if (currentDeck.id !== targetDeck.id &&
+            currentDeck.classList.contains('deck') &&
+            targetDeck.classList.contains('deck')) {
+            if (draggedIndex < dropIndex) {
+                let nextDeckId = targetDeck.nextElementSibling === null ? 0 : targetDeck.nextElementSibling.id
+                moveDeck(currentDeck.id, targetDeck.id, nextDeckId)
+                .then(() => deckList.insertBefore(currentDeck, targetDeck.nextElementSibling))
+            } else {
+                let prevDeckId = targetDeck.previousElementSibling === null ? 0 : targetDeck.previousElementSibling.id
+                moveDeck(currentDeck.id, prevDeckId, targetDeck.id)
+                .then(() => deckList.insertBefore(currentDeck, targetDeck))
+            }
+        }
+    }
 
-	draggedIndex = null;
+    draggedIndex = null;
 }
 
 // token 관련 재생성, 삭제, 만료 로직
 function refreshToken(response) {
-	let token = response.headers.get('Authorization')
-	if (token !== null) {
-		resetToken()
-		Cookies.set('Authorization', token, {path: '/'})
-		Cookies.set('Refresh-Token', response.headers.get('Refresh-Token'),
-			{path: '/'})
-	}
+    let token = response.headers.get('Authorization')
+    if (token !== null) {
+        resetToken()
+        Cookies.set('Authorization', token, {path: '/'})
+        Cookies.set('Refresh-Token', response.headers.get('Refresh-Token'),
+            {path: '/'})
+    }
 }
 
 function resetToken() {
-	Cookies.remove('Authorization', {path: '/'})
-	Cookies.remove('Refresh-Token', {path: '/'})
+    Cookies.remove('Authorization', {path: '/'})
+    Cookies.remove('Refresh-Token', {path: '/'})
 }
 
 function checkTokenExpired(res) {
-	if (res.status === 412) {
-		alert('토큰이 만료되었습니다. 다시 로그인해주세요!')
-		resetToken()
-		window.location.href = BASE_URL + '/views/login'
-	}
+    if (res.status === 412) {
+        alert('토큰이 만료되었습니다. 다시 로그인해주세요!')
+        resetToken()
+        window.location.href = BASE_URL + '/views/login'
+    }
 }

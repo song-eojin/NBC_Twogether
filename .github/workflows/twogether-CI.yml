@@ -18,9 +18,15 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
 
+  build:
     runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     steps:
       - name: 레포지토리 체크아웃
@@ -56,6 +62,10 @@ jobs:
           echo "${{ secrets.APPLICATION_KEY_YML }}" > ./application-key.yml
           touch ./application-oauth.yml
           echo "${{ secrets.APPLICATION_OAUTH_YML }}" > ./application-oauth.yml
+          touch ./application-redis.yml
+          echo "${{ secrets.APPLICATION_REDIS_YML }}" > ./application-redis.yml
+          touch ./application-smtp.yml
+          echo "${{ secrets.APPLICATION_SMTP_YML }}" > ./application-smtp.yml
         shell: bash
 
       # gradle 실행 허가

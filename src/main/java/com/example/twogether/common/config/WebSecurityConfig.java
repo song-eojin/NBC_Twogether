@@ -1,6 +1,7 @@
 package com.example.twogether.common.config;
 
 import com.example.twogether.common.jwt.JwtUtil;
+import com.example.twogether.common.redis.RedisRefreshToken;
 import com.example.twogether.common.security.JwtAuthenticationFilter;
 import com.example.twogether.common.security.JwtAuthorizationFilter;
 import com.example.twogether.common.security.UserDetailsServiceImpl;
@@ -26,27 +27,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final RedisRefreshToken redisRefreshToken;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
         return configuration.getAuthenticationManager();
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisRefreshToken);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, redisRefreshToken, userDetailsService);
     }
 
     @Bean
@@ -64,6 +63,7 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers(HttpMethod.GET, "/views/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/social/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/boards/**").permitAll()
                 .requestMatchers("/api/decks/**").permitAll()

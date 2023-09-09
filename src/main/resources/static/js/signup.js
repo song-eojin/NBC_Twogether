@@ -9,7 +9,7 @@ async function submitEmail() {
 
   // when
   await fetch('/api/users/send-verification', {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -42,10 +42,10 @@ async function submitCertificationNumber() {
   .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
   .join('&')
 
-  let url = BASE_URL + '/api/users/send-certification?' + query
+  let url = BASE_URL + '/api/users/verify?' + query
 
   await fetch(url, {
-    method: 'POST',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }

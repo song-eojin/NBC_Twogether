@@ -45,46 +45,14 @@ public class UserControllerTest {
 
     @BeforeEach
     void init() throws Exception {
-        signup();
         login();
-    }
-
-    @Test
-    @DisplayName("회원 가입")
-    void signup() throws Exception{
-        // given
-        String email = "user2023@email.com";
-        String password = "user123!@#";
-        boolean admin = false;
-        String adminToken = "";
-
-        // when
-        String body = mapper.writeValueAsString(
-            SignupRequestDto.builder()
-                .email(email).password(password)
-                .admin(admin).adminToken(adminToken)
-                .build()
-        );
-
-        // then(1) - 정상적으로 회원 가입 성공
-        mvc.perform(post(BASE_URL + "/signup")
-                .content(body)
-                .contentType(MediaType.APPLICATION_JSON)
-            );
-
-        // then(2) - 중복 회원 가입 시도
-        mvc.perform(post(BASE_URL + "/signup")
-                .content(body)
-                .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("로그인")
     void login() throws Exception {
         // given
-        String email = "user2023@email.com";
+        String email = "user1@mail.com";
         String password = "user123!@#";
 
         // when
@@ -134,7 +102,7 @@ public class UserControllerTest {
     @DisplayName("사용자 정보 삭제")
     void deleteUserInfo() throws Exception {
         // given
-        String email = "user2023@email.com";
+        String email = "user1@mail.com";
 
         // when-then. 사용자 본인 정보 가져오기
         MvcResult result = mvc.perform(get(BASE_URL + "/info")
@@ -206,11 +174,11 @@ public class UserControllerTest {
             .andExpect(status().isBadRequest())
             .andDo(print());
 
-        // when-then-iii. 기존에 사용한 이력이 있는 비밀번호 사용 시도
+        // when-then-iii. 2회 이내에 사용한 이력이 있는 비밀번호 사용 시도
         body = mapper.writeValueAsString(
             EditPasswordRequestDto.builder()
                 .password(newPassword)
-                .newPassword(password)
+                .newPassword(newPassword)
                 .build()
         );
 

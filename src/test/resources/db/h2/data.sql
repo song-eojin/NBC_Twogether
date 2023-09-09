@@ -8,11 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(50)
 );
 
--- 더미 사용자 데이터 삽입
+-- 더미 사용자 데이터 삽입 (password는 모두 `user123!@#`이 암호화된 값!)
 INSERT INTO users (id, email, introduction, nickname, password, role) VALUES
-(1, 'user1@mail.com', 'tester', 'tester', 'test1234!', 'USER'),
-(2, 'user2@mail.com', 'tester', 'tester', 'test1234!', 'USER'),
-(3, 'user3@mail.com', 'tester', 'tester', 'test1234!', 'USER');
+(1, 'user1@mail.com', 'tester', 'tester', '$2a$10$sVj83fJw0XSqg0ThjJ5MTuSD6SK7gCWYupCipJ4xBIgQQBMhTlVWe', 'USER'),
+(2, 'user2@mail.com', 'tester', 'tester', '$2a$10$sVj83fJw0XSqg0ThjJ5MTuSD6SK7gCWYupCipJ4xBIgQQBMhTlVWe', 'USER'),
+(3, 'user3@mail.com', 'tester', 'tester', '$2a$10$sVj83fJw0XSqg0ThjJ5MTuSD6SK7gCWYupCipJ4xBIgQQBMhTlVWe', 'USER');
 
 -- workspace 테이블 생성
 CREATE TABLE IF NOT EXISTS workspace (

@@ -1,8 +1,6 @@
 package com.example.twogether.card.dto;
 
 import com.example.twogether.card.entity.Card;
-import com.example.twogether.card.entity.CardCollaborator;
-import com.example.twogether.card.entity.CardLabel;
 import com.example.twogether.checklist.dto.CheckListResponseDto;
 import com.example.twogether.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;

@@ -4,7 +4,6 @@ import com.example.twogether.card.dto.CardEditRequestDto;
 import com.example.twogether.card.dto.CardResponseDto;
 import com.example.twogether.card.dto.DateRequestDto;
 import com.example.twogether.card.dto.MoveCardRequestDto;
-import com.example.twogether.card.entity.Card;
 import com.example.twogether.card.service.CardService;
 import com.example.twogether.common.dto.ApiResponseDto;
 import com.example.twogether.common.security.UserDetailsImpl;

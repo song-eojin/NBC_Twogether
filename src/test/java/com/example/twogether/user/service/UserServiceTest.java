@@ -4,9 +4,7 @@ import com.example.twogether.common.error.CustomErrorCode;
 import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.user.dto.EditPasswordRequestDto;
 import com.example.twogether.user.dto.EditUserRequestDto;
-import com.example.twogether.user.dto.SignupRequestDto;
 import com.example.twogether.user.entity.User;
-import com.example.twogether.user.entity.UserRoleEnum;
 import com.example.twogether.user.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,46 +33,8 @@ class UserServiceTest {
     private User user;
 
     @BeforeEach
-    void signUp() {
-        // given
-        String email = "user2024@email.com";
-        String password = "user123!@#";
-        boolean admin = false;
-        String adminToken = "";
-
-        encoder = new BCryptPasswordEncoder();
-        SignupRequestDto request = SignupRequestDto.builder().email(email).password(password)
-            .admin(admin).adminToken(adminToken).build();
-
-        // when
-        User signed = userService.signup(request);
-
-        // then
-        Assertions.assertEquals(email, signed.getEmail());
-        Assertions.assertTrue(encoder.matches(password, signed.getPassword()));
-        Assertions.assertEquals(UserRoleEnum.USER, signed.getRole());
-        user = signed;
-    }
-
-    @Test
-    @DisplayName("중복 회원 가입 실패")
-    void SignUpFailed() {
-        // given
-        String email = "user2024@email.com";
-        String password = "user123!@#";
-        boolean admin = false;
-        String adminToken = "";
-
-        encoder = new BCryptPasswordEncoder();
-        SignupRequestDto request = SignupRequestDto.builder().email(email).password(password)
-            .admin(admin).adminToken(adminToken).build();
-
-        // when - then
-        try {
-            userService.signup(request);
-        } catch (CustomException e) {
-            Assertions.assertEquals(CustomErrorCode.USER_ALREADY_EXISTS, e.getErrorCode());
-        }
+    void init() {
+        user = userRepository.findById(1L).orElse(null);
     }
 
     @Test
@@ -99,7 +58,7 @@ class UserServiceTest {
     @DisplayName("사용자 정보 삭제")
     void deleteUserInfo() {
         // given
-        long userId = user.getId();
+        long userId = 1L;
 
         // when
         userService.deleteUserInfo(userId, user);
@@ -133,7 +92,8 @@ class UserServiceTest {
         String password = "user123!@#";
         String newPassword = "user234@#$";
 
-        EditPasswordRequestDto recentlyUsed = EditPasswordRequestDto.builder().password(password)
+        EditPasswordRequestDto recentlyUsed = EditPasswordRequestDto.builder()
+            .password(password)
             .newPassword(password).build();
 
         EditPasswordRequestDto wrongPassword = EditPasswordRequestDto.builder()

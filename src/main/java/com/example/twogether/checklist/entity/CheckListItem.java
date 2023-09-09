@@ -31,6 +31,7 @@ public class CheckListItem extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+    @Builder.Default
     @Column(name = "is_checked")
     private boolean checked = false;
 

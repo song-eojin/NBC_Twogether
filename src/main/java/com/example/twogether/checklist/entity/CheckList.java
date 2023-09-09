@@ -40,6 +40,7 @@ public class CheckList extends Timestamped {
     @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
+    @Builder.Default
     @OneToMany(mappedBy = "checkList")
     private List<CheckListItem> checkListItemList = new ArrayList<>();
 
