@@ -352,7 +352,7 @@ nav {
     box-shadow: 0 1px 1px #091e4240,0 0 1px #091e424f;
 }
 .card-list-title {
-    max-width: 100px;
+    width: auto;
     font-size: 16px;
     padding: 2px 2px 5px 5px;
 }
@@ -370,8 +370,8 @@ nav {
 .card-page {
     position: fixed;
     top: 10%; /* 팝업 창의 위치 조절 */
-    left: 20%; /* 팝업 창의 위치 조절 */
-    width: 60%; /* 팝업 창의 너비 조절 */
+    left: 30%; /* 팝업 창의 위치 조절 */
+    width: 40%; /* 팝업 창의 너비 조절 */
     height: 80%; /* 팝업 창의 높이 조절 */
     min-width: 600px;
     min-height: 700px;
@@ -424,6 +424,7 @@ nav {
 }
 .nav-archive {
     padding-bottom: 20px;
+
 }
 
 /*우측 사이드바 보드 세팅*/
@@ -435,7 +436,7 @@ nav {
     margin: 0;
     box-sizing: border-box;
     width: 200px;
-    height: 135px;
+    height: 160px;
     padding: 10px 10px;
     position: relative;
     border: 1px solid #ccc;
@@ -610,21 +611,111 @@ nav {
     left:37px;
 }
 
-.card-detail-side-menu {
-    float: right;
-    overflow: hidden;
-    padding: 0 16px 8px 8px;
-    /*width: 50%;*/
+.comment-item {
+    position: relative;
+    display: flex;
+    min-height: 32px;
+    padding: 0px;
+    width: 100%;
+}
 
-    height: 100%;
-    position: fixed;
-    /*z-index: 1;*/
-    top: 90px;
-    right: 0;
-    /*background-color: #111;*/
-    /*overflow-x: hidden;*/
-    /*transition: 0.5s;*/
-    /*padding-top: 60px;*/
+.comment-item img {
+    position: relative;
+}
+
+.comment-content {
+    position: relative;
+    max-width: 160px;
+    width: 160px;
+    margin-left: 10px;
+}
+
+.checkList-list {
+    position:static;
+    padding: 0 5px 15px 24px;
+}
+
+.card-checklist-header {
+    position: relative;
+    display: flex;
+    min-height: 32px;
+    padding: 0px;
+    width: 100%;
+    font-size: 20px;
+}
+
+.card-checklist-header i {
+    position: relative;
+    top: 5px;
+}
+
+.checkList-title {
+    position: relative;
+    left: 13px;
+}
+
+.cp-delete-button {
+    position: relative;
+    top: 5px;
+    margin-left: 25px;
+}
+
+.cp-delete-button:hover {
+    color: #DF0101;
+}
+
+.checkList-item {
+    position: relative;
+    display: flex;
+    min-height: 32px;
+    padding: 0px;
+    width: 100%;
+    font-size: 15px;
+}
+
+.checkList-item input {
+    position: relative;
+}
+
+.checkbox-title {
+    position: relative;
+    max-width: 160px;
+    width: 180px;
+    top: 5px;
+    margin-left: 10px;
+}
+
+.checkList-item i {
+    position: relative;
+    top: 8px;
+}
+
+.card-sidebar {
+    width: 30%; /* 원하는 너비 조정 */
+    height: 100%; /* 높이 100%로 설정하여 card-page-wrapper와 같은 높이로 만듭니다. */
+    background-color: #f0f0f0; /* 배경색 설정 (선택 사항) */
+    position: absolute;
+    right: 0; /* 우측으로 배치합니다. */
+    top: 0; /* 위쪽 정렬 (선택 사항) */
+    display: flex;
+    flex-direction: column; /* 버튼을 세로로 나열하도록 설정 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.sidebar-button {
+    margin: 10px 0; /* 버튼 사이의 간격을 조정합니다. */
+    padding: 10px 20px; /* 버튼의 패딩을 조정합니다. */
+    text-align: center;
+    width: 80%; /* 버튼의 너비를 조정합니다. */
+    background-color: #ddd; /* 버튼 배경색 설정 (선택 사항) */
+    border: none;
+    cursor: pointer;
+}
+
+/* hover 시 버튼 스타일 (선택 사항) */
+.sidebar-button:hover {
+    background-color: #ccc; /* hover 시 배경색 변경 (선택 사항) */
 }
 
 /*보드초대*/

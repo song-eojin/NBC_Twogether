@@ -12,5 +12,4 @@ public interface WpColRepository extends JpaRepository<WorkspaceCollaborator, Lo
     boolean existsByWorkspaceAndEmail(Workspace workspace, String email);
     Optional<WorkspaceCollaborator> findByWorkspaceAndEmail(Workspace workspace, String email);
     void deleteAllByWorkspace_Id(Long id);
-    List<WorkspaceCollaborator> findByUser(User user);
 }

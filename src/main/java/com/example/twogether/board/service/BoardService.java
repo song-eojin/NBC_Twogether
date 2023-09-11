@@ -18,6 +18,7 @@ import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
 import com.example.twogether.workspace.entity.Workspace;
 import com.example.twogether.workspace.entity.WorkspaceCollaborator;
+import com.example.twogether.workspace.repository.WpColRepository;
 import com.example.twogether.workspace.repository.WpRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class BoardService {
     private final CardRepository cardRepository;
     private final BoardColRepository boardColRepository;
     private final WpRepository wpRepository;
+    private final WpColRepository wpColRepository;
 
 
     // 보드 생성
@@ -139,7 +141,7 @@ public class BoardService {
     private void checkWpPermissions(Workspace workspace, User user) {
 
         if (!workspace.getUser().getEmail().equals(user.getEmail()) &&
-            !workspace.getWorkspaceCollaborators().contains(user) &&
+            !wpColRepository.existsByWorkspaceAndEmail(workspace, user.getEmail()) &&
             !user.getRole().equals(UserRoleEnum.ADMIN)) {
 
             throw new CustomException(CustomErrorCode.NOT_PARTICIPATED_WORKSPACE);
@@ -149,7 +151,7 @@ public class BoardService {
     private void checkBoardPermissions(Board board, User user) {
 
         if (!board.getUser().getEmail().equals(user.getEmail()) &&
-            !board.getBoardCollaborators().contains(user) &&
+            !boardColRepository.existsByBoardAndEmail(board, user.getEmail()) &&
             !user.getRole().equals(UserRoleEnum.ADMIN)) {
 
             throw new CustomException(CustomErrorCode.NOT_PARTICIPATED_BOARD);
