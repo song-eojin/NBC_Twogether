@@ -1,8 +1,7 @@
 package com.example.twogether.socialLogin.service;
 
-import com.example.twogether.common.error.CustomErrorCode;
-import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.common.jwt.JwtUtil;
+import com.example.twogether.common.redis.RedisRefreshToken;
 import com.example.twogether.socialLogin.dto.NaverUserInfoDto;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
@@ -33,6 +32,7 @@ public class NaverLoginService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RedisRefreshToken redisRefreshToken;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
 
@@ -43,19 +43,27 @@ public class NaverLoginService {
 
     private static final String RESPONSE = "response";
 
-    public String naverLogin(String code, HttpServletResponse response) throws JsonProcessingException { //String code는 네이버로부터 받은 인가 코드
+    public void naverLogin(String code, HttpServletResponse response)
+        throws JsonProcessingException { //String code는 네이버로부터 받은 인가 코드
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
+
         // 2. 토큰으로 네이버 API 호출 : "액세스 토큰"으로 "네이버 사용자 정보" 가져오기
         NaverUserInfoDto naverUserInfo = getNaverUserInfo(accessToken);
+
         // 3. 필요시 회원가입 아니라면 바로 user가져오기.
         User naverUser = registerNaverUserIfNeeded(naverUserInfo);
+
         // 4. JWT 토큰 반환
         String createToken = jwtUtil.createToken(naverUser.getEmail(), naverUser.getRole());
+        jwtUtil.addJwtToCookie(createToken, response, true);
 
-        log.info("토큰정보"+createToken);
-        jwtUtil.addJwtToCookie(createToken, response);
-        return createToken;
+        String refreshToken = jwtUtil.createRefreshToken();
+        jwtUtil.addJwtToCookie(refreshToken, response, false);
+        redisRefreshToken.saveRefreshToken(refreshToken, Long.toString(naverUser.getId()));
+
+        log.info("access token: " + createToken);
+        log.info("refresh token: " + refreshToken);
     }
 
 

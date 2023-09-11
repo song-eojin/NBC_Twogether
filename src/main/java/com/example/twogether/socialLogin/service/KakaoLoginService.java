@@ -1,6 +1,7 @@
 package com.example.twogether.socialLogin.service;
 
 import com.example.twogether.common.jwt.JwtUtil;
+import com.example.twogether.common.redis.RedisRefreshToken;
 import com.example.twogether.socialLogin.dto.KakaoUserInfoDto;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
@@ -31,25 +32,34 @@ public class KakaoLoginService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RedisRefreshToken redisRefreshToken;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
 
     @Value("${kakao.client.id}")
     private String kakaoClientId;
 
-    public String kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException { //String code는 카카오로부터 받은 인가 코드
+    public void kakaoLogin(String code, HttpServletResponse response)
+        throws JsonProcessingException { //String code는 카카오로부터 받은 인가 코드
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
+
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+
         // 3. 필요시 회원가입 아니라면 바로 user가져오기.
         User kakaouser = registerKakaoUserIfNeeded(kakaoUserInfo);
+
         // 4. JWT 토큰 반환
         String createToken = jwtUtil.createToken(kakaouser.getEmail(), kakaouser.getRole());
+        jwtUtil.addJwtToCookie(createToken, response, true);
 
-        log.info("토큰정보"+createToken);
-        jwtUtil.addJwtToCookie(createToken, response);
-        return createToken;
+        String refreshToken = jwtUtil.createRefreshToken();
+        jwtUtil.addJwtToCookie(refreshToken, response, false);
+        redisRefreshToken.saveRefreshToken(refreshToken, Long.toString(kakaouser.getId()));
+
+        log.info("access token: " + createToken);
+        log.info("refresh token: " + refreshToken);
     }
 
 

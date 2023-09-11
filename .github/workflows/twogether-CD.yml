@@ -12,8 +12,8 @@ on:
 env:
   S3_BUCKET_NAME: twogetherbucket
   AWS_REGION: ap-northeast-2
-  CODEDEPLOY_NAME: github-actions
-  CODEDEPLOY_GROUP: github-actions-group
+  CODEDEPLOY_NAME: twogether-codedeploy-app
+  CODEDEPLOY_GROUP: twogether-codedeploy-deployment-group
 
 # workflow는 한개 이상의 job을 가지며, 각 job은 여러 step에 따라 단계를 나눌 수 있습니다.
 jobs:
@@ -33,12 +33,22 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: yml 파일 생성
+        run: |
+          cd ./src/main/resources
+          rm -rf ./application.properties
+          touch ./application.yml
+          echo "${{ secrets.APPLICATION_CD_YML }}" > ./application.yml
+          touch ./application-keys.yml
+          echo "${{ secrets.APPLICATION_KEYS_YML }}" > ./application-keys.yml
+        shell: bash
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle (without test)
+        run: ./gradlew clean build --exclude-task test
         shell: bash
 
       - name: Make zip file
@@ -46,14 +56,19 @@ jobs:
         shell: bash
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name $CODEDEPLOY_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODEDEPLOY_GROUP --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+        run: |
+          aws deploy create-deployment \
+          --application-name $CODEDEPLOY_NAME \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name $CODEDEPLOY_GROUP \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip

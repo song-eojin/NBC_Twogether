@@ -68,18 +68,16 @@ public class JwtUtil {
         return UUID.randomUUID().toString();
     }
 
-    public void addJwtToCookie(String token, HttpServletResponse res) {
+    public void addJwtToCookie(String token, HttpServletResponse res, boolean isAccessToken) {
         try {
-            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+            token = isAccessToken ? URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20") : token;
+            String header = isAccessToken ? AUTHORIZATION_HEADER : REFRESH_TOKEN_HEADER;
+            res.addHeader(header, token);
 
-
-            res.addHeader(AUTHORIZATION_HEADER, token);
-
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+            Cookie cookie = new Cookie(header, token);
             cookie.setPath("/");
-
-            // Response 객체에 Cookie 추가
             res.addCookie(cookie);
+
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         }

@@ -1,4 +1,5 @@
 const BASE_URL = 'http://localhost:8080'
+// const BASE_URL = 'http://52.78.70.219'
 
 // html 로딩 시 바로 실행되는 로직
 $(document).ready(function () {
@@ -36,7 +37,6 @@ async function logout() {
     })
 }
 
-
 async function getUserInfo() {
 	// when
 	await fetch('/api/users/info', {
@@ -60,11 +60,8 @@ async function getUserInfo() {
 		callMyBoard()
 	})
 }
-// 워크스페이스로 이동
-function moveToWorkspace() {
-	window.location.href = BASE_URL + '/views/workspace'
-}
 
+// Board 관련 로직
 async function callMyBoard() {
 	// given
 	let boardId = document.getElementById('boardId').textContent
@@ -1099,6 +1096,9 @@ async function deleteCard(cardId) {
 }
 
 // 순수 javascript 동작
+function moveToWorkspace() {
+	window.location.href = BASE_URL + '/views/workspace'
+}
 
 function toggleCreateWorkspace() {
 	$('#create-workspace-form').toggle()
@@ -1143,7 +1143,7 @@ function formDeck(deck) {
                         
                         <!-- todo: 카드 추가 기능 -->
                         <div id="add-card-name-text-area-form-${deckId}" class="deck-list-add-card-name-text-area">
-                            <form class="add-card-name-text-area-form hidden" action="post">
+                            <div class="add-card-name-text-area-form hidden">
                                 <input type="text" name="add-cardlist-input"
                                        class="add-cardlist-input"
                                        id="card-title-input-${deckId}"
@@ -1158,7 +1158,7 @@ function formDeck(deck) {
                                         <i class="fa-solid fa-xmark fa-xl"></i>
                                     </a>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         
                     </div>

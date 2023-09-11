@@ -48,7 +48,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 log.error("액세스 토큰 만료됨 : " + accessToken);
                 if (!redisRefreshToken.hasKey(refreshToken)) {
-                    printAuthenticationFailure(res, true);
+                    printAuthenticationFailure(res, false);
                     return;
                 }
 
@@ -67,7 +67,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
             if (!isValid) {
-                printAuthenticationFailure(res, false);
+                printAuthenticationFailure(res, true);
                 return;
             }
 
@@ -78,7 +78,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 // 인증 처리에 실패한 경우 처리
                 log.error(e.getMessage());
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                res.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
                 res.setContentType(contentType);
                 String result = new ObjectMapper().writeValueAsString(
                     new ErrorResponseDto(CustomErrorCode.USER_NOT_FOUND));
@@ -110,7 +110,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 인증 실패 메시지 처리
     private void printAuthenticationFailure(HttpServletResponse res, boolean isAccessToken)
         throws IOException {
-        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        res.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
         res.setContentType(contentType);
         String result = new ObjectMapper().writeValueAsString(
             new ErrorResponseDto(isAccessToken ?

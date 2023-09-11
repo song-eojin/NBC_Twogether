@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ViewController {
 
+    @GetMapping("/")
+    public String init() { return "login"; }
+
     @GetMapping("/views/signup")
     public String signup() {
         return "signup";
