@@ -36,30 +36,31 @@ h2 {
     letter-spacing:1px;
 }
 text-h3 {
-    text-align:center;
-
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 h3 {
-    padding: 0 70px;
     color:#000000;
     font-family: sans-serif;
     font-size:38px;
     letter-spacing:1px;
     transition:.2s linear;
     margin: 30px 50px 0 50px;
+    text-align: center;
+    width: 100%;
 }
 text-h4 {
-    text-align:center;
 }
 h4 {
     color:#000000;
-    padding: 0 30px;
     font-family: sans-serif;
     font-size:18px;
     letter-spacing:0px;
     text-align:center;
     transition:.2s linear;
     margin: 1px 15px 20px 15px;
+    width: 100%;
 }
 .container div {
     display: flex;
@@ -102,6 +103,30 @@ button:hover {
 }
 sendLoginPage {
     margin: 1px 0 Auto 0;
+}
+
+.separator {
+    display: flex;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.separator-or {
+    display: block;
+    margin: 10px auto 10px;
+    text-align: center;
+    height: 10px;
+    position: relative;
+    background: transparent;
+    color: rgba(15,19,42, 0.5);
+    font-size: 13px;
+    width: 90%;
+    max-width: 680px;
+    line-height: 1;
+
+}
+#login-kakao-btn {
+    background-color:#FEE500;
+    color:#000000;
 }
 a {
     display: block;

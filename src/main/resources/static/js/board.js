@@ -60,6 +60,10 @@ async function getUserInfo() {
 		callMyBoard()
 	})
 }
+// 워크스페이스로 이동
+function moveToWorkspace() {
+	window.location.href = BASE_URL + '/views/workspace'
+}
 
 async function callMyBoard() {
 	// given
@@ -86,13 +90,21 @@ async function callMyBoard() {
 			return
 		}
 
+		var boardTitle =$('#board-title')
+
 		var decks = $('#deck-list')
 		var archive = $('#archive-container')
 
+		boardTitle.empty()
 		decks.empty()
 		archive.empty()
 		let board = await res.json()
 
+		for(let boardCollaborator of board['boardCollaborators']) {
+			$('#invite-board-collaborator-list').append(formBoardCollaborator(boardId,boardCollaborator))
+		}
+
+		boardTitle.append(board['title'])
 		for (let deck of board['decks']) {
 			if (deck['archived']) {
 				archive.append(formArchived(deck))
@@ -184,6 +196,190 @@ async function createWorkspace() {
 	})
 }
 
+function editBoardOnOff() {
+	$('#edit-board-form').toggle()
+}
+
+function closeEditBoard() {
+	$('#edit-board-form').hide()
+}
+
+function editBoard() {
+	//given
+	let boardId = document.getElementById('boardId').textContent
+
+	let title = document.getElementById('board-title-edited').value
+	if (title === '') {
+		title = null;
+	}
+	let color = document.getElementById('board-color-edited').value
+	if (color === '') {
+		color = null;
+	}
+	let info = document.getElementById('board-info-edited').value
+	if (info === '') {
+		info = null;
+	}
+
+	console.log(title)
+
+	const request = {
+		title: title,
+		color: color,
+		info: info
+	}
+
+	// when
+	fetch('/api/boards/' + boardId, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+		// then
+		.then(async res => {
+			checkTokenExpired(res)
+			refreshToken(res)
+
+			if (res.status !== 200) {
+				let error = await res.json()
+				alert(error['message'])
+				return
+			}
+
+			closeEditBoard()
+			await callMyBoard()
+		});
+}
+function openInviteBoardCollab() {
+	closeAllInviteCollaborators()
+	$('#invite-board-collaborator').show()
+}
+
+function closeAllInviteCollaborators() {
+	$('.invite-collaborator').hide()
+}
+
+async function inviteBoardCollaborator() {
+	// given
+	let boardId = document.getElementById('boardId').textContent
+
+
+	let email = document.getElementById('board-collaborator-email').value
+	const request = {
+		email: email
+	}
+
+	// when
+	await fetch('/api/boards/' + boardId + '/invite', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request)
+	})
+
+		// then
+		.then(async res => {
+			checkTokenExpired(res)
+			refreshToken(res)
+
+			if (res.status !== 200) {
+				let error = await res.json()
+				alert(error['message'])
+			}
+
+			closeAllInviteCollaborators()
+			await callMyBoard()
+		})
+}
+
+function formBoardCollaborator(boardId,boardCollaborator) {
+	let boardColId = boardCollaborator['boardColId']
+	let email = boardCollaborator['email']
+	let nickname = boardCollaborator['nickname']
+
+	return `
+				<li id="board-col-${boardColId}">
+				<span>${nickname}</span>
+				<span id="board-col-email-${boardColId}">${email}</span>
+				<button onclick="deleteBoardCollaborator(${boardId},${boardColId})">추방</button>
+				</li>
+				`
+}
+
+function deleteBoard() {
+	let boardId = document.getElementById('boardId').textContent
+
+	let check = confirm("보드를 삭제하시겠습니까?")
+	if (!check) {
+		return
+	}
+
+	// when
+	fetch(`/api/boards/${boardId}`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+		// then
+		.then(async res => {
+			checkTokenExpired(res)
+			refreshToken(res)
+
+			if (res.status !== 200) {
+				let error = await res.json()
+				alert(error['message'])
+				return
+			}
+
+			moveToWorkspace()
+		})
+}
+
+function deleteBoardCollaborator(boardId,boardColId) {
+	//given
+	let boardColEmail = document.getElementById('board-col-email-' + boardColId).innerHTML
+
+	const request = {
+		email: boardColEmail
+	}
+
+	// when
+	fetch('/api/boards/' + boardId + '/invite', {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		$('#board-col-' + boardColId).remove()
+	})
+
+}
 async function createDeck() {
 	// given
 	let boardId = document.getElementById('boardId').textContent
@@ -1030,11 +1226,16 @@ function formCardPage(card) {
 	return `
 			<div id="card-page-wrapper" class="card-page-wrapper">
 				<div id="card-page-${cardId}" class="card-page">
-					<button id="close-card" onclick="closeCard(${cardId})">닫기</button>
+					<button id="close-card" onclick="closeCard(${cardId})"><i class="fa-solid fa-xmark fa-xl"></i></button>
 				    <div class="card-header">
+				    	<i class="fa-regular fa-note-sticky"></i>
 				        <p class="card-page-title" id="card-page-title-${cardId}" onclick="editTitleInCP(${cardId})">
 				            ${title}
 				        </p>
+				        <!--덱타이틀-->
+				        <!--<p class="card-page-deck-title" id="card-page-title-${cardId}" > -->
+				        <!--    ${title}-->
+				        <!--</p>-->
 				    </div>
 				    <div class="card-main">
 				        <h2 style="display: none">카드 작업자</h2>
@@ -1043,25 +1244,43 @@ function formCardPage(card) {
 				        <!--트렐로 참조-->
 				        <h2 style="display: none">마감일</h2>
 				        <!--달력 처럼 보여줄지 그냥 YYYY.MM.dd 꼴로 보여줄지 논의-->
-				        <h2>카드 설명</h2>
-				        <p class="card-page-content" id="card-page-content-${cardId}" onclick="editContentInCP(${cardId})"> <!--설명 수정 메서드 추가-->
+				        <div class="card-description">
+				        	<div class="card-description-header">
+				    		<i class="fa-regular fa-pen-to-square"></i>
+				        	<h2>카드 설명</h2>
+<!--				        	<div class="card-description-edit">-->
+<!--                            <button id="edit-description">수정</button>-->
+<!--                        	</div>-->
+                        	</div>
+                        	<div class="card-description-content">
+				        	<p class="card-page-content" id="card-page-content-${cardId}" onclick="editContentInCP(${cardId})"> <!--설명 수정 메서드 추가-->
 				            ${content}
-				        </p>
+				        	</p>
+				        	</div>
+				        </div>
 				        <h2 style="display: none">첨부 파일</h2>
 				        <!--첨부파일이 없으면 파일을 올릴 수 있도록 드래그 할 수 있는 공간이 있고, 있다면 파일 형식에 따라 보여주기-->
+
 				        <h2>체크리스트</h2>
 				        <div class="checkList-input">
 				            <input type="text" id="checkList-input-${cardId}" placeholder="체크리스트 타이틀 작성...">
 				            <button onclick="addCheckList(${cardId})">생성</button>
 				        </div>
 				        <div class="checkList-list" id="checkList-list-${cardId}"></div>
-				        <h2>댓글</h2>
-				        <div class="comment-input">
-				        	<span id="nickname"><!--현재 사용자의 닉네임과 아이콘 표시--></span>
-				            <input type="text" id="comment-input-${cardId}" placeholder="댓글 작성...">
-				            <button onclick="submitComment(${cardId})">제출</button>
-				        </div>
-				        <div class="comment" id="comment-list-${cardId}"></div>
+				        
+				        	<div class="card-comment">
+    								<div class="card-comment-header">
+    									<i class="fa-solid fa-comments fa-sm"></i>
+				        			<h2>댓글</h2>
+				        		</div>
+				        		<div class="card-comment-content">
+				        			<div class="comment-input">
+				        				<span id="nickname"><!--현재 사용자의 닉네임과 아이콘 표시--></span>
+				            		<input type="text" id="comment-input-${cardId}" placeholder="댓글 작성...">
+				            		<button onclick="submitComment(${cardId})">제출</button>
+				        			</div>
+				        		</div>	
+				        		<div class="comment" id="comment-list-${cardId}"></div>
 					</div>
 					<div class="card-sidebar">
 						<button class="sidebar-button" id="sidebar-button-members" style="display: none">Members</button>

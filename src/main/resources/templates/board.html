@@ -27,7 +27,11 @@
 </head>
 <body>
 <header id="header">
-    <h2 id='title'>Two Gether</h2>
+    <div onclick="moveToWorkspace()">
+    <h2 id='title'>Two Gether</h2></div>
+    <div id="board-box">
+        <h3 id="board-title">js 보드 제목</h3>
+    </div>
     <span id="boardId" th:text="${id}" style="display:none"></span>
     <div class="user-info">
         <i class="fas fa-user-circle"></i>
@@ -40,23 +44,29 @@
 
 <div id="content">
     <nav id="nav">
-        <ul id="nav-boards">
+        <ul id="nav-workspaces">
+<!--            <ul id="nav-workspaces">-->
         </ul>
 
-        <button id="create-workspace" onclick="toggleCreateWorkspace()"><i class="fas fa-plus"></i>
-            Create New Workspace
-        </button>
-
+        <div class="nav-create-workspace-btns">
+            <button class="create-workspace-btns" id="create-workspace" onclick="toggleCreateWorkspace()"><i class="fas fa-plus"></i>
+                워크스페이스 새로 만들기
+            </button>
+        </div>
         <div id="create-workspace-form" style="display:none">
-            <div>
-                <label for="workspace-title">Title</label>
-                <input type="text" id="workspace-title"/>
+            <div class="create-workspace-form-content">
+                <div>
+                    <label for="workspace-title">타이틀</label>
+                    <input type="text" id="workspace-title"/>
+                </div>
+                <div>
+                    <label for="workspace-description">정보</label>
+                    <input type="text" id="workspace-description"/>
+                </div>
+                <div>
+                    <button class="create-workspace-submit" id="create-workspace-btn" onclick="createWorkspace()">생성</button>
+                </div>
             </div>
-            <div>
-                <label for="workspace-description">Description</label>
-                <input type="text" id="workspace-description"/>
-            </div>
-            <button id="create-workspace-btn" onclick="createWorkspace()">Create</button>
         </div>
     </nav>
 
@@ -100,7 +110,6 @@
                     </li>
                 </ul>
             </div>
-
         </div>
     </div>
 
@@ -110,10 +119,88 @@
         <!--        <a href="#">Services</a>-->
         <!--        <a href="#">Clients</a>-->
         <!--        <a href="#">Contact</a>-->
+        <div class="nav-archive">
         <ul id="archive-container"></ul>
-    </div>
+        </div>
 
-    <span class="open-btn" onclick="openNav()">&#9776;</span>
+        <div class="nav-board-setting">
+            <ul id="board-container"></ul>
+            <div class="nav-board-edit-btns">
+                <a class="board-edit-btns" onclick="editBoardOnOff()">
+                <span class="icon-edit-board">
+                    <i class="fa-solid fa-gear"></i>
+                </span>
+                <span class="text-edit-board">
+                    보드 수정
+                </span>
+                </a>
+            </div>
+            <div class="nav-edit-board-content" id="edit-board-form" style="display:none">
+                <div class="edit-board-content">
+                    <div>
+                        <label for="board-title-edited">보드 이름</label>
+                        <input type="text" id="board-title-edited"/>
+                    </div>
+                    <div>
+                        <label for="board-color-edited">보드 색상</label>
+                        <input type="text" id="board-color-edited"/>
+                    </div>
+                    <div>
+                        <label for="board-info-edited">보드 정보</label>
+                        <input type="text" id="board-info-edited"/>
+                    </div>
+                    <div>
+                        <button class="edit-board-submit" id="edit-board-btn" onclick="editBoard()">수정</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+            <a class="invite-board-col" onclick="openInviteBoardCollab()">
+                <span class="icon-invite-board-col">
+                    <i class="fa-solid fa-gear"></i>
+                </span>
+                <span class="text-invite-board-col">
+                    보드 협업자 초대
+                </span>
+            </a>
+            </div>
+
+            <div>
+            <a class="board-delete" onclick="deleteBoard()">
+                <span class="icon-board-delete">
+                    <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="text-board-delete">
+                    보드 삭제
+                </span>
+            </a>
+            </div>
+        </div>
+
+        <div class="invite-board-col-bg">
+            <div id="invite-board-collaborator" class="invite-collaborator" style="display:none">
+                <div class="invite-board-col-header">
+                    <h2>보드에 초대하세요.</h2>
+                    <a class="close-button-invite-board-col" onclick="closeAllInviteCollaborators()">
+                        <i class="fa-solid fa-xmark fa-xl"></i>
+                    </a>
+                </div>
+                <div class="board-col-email">
+                    <input type="text" id="board-collaborator-email"
+                           class="invite-board-col-input"
+                           placeholder="초대할 이메일을 입력하세요..."/>
+                </div>
+                <div>
+                    <button class="invite-board-col-btn" onclick="inviteBoardCollaborator()">초대</button>
+                    <div>
+                        <ul id="invite-board-collaborator-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <span class="open-btn" onclick="openNav()">&#9776;</span>
 </div>
 <script src="/js/board.js"></script>
 </body>

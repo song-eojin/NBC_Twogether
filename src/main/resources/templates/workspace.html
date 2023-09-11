@@ -21,10 +21,14 @@
   <!--  js를 jquery와 함께 호출 시 스크립트 실행 순서에 의해 jQuery를 먼저 선언해야 한다. -->
 
   <title>Twogether</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 </head>
 <body>
 <header id="header">
-  <h2 id='title'>Two Gether</h2>
+  <div onclick="moveToWorkspace()">
+    <h2 id='title'>Two Gether</h2></div>
   <div class="user-info">
     <i class="fas fa-user-circle"></i>
     Email: <span id="email"></span>
@@ -39,20 +43,25 @@
     <ul id="nav-workspaces">
     </ul>
 
-    <button id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
-      Create New Workspace
+    <div class="nav-create-workspace-btns">
+    <button class="create-workspace-btns" id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
+      워크스페이스 새로 만들기
     </button>
-
+    </div>
     <div id="create-workspace-form" style="display:none">
+      <div class="create-workspace-form-content">
       <div>
-        <label for="workspace-title">Title</label>
+        <label for="workspace-title">타이틀</label>
         <input type="text" id="workspace-title"/>
       </div>
       <div>
-        <label for="workspace-description">Description</label>
+        <label for="workspace-description">정보</label>
         <input type="text" id="workspace-description"/>
       </div>
-      <button id="create-workspace-btn" onclick="createWorkspace()">Create</button>
+        <div>
+      <button class="create-workspace-submit" id="create-workspace-btn" onclick="createWorkspace()">생성</button>
+        </div>
+        </div>
     </div>
   </nav>
 

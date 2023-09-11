@@ -28,30 +28,28 @@ h2 {
     letter-spacing:1px;
 }
 text-h3 {
-    text-align:center;
-
 }
 h3 {
-    padding: 0 70px;
     color:#000000;
     font-family: sans-serif;
     font-size:38px;
     letter-spacing:1px;
     transition:.2s linear;
     margin: 30px 50px 0 50px;
+    text-align: center;
+    width: 100%;
 }
 text-h4 {
-    text-align:center;
 }
 h4 {
     color:#000000;
-    padding: 0 30px;
     font-family: sans-serif;
     font-size:18px;
     letter-spacing:0px;
     text-align:center;
     transition:.2s linear;
     margin: 1px 15px 20px 15px;
+    width: 100%;
 }
 
 
@@ -140,7 +138,9 @@ button:hover {
 }
 
 sendLoginPage {
-    margin: 3px 0 Auto 0;
+}
+
+#signupButton {
 }
 
 

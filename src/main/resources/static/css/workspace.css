@@ -14,10 +14,16 @@ body {
 /* Header styles */
 #header {
     background-color: #4d3737; /* Wooden color */
-    padding: 10px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+#title {
+    font-size:20px;
+    font-weight:100;
+    color:#ffffff;
+    font-family: 'Russo One', sans-serif;
 }
 
 .user-info {
@@ -75,7 +81,20 @@ nav {
 #create-workspace-form button {
     margin-bottom: 5px;
 }
-
+.create-workspace-form-content {
+    margin: 0;
+    box-sizing: border-box;
+    width: 200px;
+    height: 135px;
+    padding: 10px 10px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #44546f;
+    font-size: 12px;
+    cursor: pointer;
+}
 /* Main content styles */
 #main {
     flex: 8.5;
@@ -109,9 +128,13 @@ section {
 
 .workspace header {
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     align-items: center;
-    background-color: lightgray;
+    /*background-color: lightgray;*/
+}
+
+.workspace h1 {
+    margin-bottom: 5px;
 }
 
 .workspace h2 {
@@ -119,41 +142,190 @@ section {
 }
 
 .workspace h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin-top: 5px;
 }
 
 .workspace header i {
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
+}
+.workspace-control-btns {
+    margin-left: 20px;
+    display:flex;
 }
 
 .workspace-control-btns button {
+    /*display:flex;*/
     background: none;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    margin-left: 5px;
+    /*margin-left: 5px;*/
+
+    margin-bottom: 0;
+    top: auto;
 }
 
-.workspace-control-btns button:hover {
+.workspace-control-btns .edit-workspace-content-submit {
+    background-color: #705c3b;
+    font-size: 0.8rem;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+}
+
+.nav-create-workspace-btns .create-workspace-btns {
+
+}
+.nav-create-workspace-btns .create-workspace-btns:hover{
+    background-color: darkgray;
+}
+
+/*.nav-create-workspace-btns */
+.create-workspace-submit {
+    background-color: #705c3b;
+    font-size: 0.8rem;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+}
+
+.workspace-control-btns .edit-workspace-content-submit:hover {
+    background-color: #4d3737; /* Dark brown color on hover */
     color: lightgray;
 }
 
+.workspace-control-btns button:hover {
+    background-color: lightgray;
+}
+
+.workspace-control {
+    /*display: flex;*/
+}
+hr {
+    display: flex;
+    background-color: #091e4224;
+    border: 0;
+    height: 1px;
+    margin: 16px 0 10px 0;
+    padding: 0;
+    width: 100%;
+}
+.workspace-control-header {
+    display: flex;
+}
+.workspace-control-des {
+    display: flex;
+}
+
+/*Create Workspace*/
+edit-workspace-form {
+
+}
+
+.edit-workspace-content {
+    margin: 0;
+    box-sizing: border-box;
+
+    width: 200px;
+    height: 135px;
+    padding: 10px 10px;
+    /*margin: 10px 5px;*/
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #44546f;
+    font-size: 12px;
+    cursor: pointer;
+    /*margin-bottom: 4px;*/
+    /*margin-top: 12px;*/
+}
+.edit-workspace-content-title {
+    margin-bottom: 5px;
+}
+.edit-workspace-content-description {
+    margin-bottom: 5px;
+}
+
 /* Invite Collaborator classes styles */
+/*.invite-wp-col-bg {*/
+
+/*    !*position: fixed;*!*/
+/*    !*top:0; left: 0; bottom: 0; right: 0;*!*/
+/*    !*background: rgba(0, 0, 0, 0.8);*!*/
+/*    align-items: flex-start;*/
+/*    background-color: #000000a3;*/
+/*    display: none;*/
+/*    height: 100%;*/
+/*    justify-content: center;*/
+/*    left: 0;*/
+/*    overflow-y: auto;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    !*width: 100%;*!*/
+/*    z-index: 20;*/
+/*}*/
+.invite-wp-col {
+    /*width: 600px;*/
+}
 .invite-collaborator {
+     width: 500px;
      position: fixed;
      top: 50%;
      left: 50%;
      transform: translate(-50%, -50%);
      background-color: #fff;
-     padding: 20px;
+     padding: 20px 25px 10px 25px;
      border: 1px solid #ccc;
      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
      display: flex;
      flex-direction: column;
      align-items: center;
- }
+    border-radius: 10px;
+    z-index:99;
+
+}
+.invite-wp-col-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.wp-col-email {
+    width:100%;
+    text-aglin:center
+}
+.close-button-invite-wp-col {
+    color: #44546f;
+    position: relative;
+    padding: 3px 1px;
+    display:inline-block;
+}
+.wp-col-input {
+    /*display: flex;*/
+    /*!*max-width: 100%;*!*/
+    /*flex-grow: 1;*/
+    /*margin-bottom: 8px;*/
+    overflow: visible;
+    /*background-color: var(--ds-surface, #ffffff);*/
+    margin: auto;
+}
+.invite-wp-col-input {
+    width: 100%;
+    padding:8px 10px;
+    margin-bottom:5px;
+    border:1px solid #C4DB37;
+    box-shadow: inset 0 0 0 2px #C4DB37 ;
+    border-radius: 3px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
 
 .invite-collaborator label,
 .invite-collaborator input,
@@ -161,9 +333,33 @@ section {
     margin: 5px 0;
 }
 
+.invite-wp-col-btn {
+    /*border-radius: 8px;*/
+    font-size: 14px;
+    /*display: block;*/
+    /*flex: 1 0 auto;*/
+    /*margin: 8px 0 8px 8px;*/
+    /*padding: 4px 8px 4px 6px;*/
+    /*position: relative;*/
+    /*text-decoration: none;*/
+    padding:6px 13px;
+    font-weight: bold;
+    /*color:#fff;*/
+    border:0;
+    border-radius: 3px;
+    background-color: #705c3b;
+    color:white;
+    cursor: pointer;
+}
+.invite-wp-col-header .invite-wp-col-btn:hover {
+    background-color: #3e3131;
+    color: white;
+    box-shadow: 5px 5px #724123;
+}
 /* Board Styles */
 .workspace-board-list {
     display : flex;
+    /*z-index:100;*/
 }
 
 .board {
@@ -191,7 +387,8 @@ section {
 
 .board-btns {
     position: absolute;
-    top:0;
+    /*top:0;*/
+    bottom: 0;
     right: 0;
     display: flex;
     flex-direction: column;
@@ -200,9 +397,10 @@ section {
 
 .board-btns button {
     margin: 1px 0;
+    border:none;
 }
 
-.create-borad-btn {
+.create-board-btn {
     width: 100px;
     height: 100px;
     padding: 5px 10px;
@@ -246,7 +444,7 @@ section {
 }
 
 .create-board-form button {
-    background-color: lightgray;
+    background-color: #705c3b;
     color: white;
     padding: 5px 10px;
     cursor: pointer;
@@ -255,6 +453,21 @@ section {
 }
 
 .create-board-form button:hover {
-    background-color: #705c3b; /* Dark brown color on hover */
+    background-color: #4d3737; /* Dark brown color on hover */
+}
+
+.create-board-content {
+    margin: 0;
+    box-sizing: border-box;
+    width: 200px;
+    height: 200px;
+    padding: 12px 10px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #44546f;
+    font-size: 12px;
+    cursor: pointer;
 }
 

@@ -94,6 +94,21 @@ nav {
     margin-bottom: 5px;
 }
 
+.create-workspace-form-content {
+    margin: 0;
+    box-sizing: border-box;
+    width: 200px;
+    height: 135px;
+    padding: 10px 10px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #44546f;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 /* 우측 하단 */
 .board-canvas {
     flex: 8.5;
@@ -138,7 +153,7 @@ nav {
     display: flex;
     flex:1;
     width: 100%;
-    padding: 0 5px;
+    /*padding: 0 5px;*/
     box-sizing: border-box;
 }
 
@@ -358,9 +373,19 @@ nav {
     left: 20%; /* 팝업 창의 위치 조절 */
     width: 60%; /* 팝업 창의 너비 조절 */
     height: 80%; /* 팝업 창의 높이 조절 */
+    min-width: 600px;
+    min-height: 700px;
     background-color: #fff; /* 팝업 창 배경 색상 */
     z-index: 10000; /* 배경보다 위에 표시하기 위한 z-index 설정 */
     overflow: auto; /* 스크롤이 필요한 경우 스크롤 표시 */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+.card-page-title {
+    /*padding: 12px 0 0;*/
+    left: 60px;
+    position: absolute;
+    top: 20px;
 }
 
 /* 우측 사이드 바 관련 */
@@ -371,7 +396,7 @@ nav {
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #111;
+    background-color: #e0e1e4;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -380,14 +405,14 @@ nav {
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
-    color: #818181;
+    font-size: 20px;
+    color: darkgray;
     display: block;
     transition: 0.3s;
 }
 
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: #818181;
 }
 
 .sidenav .closebtn {
@@ -397,7 +422,30 @@ nav {
     font-size: 36px;
     margin-left: 50px;
 }
+.nav-archive {
+    padding-bottom: 20px;
+}
 
+/*우측 사이드바 보드 세팅*/
+.nav-edit-board-content {
+    display: none;
+    margin-top: 10px;
+}
+.edit-board-content {
+    margin: 0;
+    box-sizing: border-box;
+    width: 200px;
+    height: 135px;
+    padding: 10px 10px;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #ffffff;
+    color: #44546f;
+    font-size: 12px;
+    cursor: pointer;
+
+}
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
@@ -426,4 +474,239 @@ nav {
 .archive-item-title {
     color: black;
     margin-right: 25px;
+}
+
+/*카드 페이지*/
+.card-detail-page {
+    min-height: 700px;
+    width: 600px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px 25px 10px 25px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    z-index:99;
+}
+
+.card-detail-page-cancel-button {
+    border-radius: 50%;
+    color: #44546f;
+    height: 32px;
+    margin: 0;
+    overflow: hidden;
+    padding: 4px;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 32px;
+}
+
+#close-card {
+    border:none;
+    background-color: transparent;
+    color: #44546f;
+    height: 32px;
+    margin: 0;
+    overflow: hidden;
+    padding: 4px;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 32px;
+    z-index: 2;
+}
+
+/*.card-detail-header {*/
+.card-header{
+    min-height: 32px;
+    /*padding: 8px 52px 8px 56px;*/
+    padding:20px 40px 50px 25px;
+    position: relative;
+    text-align: left;
+    width:100%;
+    z-index: 1;
+    font-size: 24px;
+}
+
+.card-detail-header-title {
+    /*padding: 12px 0 0;*/
+    left: 16px;
+    position: absolute;
+    top: 16px;
+}
+.card-detail-header-deck-title {
+    margin: 4px 8px 4px 2px
+}
+/*.card-detail-header-title h2 {*/
+/*    font-size: 20px;*/
+/*}*/
+.card-detail-header-deck-title p {
+    font-size: 14px;
+}
+.card-detail-main {
+    width:100%;
+    /*width: 500px;*/
+    float: left;
+    margin: 0;
+    min-height: 24px;
+    /*padding: 0 8px 8px 16px;*/
+    padding: 0 5px 5px 15px;
+    position: relative;
+    display:flex;
+}
+
+.card-description {
+    padding: 0px 5px 15px 25px;
+}
+.card-description-header {
+    display:flex;
+    min-height: 32px;
+    padding:0px;
+    position: relative;
+    width:100%;
+    font-size: 24px;
+}
+.card-description-header i {
+    position: relative;
+    top: 5px;
+}
+.card-description-header h2 {
+    left: 13px;
+    position: relative;
+}
+.card-page-content {
+    font-weight: normal;
+    position: relative;
+    left:37px;
+}
+.card-comment {
+    position:static;
+    padding: 0 5px 15px 24px;
+}
+
+.card-comment-header {
+    display:flex;
+    font-size: 24px;
+}
+.card-comment-header i{
+    position: relative;
+    top:16px;
+}
+
+.card-comment-header h2{
+    position: relative;
+    left: 13px;
+}
+.card-comment-content {
+    font-weight: normal;
+    position: relative;
+    left:37px;
+}
+
+.card-detail-side-menu {
+    float: right;
+    overflow: hidden;
+    padding: 0 16px 8px 8px;
+    /*width: 50%;*/
+
+    height: 100%;
+    position: fixed;
+    /*z-index: 1;*/
+    top: 90px;
+    right: 0;
+    /*background-color: #111;*/
+    /*overflow-x: hidden;*/
+    /*transition: 0.5s;*/
+    /*padding-top: 60px;*/
+}
+
+/*보드초대*/
+.invite-collaborator {
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px 25px 10px 25px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    z-index:99;
+
+}
+.invite-board-col-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.board-col-email {
+    width:100%;
+    text-aglin:center
+}
+.close-button-invite-board-col {
+    color: #44546f;
+    position: relative;
+    padding: 3px 1px;
+    display:inline-block;
+}
+.board-col-input {
+    /*display: flex;*/
+    /*!*max-width: 100%;*!*/
+    /*flex-grow: 1;*/
+    /*margin-bottom: 8px;*/
+    overflow: visible;
+    /*background-color: var(--ds-surface, #ffffff);*/
+    margin: auto;
+}
+.invite-board-col-input {
+    width: 100%;
+    padding:8px 10px;
+    margin-bottom:5px;
+    border:1px solid #C4DB37;
+    box-shadow: inset 0 0 0 2px #C4DB37 ;
+    border-radius: 3px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.invite-collaborator label,
+.invite-collaborator input,
+.invite-collaborator button {
+    margin: 5px 0;
+}
+
+.invite-board-col-btn {
+    /*border-radius: 8px;*/
+    font-size: 14px;
+    /*display: block;*/
+    /*flex: 1 0 auto;*/
+    /*margin: 8px 0 8px 8px;*/
+    /*padding: 4px 8px 4px 6px;*/
+    /*position: relative;*/
+    /*text-decoration: none;*/
+    padding:6px 13px;
+    font-weight: bold;
+    /*color:#fff;*/
+    border:0;
+    border-radius: 3px;
+    background-color: #705c3b;
+    color:white;
+    cursor: pointer;
+}
+.invite-board-col-header .invite-board-col-btn:hover {
+    background-color: #3e3131;
+    color: white;
+    box-shadow: 5px 5px #724123;
 }
