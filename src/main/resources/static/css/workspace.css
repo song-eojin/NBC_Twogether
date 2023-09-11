@@ -3,7 +3,13 @@
     margin: 0;
     box-sizing: border-box;
 }
-
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
 /* Global styles */
 body {
     margin: 0;
@@ -53,7 +59,13 @@ nav {
     flex-direction: column;
     align-items: center;
 }
-
+.nav-workspace-lists {
+    width: 100%;
+    margin: 0 0 0 5px;
+}
+.nav-wp-lists {
+    margin-bottom: 20px;
+}
 #nav-workspaces {
     list-style: none;
     padding: 0;
@@ -125,12 +137,23 @@ section {
     padding: 15px;
     border-radius: 5px;
 }
+.col-workspace {
+    background-color: white;
+    color: black;
+    border: 1px solid lightgray;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
 
 .workspace header {
     display: flex;
     /*justify-content: space-between;*/
     align-items: center;
     /*background-color: lightgray;*/
+}
+.col-workspace header {
+    align-items: center;
 }
 
 .workspace h1 {
@@ -142,6 +165,14 @@ section {
 }
 
 .workspace h3 {
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+.col-workspace h2 {
+    font-size: 1.5rem;
+}
+
+.col-workspace h3 {
     font-size: 0.8rem;
     margin-top: 5px;
 }
@@ -275,7 +306,7 @@ edit-workspace-form {
     /*width: 600px;*/
 }
 .invite-collaborator {
-     width: 500px;
+     width: 430px;
      position: fixed;
      top: 50%;
      left: 50%;
@@ -295,11 +326,19 @@ edit-workspace-form {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 .wp-col-email {
+    display:grid;
+    grid-template-columns:1fr min-content;
     width:100%;
-    text-aglin:center
+    text-align:center;
+    padding: 0 6px 0 1px;
+}
+.wp-col-list {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 0 3px 0 0;
 }
 .close-button-invite-wp-col {
     color: #44546f;
@@ -308,12 +347,7 @@ edit-workspace-form {
     display:inline-block;
 }
 .wp-col-input {
-    /*display: flex;*/
-    /*!*max-width: 100%;*!*/
-    /*flex-grow: 1;*/
-    /*margin-bottom: 8px;*/
     overflow: visible;
-    /*background-color: var(--ds-surface, #ffffff);*/
     margin: auto;
 }
 .invite-wp-col-input {
@@ -332,29 +366,49 @@ edit-workspace-form {
 .invite-collaborator button {
     margin: 5px 0;
 }
-
+.invite-collaborator hr {
+    margin : 10px 0 7px 0;
+}
 .invite-wp-col-btn {
-    /*border-radius: 8px;*/
     font-size: 14px;
-    /*display: block;*/
-    /*flex: 1 0 auto;*/
-    /*margin: 8px 0 8px 8px;*/
-    /*padding: 4px 8px 4px 6px;*/
-    /*position: relative;*/
-    /*text-decoration: none;*/
     padding:6px 13px;
     font-weight: bold;
-    /*color:#fff;*/
     border:0;
     border-radius: 3px;
     background-color: #705c3b;
     color:white;
     cursor: pointer;
+    white-space:nowrap;
+    position: relative;
+    left: 5px;
 }
 .invite-wp-col-header .invite-wp-col-btn:hover {
     background-color: #3e3131;
     color: white;
     box-shadow: 5px 5px #724123;
+}
+.wp-col-lists {
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr min-content;
+}
+.wp-col-lists-email {
+    position:relative;
+    margin: 13px 0 0 3px;
+    text-align: left;
+}
+.col-delete-btn {
+    border:none;
+    padding: 6px 10px;
+    font-weight: bold;
+    color: #fff;
+    border: 0;
+    border-radius: 3px;
+    background-color: #9A9A9A;
+    cursor: pointer;
+    white-space: nowrap;
+    left: 3px;
+    position: relative;
 }
 /* Board Styles */
 .workspace-board-list {
@@ -383,6 +437,10 @@ edit-workspace-form {
     position: absolute;
     top: 0;
     left: 5px;
+}
+.board .move-to-board {
+    width: 99px;
+    height: 69px;
 }
 
 .board-btns {

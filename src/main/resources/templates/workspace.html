@@ -40,8 +40,19 @@
 
 <div id="content">
   <nav id="nav">
-    <ul id="nav-workspaces">
-    </ul>
+    <div class="nav-workspace-lists">
+      <h3>My Workspaces</h3>
+      <div class="nav-wp-lists">
+      <ul id="nav-workspaces"></ul>
+      </div>
+      <hr>
+      <div style="display:none">
+      <h3>Collab Workspaces</h3>
+      <div class="nav-col-wp-lists">
+      <ul id="nav-col-workspaces"></ul>
+      </div>
+      </div>
+    </div>
 
     <div class="nav-create-workspace-btns">
     <button class="create-workspace-btns" id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
@@ -50,18 +61,18 @@
     </div>
     <div id="create-workspace-form" style="display:none">
       <div class="create-workspace-form-content">
-      <div>
+        <div>
         <label for="workspace-title">타이틀</label>
         <input type="text" id="workspace-title"/>
-      </div>
-      <div>
+        </div>
+        <div>
         <label for="workspace-description">정보</label>
         <input type="text" id="workspace-description"/>
-      </div>
+        </div>
         <div>
       <button class="create-workspace-submit" id="create-workspace-btn" onclick="createWorkspace()">생성</button>
         </div>
-        </div>
+      </div>
     </div>
   </nav>
 

@@ -424,7 +424,6 @@ nav {
 }
 .nav-archive {
     padding-bottom: 20px;
-
 }
 
 /*우측 사이드바 보드 세팅*/
@@ -436,7 +435,7 @@ nav {
     margin: 0;
     box-sizing: border-box;
     width: 200px;
-    height: 160px;
+    height: 135px;
     padding: 10px 10px;
     position: relative;
     border: 1px solid #ccc;
@@ -445,7 +444,6 @@ nav {
     color: #44546f;
     font-size: 12px;
     cursor: pointer;
-
 }
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
@@ -720,7 +718,7 @@ nav {
 
 /*보드초대*/
 .invite-collaborator {
-    width: 500px;
+    width: 430px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -740,13 +738,27 @@ nav {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+}
+.invite-board-col-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 5px 0 0 0;
 }
 .board-col-email {
     width:100%;
-    text-aglin:center
+    display:grid;
+    grid-template-columns:1fr min-content;
+    text-align:center;
+    padding: 0 6px 0 1px;
 }
-.close-button-invite-board-col {
+.board-col-list {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 0 3px 0 0;
+}
+/*.close-button-invite-board-col {*/
+.invite-board-col-header a {
     color: #44546f;
     position: relative;
     padding: 3px 1px;
@@ -777,27 +789,60 @@ nav {
 .invite-collaborator button {
     margin: 5px 0;
 }
-
+.invite-collaborator hr {
+    margin : 10px 0 7px 0;
+}
 .invite-board-col-btn {
-    /*border-radius: 8px;*/
     font-size: 14px;
-    /*display: block;*/
-    /*flex: 1 0 auto;*/
-    /*margin: 8px 0 8px 8px;*/
-    /*padding: 4px 8px 4px 6px;*/
-    /*position: relative;*/
-    /*text-decoration: none;*/
     padding:6px 13px;
     font-weight: bold;
-    /*color:#fff;*/
     border:0;
     border-radius: 3px;
     background-color: #705c3b;
     color:white;
     cursor: pointer;
+    white-space:nowrap;
+    position: relative;
+    left: 5px;
 }
 .invite-board-col-header .invite-board-col-btn:hover {
     background-color: #3e3131;
     color: white;
     box-shadow: 5px 5px #724123;
+}
+.invite-board-col-header i {
+    font-size: 1rem;
+    cursor: pointer;
+}
+hr {
+    display: flex;
+    background-color: #091e4224;
+    border: 0;
+    height: 1px;
+    margin: 16px 0 10px 0;
+    padding: 0;
+    width: 100%;
+}
+.board-col-lists {
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr min-content;
+}
+.board-col-lists-email {
+    position:relative;
+    margin: 10px 0 0 3px;
+    text-align: left;
+}
+.col-delete-btn {
+    border:none;
+    padding: 6px 10px;
+    font-weight: bold;
+    color: #fff;
+    border: 0;
+    border-radius: 3px;
+    background-color: #9A9A9A;
+    cursor: pointer;
+    white-space: nowrap;
+    left: 3px;
+    position: relative;
 }
