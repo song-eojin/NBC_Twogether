@@ -343,7 +343,6 @@ nav {
 }
 /* 팝업 창 스타일링 */
 .card-page-wrapper {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;

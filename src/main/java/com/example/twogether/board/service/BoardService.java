@@ -152,7 +152,7 @@ public class BoardService {
             !board.getBoardCollaborators().contains(user) &&
             !user.getRole().equals(UserRoleEnum.ADMIN)) {
 
-            throw new CustomException(CustomErrorCode.NOT_PARTICIPATED_WORKSPACE);
+            throw new CustomException(CustomErrorCode.NOT_PARTICIPATED_BOARD);
         }
     }
 }

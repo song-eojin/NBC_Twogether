@@ -14,12 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CheckListResponseDto {
 
+    private Long cardId;
     private Long clId;
     private String title;
     private List<ChlItemResponseDto> chlItems;
 
     public static CheckListResponseDto of(CheckList checkList) {
         return CheckListResponseDto.builder()
+            .cardId(checkList.getCard().getId())
             .clId(checkList.getId())
             .title(checkList.getTitle())
             .chlItems(checkList.getCheckListItemList().stream().map(ChlItemResponseDto::of).toList())

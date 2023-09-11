@@ -13,6 +13,7 @@ public class CommentResponseDto {
     private Long cardId;
     private Long commentId;
     private String writer;
+    private String icon;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -22,6 +23,7 @@ public class CommentResponseDto {
             .cardId(comment.getCard().getId())
             .commentId(comment.getId())
             .writer(comment.getUser().getNickname())
+            .icon(comment.getUser().getIcon())
             .content(comment.getContent())
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())

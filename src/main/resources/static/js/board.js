@@ -92,10 +92,8 @@ async function callMyBoard() {
 		decks.empty()
 		archive.empty()
 		let board = await res.json()
-		console.log(board)
 
 		for (let deck of board['decks']) {
-			$('list-card-list-' + deck['deckId']).empty()
 			if (deck['archived']) {
 				archive.append(formArchived(deck))
 			} else {
@@ -107,6 +105,50 @@ async function callMyBoard() {
 						$('#list-card-list-' + deck['deckId']).append(formCard(card))
 					}
 				}
+			}
+		}
+	})
+}
+
+async function callMyCard(cardId) {
+	// when
+	await fetch('/api/cards/' + cardId, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error.message)
+			return
+		}
+
+		let cardPage = $('#card-page-' + cardId)
+		let card = await res.json()
+
+		cardPage.empty()
+		cardPage.append(formCardPage(card))
+		// 댓글 추가
+		let commentList = $('#comment-list-' + cardId)
+		for (let comment of card['comments']) {
+			commentList.append(formCommentList(comment))
+		}
+		// 체크리스트 추가
+		let checkLists = $('#checkList-list-' + cardId)
+		for (let checkList of card['checkLists']) {
+			checkLists.append(formCheckList(checkList))
+			let checkListItems = $('#checkList-items-' + cardId)
+			for (let chlItem of checkList['chlItems']) {
+				checkListItems.append(formCheckListItem(chlItem))
 			}
 		}
 	})
@@ -169,7 +211,7 @@ async function createDeck() {
 			return
 		}
 
-		callMyBoard() // board 다시 부르기
+		await callMyBoard() // board 다시 부르기
 	})
 }
 
@@ -313,11 +355,11 @@ async function createCard(deckId) {
 	})
 }
 
-function editCardTitle(cardId, newTitle) {
+async function editCardTitleB(cardId, newTitle) {
 	// given
 	let title = newTitle
 	if (title === '') {
-		title = '카드 타이틀을 입력해주세요';
+		title = null;
 	}
 	let content = null;
 	const request = {
@@ -345,10 +387,47 @@ function editCardTitle(cardId, newTitle) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+		callMyBoard()
 	})
 }
 
-function editCardContent(cardId, newContent) {
+async function editCardTitleC(cardId, newTitle) {
+	// given
+	let title = newTitle
+	if (title === '') {
+		title = null;
+	}
+	let content = null;
+	const request = {
+		title: title,
+		content: content
+	};
+
+	// when
+	fetch('/api/cards/' + cardId, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+		callMyCard(cardId)
+	})
+}
+
+async function editCardContent(cardId, newContent) {
 	// given
 	let title = null;
 	let content = newContent
@@ -380,6 +459,316 @@ function editCardContent(cardId, newContent) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+		callMyCard(cardId)
+	})
+}
+
+async function submitComment(cardId) {
+	// given
+	let boardId = document.getElementById('boardId').textContent
+	let newComment = document.getElementById('comment-input-' + cardId).value
+	if (newComment === '') {
+		return
+	}
+	const request = {
+		content: newComment
+	};
+
+	// when
+	fetch('/api/boards/' + boardId + '/cards/' + cardId + '/comments', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function editComment(cardId, commentId, newComment) {
+	// given
+	let content = newComment
+	if (content === '') {
+		content = null
+	}
+	const request = {
+		content: content
+	};
+
+	// when
+	fetch('/api/comments/' + commentId, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+		callMyCard(cardId);
+	})
+}
+
+async function deleteComment(cardId, commentId) {
+	let check = confirm("해당 댓글을 삭제하시겠습니까?")
+	if (!check) {
+		return
+	}
+
+	fetch('/api/comments/' + commentId, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function addCheckList(cardId) {
+	// given
+	let title = document.getElementById('checkList-input-' + cardId).value
+	if (title === '') {
+		title = 'Checklist'
+	}
+
+	const request = {
+		title: title
+	};
+
+	// when
+	fetch('/api/cards/' + cardId + '/checklists', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function editCheckListTitle(cardId, chlId, newTitle) {
+	// given
+	let title = newTitle
+	if (title === '') {
+		title = null
+	}
+	const request = {
+		title: title
+	};
+
+	// when
+	fetch('/api/checklists/' + chlId, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+		callMyCard(cardId);
+	})
+}
+
+async function addCheckListItem(cardId, checkListId) {
+	// given
+	let content = document.getElementById('checkList-item-input-' + checkListId).value
+
+	// when
+	fetch('/api/checklists/' + checkListId + '/chlItems', {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: content,
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function checkItem(cardId, chlItemId) {
+	// when
+	fetch('/api/chlItems/' + chlItemId + '/isChecked', {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function editChlItem(cardId, chlItemId, newContent) {
+	// given
+	let content = newContent
+	if (content === '') {
+		content = null
+	}
+
+	// when
+	fetch('/api/chlItems/' + chlItemId + '/content', {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: content,
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+		callMyCard(cardId);
+	})
+}
+
+async function deleteCheckList(cardId, checkListId) {
+	let check = confirm("해당 체크리스트를 삭제하시겠습니까?")
+	if (!check) {
+		return
+	}
+
+	// when
+	fetch('/api/checklists/' + checkListId, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
+	})
+}
+
+async function deleteCheckListItem(cardId, chlItemId) {
+	// when
+	fetch('/api/chlItems/' + chlItemId, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		if (res.status !== 200) {
+			let error = await res.json()
+			alert(error['message'])
+		}
+
+		callMyCard(cardId).then()
 	})
 }
 
@@ -544,7 +933,7 @@ function formDeck(deck) {
                     </div>
                     
                     <div class="deck-list-add-card-area">
-                        <div class="card-list-${deckId}" id="card-list-${deckId}">
+                        <div class="cards" id="cards-${deckId}">
                             <ul class="list-card-list" id="list-card-list-${deckId}"></ul>
                         </div>
                         
@@ -616,23 +1005,30 @@ function formArchivedCard(card) {
 function formCard(card) {
 	let cardId = card['id']
 	let title = card['title']
-	let dueDate = card['dueDate']
-	let content = card['content']
-	let attachment = card['attachment']
-	let cardLabels = card['cardLabels']
-	let checkLists = card['checkLists']
-	let comments = card['comments']
-	let collaborators = card['cardCollaborators']
 
 	return`
-			<li class="card-list" id="card-list-${cardId}" onclick="openCardPage(${cardId})">
+			<li class="card-list" id="card-list-${cardId}" onclick="callMyCard(${cardId})">
 			    <span>
 			        <p class="card-list-title" id="card-list-title-${cardId}" onclick="editTitle(${cardId}, event)">
 			            ${title}
 			        </p>
 			    </span>
 			</li>
-			<div id="card-page-wrapper-${cardId}" class="card-page-wrapper">
+			<div id="card-page-${cardId}"></div>
+	`
+}
+
+function formCardPage(card) {
+	let cardId = card['id']
+	let title = card['title']
+	let dueDate = card['dueDate']
+	let content = card['content']
+	let attachment = card['attachment']
+	let cardLabels = card['cardLabels']
+	let collaborators = card['cardCollaborators']
+
+	return `
+			<div id="card-page-wrapper" class="card-page-wrapper">
 				<div id="card-page-${cardId}" class="card-page">
 					<button id="close-card" onclick="closeCard(${cardId})">닫기</button>
 				    <div class="card-header">
@@ -653,16 +1049,24 @@ function formCard(card) {
 				        </p>
 				        <h2 style="display: none">첨부 파일</h2>
 				        <!--첨부파일이 없으면 파일을 올릴 수 있도록 드래그 할 수 있는 공간이 있고, 있다면 파일 형식에 따라 보여주기-->
-				        <h2 style="display: none">체크리스트</h2>
-				        <!--체크리스트 내 체크된 아이템 개수/체크리스트 내 아이템 개수로 달성도 표시-->
-				        <h2 style="display: none">댓글</h2>
-				        <!--본인 프로필 이미지와 댓글 입력창-->
-				        <!--댓글 쓴 유저의 프로필 이미지와 카드 댓글 목록-->
+				        <h2>체크리스트</h2>
+				        <div class="checkList-input">
+				            <input type="text" id="checkList-input-${cardId}" placeholder="체크리스트 타이틀 작성...">
+				            <button onclick="addCheckList(${cardId})">생성</button>
+				        </div>
+				        <div class="checkList-list" id="checkList-list-${cardId}"></div>
+				        <h2>댓글</h2>
+				        <div class="comment-input">
+				        	<span id="nickname"><!--현재 사용자의 닉네임과 아이콘 표시--></span>
+				            <input type="text" id="comment-input-${cardId}" placeholder="댓글 작성...">
+				            <button onclick="submitComment(${cardId})">제출</button>
+				        </div>
+				        <div class="comment" id="comment-list-${cardId}"></div>
 					</div>
 					<div class="card-sidebar">
 						<button class="sidebar-button" id="sidebar-button-members" style="display: none">Members</button>
 						<button class="sidebar-button" id="sidebar-button-labels" style="display: none">Labels</button>
-						<button class="sidebar-button" id="sidebar-button-checklist" style="display: none">Checklist</button>
+						<button class="sidebar-button" id="sidebar-button-checklist" onclick="addCheckList(${cardId})">Checklist</button>
 						<button class="sidebar-button" id="sidebar-button-duedate" style="display: none">Due Date</button>
 						<button class="sidebar-button" id="sidebar-button-attachment" style="display: none">Attachment</button>
 						<button class="sidebar-button" id="sidebar-button-archive" onclick="archiveCard(${cardId})">Archive</button>
@@ -672,6 +1076,72 @@ function formCard(card) {
 	`
 }
 
+function formCommentList(comment) {
+	let cardId = comment['cardId']
+	let commentId = comment['commentId']
+	let writer = comment['writer']
+	let icon = comment['icon']
+	let content = comment['content']
+
+	return`
+		<div class="comment-item" id="comment-${commentId}">
+			<img src=${icon} alt=${writer}>
+			<p class="comment-content" id="comment-content-${commentId}" onclick="editCommentInCP(${cardId}, ${commentId})">${content}</p>
+			<button class="comment-delete-button" onclick="deleteComment(${cardId}, ${commentId})">댓글 삭제</button>
+		<div>
+	`
+}
+
+function formCheckList(checkList) {
+	let cardId = checkList['cardId']
+	let checkListId = checkList['clId']
+	let title = checkList['title']
+
+	return`
+		<div class="checkList" id="checkList-${checkListId}">
+			<p class="checkList-title" id="checkList-title-${checkListId}" onclick="editCheckListTitleInCP(${cardId}, ${checkListId})">${title}</p>
+			<button class="checkList-delete-button" onclick="deleteCheckList(${cardId}, ${checkListId})">삭제</button>
+			<div class="checkList-item-input">
+				<input type="text" id="checkList-item-input-${checkListId}" placeholder="체크박스 작성...">
+				<button onclick="addCheckListItem(${cardId}, ${checkListId})">생성</button>
+			</div>
+			<div class="checkList-items" id="checkList-items-${cardId}"></div>
+		</div>
+	`
+}
+
+function formCheckListItem(chlItem) {
+	let cardId = chlItem['cardId']
+	let chlItemId = chlItem['chlItemId']
+	let content = chlItem['content']
+	let checked = chlItem['checked']
+
+	let checkbox = ``
+	if (checked) {
+		checkbox = `<input type="checkbox" id="checkbox-${chlItemId}" onclick="checkItem(${cardId}, ${chlItemId})" checked>`
+	} else {
+		checkbox = `<input type="checkbox" id="checkbox-${chlItemId}" onclick="checkItem(${cardId}, ${chlItemId})">`
+	}
+
+	return`
+		<div class="checkList-item" id="checkList-item-${chlItemId}">
+			${checkbox}
+			<!--label로 설정하면 클릭 시 체크박스만 체크되고 content 수정이 안되는 문제가 있어 p로 변경하였습니다.-->
+			<p class="checkbox-title" id="checkbox-title-${chlItemId}" onclick="editChlItemInCP(${cardId}, ${chlItemId})">${content}</p>
+			<button class="Item-delete-button" onclick="deleteCheckListItem(${cardId}, ${chlItemId})">삭제</button>
+		</div>
+	`
+}
+
+function closeCard(cardId) {
+	let cardPage = document.getElementById('card-page-' + cardId)
+	while (cardPage.firstChild) {
+		cardPage.removeChild(cardPage.firstChild)
+	}
+	callMyBoard()
+}
+
+// 보드 페이지에서 카드 제목 수정하기
 function editTitle(cardId, event) {
 	event.stopPropagation();
 	// 클릭한 제목 요소 가져오기
@@ -694,20 +1164,27 @@ function editTitle(cardId, event) {
 	inputElement.addEventListener("keydown", (event) => {
 		if (event.key === "Enter") {
 			event.preventDefault();
-			const newTitle = inputElement.value;
+			let newTitle = inputElement.value;
+			if (newTitle === '') {
+				newTitle = currentTitle;
+			}
 			titleElement.innerHTML = newTitle;
-			editCardTitle(cardId, newTitle);
+			editCardTitleB(cardId, newTitle);
 		}
 	});
 
 	// input 요소에서 포커스가 해제되면 수정 완료 처리
 	inputElement.addEventListener("blur", () => {
-		const newTitle = inputElement.value;
+		let newTitle = inputElement.value;
+		if (newTitle === '') {
+			newTitle = currentTitle;
+		}
 		titleElement.innerHTML = newTitle;
-		editCardTitle(cardId, newTitle);
+		editCardTitleB(cardId, newTitle);
 	});
 }
 
+// 카드 페이지에서 카드 제목 수정하기
 function editTitleInCP(cardId) {
 	// 클릭한 제목 요소 가져오기
 	const titleElement = document.getElementById(`card-page-title-${cardId}`);
@@ -731,7 +1208,7 @@ function editTitleInCP(cardId) {
 			event.preventDefault();
 			const newTitle = inputElement.value;
 			titleElement.innerHTML = newTitle;
-			editCardTitle(cardId, newTitle);
+			editCardTitleC(cardId, newTitle);
 		}
 	});
 
@@ -739,7 +1216,7 @@ function editTitleInCP(cardId) {
 	inputElement.addEventListener("blur", () => {
 		const newTitle = inputElement.value;
 		titleElement.innerHTML = newTitle;
-		editCardTitle(cardId, newTitle);
+		editCardTitleC(cardId, newTitle);
 	});
 }
 
@@ -765,7 +1242,7 @@ function editContentInCP(cardId) {
 		if (event.key === "Enter") {
 			event.preventDefault();
 			const newContent = inputElement.value;
-			contentElement.innerHTML = newContent;
+			contentElement.innerHTML += newContent;
 			editCardContent(cardId, newContent);
 		}
 	});
@@ -773,27 +1250,114 @@ function editContentInCP(cardId) {
 	// input 요소에서 포커스가 해제되면 수정 완료 처리
 	inputElement.addEventListener("blur", () => {
 		const newContent = inputElement.value;
-		contentElement.innerHTML = newContent;
+		contentElement.innerHTML += newContent;
 		editCardContent(cardId, newContent);
 	});
 }
 
-function openCardPage(cardId) {
-	// 팝업 창을 보이도록 설정
-	var cardPageWrapper = document.getElementById("card-page-wrapper-" + cardId);
-	var cardPage = document.getElementById("card-page-" + cardId);
-	cardPageWrapper.style.display = "block";
-	cardPage.style.display = "block";
+function editCommentInCP(cardId, commentId) {
+	// 클릭한 댓글 요소 가져오기
+	const contentElement = document.getElementById(`comment-content-${commentId}`);
+
+	// 현재 댓글 내용 가져오기
+	const currentContent = contentElement.innerText;
+
+	// 수정 가능한 input 요소 생성
+	const inputElement = document.createElement("input");
+	inputElement.value = currentContent;
+
+	// 댓글을 input 요소로 교체
+	contentElement.innerHTML = "";
+	contentElement.appendChild(inputElement);
+
+	// input 요소에 포커스 설정
+	inputElement.focus();
+
+	inputElement.addEventListener("keydown", (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			const newComment = inputElement.value;
+			contentElement.innerHTML = newComment;
+			editComment(cardId, commentId, newComment);
+		}
+	});
+
+	// input 요소에서 포커스가 해제되면 수정 완료 처리
+	inputElement.addEventListener("blur", () => {
+		const newComment = inputElement.value;
+		contentElement.innerHTML = newComment;
+		editComment(cardId, commentId, newComment);
+	});
 }
 
-function closeCard(cardId) {
-	// 팝업 창을 숨김
-	var cardPageWrapper = document.getElementById("card-page-wrapper-" + cardId);
-	var cardPage = document.querySelector(".card-page");
-	cardPageWrapper.style.display = "none";
-	cardPage.style.display = "none";
+function editCheckListTitleInCP(cardId, chlId) {
+	// 클릭한 제목 요소 가져오기
+	const titleElement = document.getElementById(`checkList-title-${chlId}`);
 
-	callMyBoard().then()
+	// 현재 제목 내용 가져오기
+	const currentTitle = titleElement.innerText;
+
+	// 수정 가능한 input 요소 생성
+	const inputElement = document.createElement("input");
+	inputElement.value = currentTitle;
+
+	// 제목을 input 요소로 교체
+	titleElement.innerHTML = "";
+	titleElement.appendChild(inputElement);
+
+	// input 요소에 포커스 설정
+	inputElement.focus();
+
+	inputElement.addEventListener("keydown", (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			const newTitle = inputElement.value;
+			titleElement.innerHTML = newTitle;
+			editCheckListTitle(cardId, chlId, newTitle);
+		}
+	});
+
+	// input 요소에서 포커스가 해제되면 수정 완료 처리
+	inputElement.addEventListener("blur", () => {
+		const newTitle = inputElement.value;
+		titleElement.innerHTML = newTitle;
+		editCheckListTitle(cardId, chlId, newTitle);
+	});
+}
+
+function editChlItemInCP(cardId, chlItemId) {
+	// 클릭한 제목 요소 가져오기
+	const titleElement = document.getElementById(`checkbox-title-${chlItemId}`);
+
+	// 현재 제목 내용 가져오기
+	const currentTitle = titleElement.innerText;
+
+	// 수정 가능한 input 요소 생성
+	const inputElement = document.createElement("input");
+	inputElement.value = currentTitle;
+
+	// 제목을 input 요소로 교체
+	titleElement.innerHTML = "";
+	titleElement.appendChild(inputElement);
+
+	// input 요소에 포커스 설정
+	inputElement.focus();
+
+	inputElement.addEventListener("keydown", (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			const newTitle = inputElement.value;
+			titleElement.innerHTML = newTitle;
+			editChlItem(cardId, chlItemId, newTitle);
+		}
+	});
+
+	// input 요소에서 포커스가 해제되면 수정 완료 처리
+	inputElement.addEventListener("blur", () => {
+		const newTitle = inputElement.value;
+		titleElement.innerHTML = newTitle;
+		editChlItem(cardId, chlItemId, newTitle);
+	});
 }
 
 function toggleEditDeckTitle(deckId) {
