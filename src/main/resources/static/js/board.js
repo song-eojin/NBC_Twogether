@@ -595,6 +595,7 @@ async function editCardTitleB(cardId, newTitle) {
 }
 
 async function editCardTitleC(cardId, newTitle) {
+
 	// given
 	let title = newTitle
 	if (title === '') {

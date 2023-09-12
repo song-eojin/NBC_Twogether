@@ -18,6 +18,9 @@ function callMyAlarms() {
         let alarms = alarmsResponse['alarms'];
         let isUnreadAlarmExist = false;
 
+        if(alarms.empty()) {
+            $('#alarm-default-msg').text("도착한 알림이 없습니다.")
+        }
         for (let alarmId in alarms) {
             if (alarms.hasOwnProperty(alarmId)) {
                 let alarm = alarms[alarmId];

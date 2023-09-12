@@ -1,6 +1,17 @@
-function logout() {
-    resetToken()
-    window.location.href = BASE_URL + '/views/login'
+async function logout() {
+    // when
+    await fetch('/api/users/logout', {
+        method: 'DELETE',
+        headers: {
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
+    // then
+    .then(() => {
+        resetToken()
+        window.location.href = BASE_URL + '/views/login'
+    })
 }
 
 async function callMyUserInfo() {

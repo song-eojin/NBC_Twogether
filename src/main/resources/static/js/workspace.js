@@ -5,7 +5,8 @@ const BASE_URL = 'http://localhost:8080'
 $(document).ready(function () {
 
     let auth = Cookies.get('Authorization') ? Cookies.get('Authorization') : ''
-    let refresh = Cookies.get('Refresh-Token') ? Cookies.get('Refresh-Token') : ''
+    let refresh = Cookies.get('Refresh-Token') ? Cookies.get('Refresh-Token')
+        : ''
 
     // access 토큰과 refresh 토큰이 모두 존재하지 않을 때 -- 로그아웃
     if (auth === '' && refresh === '') {
@@ -28,6 +29,7 @@ $(document).ready(function () {
         } else {
             $('#alarm-panel').show();
         }
+        callMyAlarms()
     })
 
     // 개인 프로필 창 : 사진 클릭 이벤트 핸들러 추가
@@ -64,42 +66,41 @@ $(document).ready(function () {
 
 function callMyWorkspaces() {
 
-  // before
-  $('#my-workspaces').empty()
+    // before
+    $('#my-workspaces').empty()
 
-  // when
-  fetch('/api/workspaces', {
-    method: 'GET',
-    headers: {
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
+    // when
+    fetch('/api/workspaces', {
+        method: 'GET',
+        headers: {
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
 
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
 
-    let workspaces = await res.json()
+        let workspaces = await res.json()
 
+        for (let workspace of workspaces['workspaces']) {
+            let wId = workspace['workspaceId']
+            $('#my-workspaces').append(formMyWorkspace(workspace))
+            $('#nav-workspaces').append(formNavMyWorkspace(workspace))
 
-    for (let workspace of workspaces['workspaces']) {
-      let wId = workspace['workspaceId']
-      $('#my-workspaces').append(formMyWorkspace(workspace))
-      $('#nav-workspaces').append(formNavMyWorkspace(workspace))
+            for (let board of workspace['boards']) {
+                $('#workspace-board-list-' + wId).append(formMyBoard(board))
+            }
 
-
-      for (let board of workspace['boards']) {
-        $('#workspace-board-list-' + wId).append(formMyBoard(board))
-      }
-
-      for (let collaborator of workspace['wpCollaborators']) {
-        console.log(collaborator)
-        $('#invite-wp-col-list-' + wId).append(formCollaborator(wId, collaborator))
-      }
-      $(`#workspace-board-list-${wId}`).append(formCreateBoard(wId))
-    }
+            for (let collaborator of workspace['wpCollaborators']) {
+                console.log(collaborator)
+                $('#invite-wp-col-list-' + wId).append(
+                    formCollaborator(wId, collaborator))
+            }
+            $(`#workspace-board-list-${wId}`).append(formCreateBoard(wId))
+        }
         // 공통 초대 요청란 닫기
         closeAllInviteCollaborators()
     })
@@ -138,55 +139,39 @@ function callColWorkspaces() {
     })
 }
 
-async function createWorkspace() {
-
-    for (let workspace of workspaces['workspaces']) {
-      let wId = workspace['workspaceId']
-      $('#col-workspaces').append(formColWorkspace(workspace))
-      $('#nav-col-workspaces').append(formNavColWorkspace(workspace))
-      for (let board of workspace['boards']) {
-        $('#workspace-board-list-' + wId).append(formColBoard(board))
-      }
-    }
-
-    // 공통 초대 요청란 닫기
-    closeAllInviteCollaborators()
-  })
-}
-
 // 워크스페이스로 이동
 function moveToWorkspace() {
-  window.location.reload();
+    window.location.reload();
 }
 
 async function createWorkspace() {
-  // given
-  let title = $('#workspace-title').val()
-  let description = $('#workspace-description').val()
-  const request = {
-    title: title,
-    icon: description
-  }
+    // given
+    let title = $('#workspace-title').val()
+    let description = $('#workspace-description').val()
+    const request = {
+        title: title,
+        icon: description
+    }
 
-  // when
-  await fetch('/api/workspaces', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    },
-    body: JSON.stringify(request)
-  })
+    // when
+    await fetch('/api/workspaces', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request)
+    })
 
-  // then
-  .then(res => {
-    checkTokenExpired(res)
-    refreshToken(res)
+    // then
+    .then(res => {
+        checkTokenExpired(res)
+        refreshToken(res)
 
-    // 생성된 workspace도 노출되도록 하기 위해 함수 호출
-    callMyWorkspaces()
-  })
+        // 생성된 workspace도 노출되도록 하기 위해 함수 호출
+        callMyWorkspaces()
+    })
 }
 
 function editWorkspace(wId) {
@@ -269,7 +254,9 @@ async function createBoard(wId) {
 function deleteWorkspace(wId) {
 
     let check = confirm("워크스페이스를 삭제하시겠습니까?")
-    if (!check) { return }
+    if (!check) {
+        return
+    }
 
     // when
     fetch(`/api/workspaces/${wId}`, {
@@ -297,44 +284,38 @@ function deleteWorkspace(wId) {
 }
 
 function deleteBoard(bId) {
-
-  if (res.status !== 200) {
-      let error = await res.json()
-      alert(error['message'])
-      return
+    let check = confirm("보드를 삭제하시겠습니까?")
+    if (!check) {
+        return
     }
-
-    // 생성된 workspace도 노출되도록 하기 위해 함수 호출
-    callMyWorkspaces()
-  })
+    // when
+    fetch(`/api/boards/${bId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+            return
+        }
+        // 생성된 workspace도 노출되도록 하기 위해 함수 호출
+        callMyWorkspaces()
+    })
 }
 
 async function inviteWpCollaborator(wId) {
-  // given
-  let email = document.getElementById('wp-col-email-' + wId).value
-  const request = {
-    email: email
-  }
-
-  // when
-  await fetch('/api/workspaces/' + wId + '/invite', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    },
-    body: JSON.stringify(request)
-  })
-
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
-    if (res.status !== 200) {
-      let error = await res.json()
-      alert(error['message'])
+    // given
+    let email = document.getElementById('wp-col-email-' + wId).value
+    const request = {
+        email: email
     }
 
     // when
@@ -363,35 +344,35 @@ async function inviteWpCollaborator(wId) {
 }
 
 async function cancelWpCollaborator(wId, colId) {
-  // given
-  let colEmail = document.getElementById('col-email-' + colId).innerHTML
-  const request = {
-    email: colEmail
-  }
-
-  // when
-  await fetch('/api/workspaces/' + wId + '/invite', {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    },
-    body: JSON.stringify(request)
-  })
-
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
-    if (res.status !== 200) {
-      let error = await res.json()
-      alert(error['message'])
+    // given
+    let colEmail = document.getElementById('col-email-' + colId).innerHTML
+    const request = {
+        email: colEmail
     }
 
-    $('#wp-col-' + colId).remove()
-  })
+    // when
+    await fetch('/api/workspaces/' + wId + '/invite', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request)
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+        }
+
+        $('#wp-col-' + colId).remove()
+    })
 }
 
 function moveToBoard(bId) {
@@ -420,7 +401,7 @@ function formMyWorkspace(workspace) {
     let introduction = workspace['icon']
     let wId = workspace['workspaceId']
 
-  return `
+    return `
     <div id="workspace-${wId}" class="workspace">
         <div>
           <header>
@@ -491,11 +472,12 @@ function formMyWorkspace(workspace) {
             </div>
         </div>       `
 }
-function formNavMyWorkspace(workspace) {
-  let title = workspace['title']
-  let wId = workspace['workspaceId']
 
-  return `
+function formNavMyWorkspace(workspace) {
+    let title = workspace['title']
+    let wId = workspace['workspaceId']
+
+    return `
     <li id="workspace-${wId}">
       <div class="wp-lists"
         <span>${title}</span>
@@ -504,12 +486,12 @@ function formNavMyWorkspace(workspace) {
     `
 
 }
+
 function formNavColWorkspace(workspace) {
-  let title = workspace['title']
-  let wId = workspace['workspaceId']
+    let title = workspace['title']
+    let wId = workspace['workspaceId']
 
-
-  return `
+    return `
     <li id="workspace-${wId}">
       <div class="col-wp-lists"
         <span>${title}</span>
@@ -517,12 +499,13 @@ function formNavColWorkspace(workspace) {
     </li>
     `
 }
+
 function formMyBoard(board) {
     let boardId = board['boardId']
     let title = board['title']
     let color = board['color']
 
-  return `
+    return `
     <div id="board-${boardId}" class="board" >
       <div class="move-to-board" onclick="moveToBoard(${boardId})">
       <h3>${title}</h3>
@@ -535,12 +518,13 @@ function formMyBoard(board) {
     
   `
 }
-function formCollaborator(wId, collaborator) {
-  let colId = collaborator['wpColId']
-  let email = collaborator['email']
-  let nickname = collaborator['nickname']
 
-  return `
+function formCollaborator(wId, collaborator) {
+    let colId = collaborator['wpColId']
+    let email = collaborator['email']
+    let nickname = collaborator['nickname']
+
+    return `
       <li id="wp-col-${colId}">
         <div class="wp-col-lists">
           <div class="wp-col-lists-email">
@@ -554,7 +538,7 @@ function formCollaborator(wId, collaborator) {
 }
 
 function formCreateBoard(wId) {
-  return `
+    return `
         <div id="create-board-btn-${wId}" class="create-board-btn board" onclick="createBoardOnOff(${wId})">보드 생성</div>
         <div id="create-board-form-${wId}" class="create-board-form board">
           <div class="create-board-content">
@@ -582,7 +566,7 @@ function formColWorkspace(workspace) {
     let introduction = workspace['icon']
     let wId = workspace['workspaceId']
 
-  return `
+    return `
        <div id="workspace-${wId}" class="col-workspace">
           <header>
             <h2>${title}</h2>

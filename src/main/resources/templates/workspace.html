@@ -77,76 +77,67 @@
         <div id="profileImage-btns" class="hide">
             <button id="save-edit-profileImage-btn" onclick="editProfileImage()">Save
             </button>
-            <button id="cancel-profileImage-btn" >Cancel</button>
-            <button id="default-profileImage-btn" onclick="defaultProfileImage()" style="width: 78%;">Default</button>
+            <button id="cancel-profileImage-btn">Cancel</button>
+            <button id="default-profileImage-btn" onclick="defaultProfileImage()"
+                    style="width: 78%;">Default
+            </button>
             <div id="upload-profileImage-input-container">
                 <input type="file" id="upload-profileImage-input" accept="image/*">
             </div>
         </div>
 
         <div id="profileInfo-btns">
-            <button id="save-edit-userInfo-btn" onclick="editUserInfo()" class="hide" style="margin-left: 0">Save</button>
+            <button id="save-edit-userInfo-btn" onclick="editUserInfo()" class="hide"
+                    style="margin-left: 0">Save
+            </button>
             <button id="cancel-userInfo-btn" onclick="closeEditUserInfoForm()" class="hide">Cancel
             </button>
-        </div><br>
+        </div>
+        <br>
 
-        <button id="change-userInfo-btn">Edit Info</button><br>
-        <button id="change-userImage-btn">Edit Image</button><br>
-    </div>
-  <nav id="nav">
-    <div class="nav-workspace-lists" style="display:none;">
-      <h3>My Workspaces</h3>
-      <div class="nav-wp-lists">
-      <ul id="nav-workspaces"></ul>
-      </div>
-      <hr>
-      <div>
-      <h3>Collab Workspaces</h3>
-      <div class="nav-col-wp-lists">
-      <ul id="nav-col-workspaces"></ul>
-      </div>
-      </div>
+        <button id="change-userInfo-btn">Edit Info</button>
+        <br>
+        <button id="change-userImage-btn">Edit Image</button>
+        <br>
     </div>
 
-    <div class="nav-create-workspace-btns">
-    <button class="create-workspace-btns" id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
-      워크스페이스 새로 만들기
-    </button>
-    </div>
-    <div id="create-workspace-form" style="display:none">
-      <div class="create-workspace-form-content">
-        <div>
-        <label for="workspace-title">타이틀</label>
-        <input type="text" id="workspace-title"/>
-        </div>
-        <div>
-        <label for="workspace-description">정보</label>
-        <input type="text" id="workspace-description"/>
-        </div>
-        <div>
-      <button class="create-workspace-submit" id="create-workspace-btn" onclick="createWorkspace()">생성</button>
-        </div>
-      </div>
-
-    <!--워크스페이스-->
     <nav id="nav">
-        <ul id="nav-workspaces">
-        </ul>
+        <div class="nav-workspace-lists" style="display:none;">
+            <h3>My Workspaces</h3>
+            <div class="nav-wp-lists">
+                <ul id="nav-workspaces"></ul>
+            </div>
+            <hr>
+            <div>
+                <h3>Collab Workspaces</h3>
+                <div class="nav-col-wp-lists">
+                    <ul id="nav-col-workspaces"></ul>
+                </div>
+            </div>
+        </div>
 
-        <button id="create-workspace" onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
-            Create New Workspace
-        </button>
-
+        <div class="nav-create-workspace-btns">
+            <button class="create-workspace-btns" id="create-workspace"
+                    onclick="createWorkspaceOnOff()"><i class="fas fa-plus"></i>
+                워크스페이스 새로 만들기
+            </button>
+        </div>
         <div id="create-workspace-form" style="display:none">
-            <div>
-                <label for="workspace-title">Title</label>
-                <input type="text" id="workspace-title"/>
+            <div class="create-workspace-form-content">
+                <div>
+                    <label for="workspace-title">타이틀</label>
+                    <input type="text" id="workspace-title"/>
+                </div>
+                <div>
+                    <label for="workspace-description">정보</label>
+                    <input type="text" id="workspace-description"/>
+                </div>
+                <div>
+                    <button class="create-workspace-submit" id="create-workspace-btn"
+                            onclick="createWorkspace()">생성
+                    </button>
+                </div>
             </div>
-            <div>
-                <label for="workspace-description">Description</label>
-                <input type="text" id="workspace-description"/>
-            </div>
-            <button id="create-workspace-btn" onclick="createWorkspace()">Create</button>
         </div>
     </nav>
 

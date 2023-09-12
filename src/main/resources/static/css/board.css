@@ -627,6 +627,7 @@ nav {
 
 .comment-item img {
     position: relative;
+    width: 30px;
 }
 
 .comment-content {
