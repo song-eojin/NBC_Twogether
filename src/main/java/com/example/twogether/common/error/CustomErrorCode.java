@@ -10,6 +10,7 @@ public enum CustomErrorCode {
     UNAUTHORIZED_REQUEST("U003", "승인되지 않은 요청입니다."),
     PASSWORD_MISMATCHED("U004", "기존 비밀번호와 일치하지 않습니다."),
     PASSWORD_RECENTLY_USED("U005", "최근 2회 이내에 사용한 적 있는 비밀번호입니다."),
+    ICON_UPLOAD_FAIL("U006", "프로필 사진 기본으로 변경을 실패했습니다."),
 
     // Email
     EMAIL_ALREADY_USED("EM001", "이미 사용 중인 이메일입니다."),

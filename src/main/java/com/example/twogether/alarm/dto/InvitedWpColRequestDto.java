@@ -6,16 +6,15 @@ import com.example.twogether.user.entity.User;
 
 public class InvitedWpColRequestDto {
 
-    public static Alarm toEntity(User invitingUser, User invitedUser, String content, String url, AlarmTrigger alarmTrigger, Long wpId, String wpTitle) {
+    public static Alarm toEntity(User invitingUser, User invitedUser, String title, String content, String url, AlarmTrigger alarmTrigger, Long wpId, String wpTitle) {
 
         return Alarm.builder()
+            .title(title)
             .content(content)
             .url(url)
             .alarmTrigger(alarmTrigger)
             .eventMaker(invitingUser) // 워크스페이스의 오너
             .user(invitedUser)
-            .wpId(wpId)
-            .wpTitle(wpTitle)
             .build();
     }
 

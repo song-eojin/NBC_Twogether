@@ -62,7 +62,8 @@ public class CardColController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "카드에 할당된 협업자를 삭제하였습니다."));
     }
 
-//    @Operation(summary = "카드를 작업할 협업자 전체 조회") // 혹시 몰라 만들어 둠 - 필요하면 주석 풀 것
+    /* 필요하면 주석 풀 것 */
+    //    @Operation(summary = "카드를 작업할 협업자 전체 조회")
 //    @GetMapping("/cards/{cardId}/users")
 //    public ResponseEntity<CardColsResponseDto> getCardCols(
 //        @AuthenticationPrincipal UserDetailsImpl userDetails,

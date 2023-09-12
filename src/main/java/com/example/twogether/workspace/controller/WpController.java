@@ -37,7 +37,6 @@ public class WpController {
     ) {
 
         wpService.createWorkspace(userDetails.getUser(), wpRequestDto);
-
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.CREATED.value(), "워크스페이스가 생성되었습니다."));
     }
 

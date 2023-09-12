@@ -11,4 +11,5 @@ public interface WpRepository extends JpaRepository<Workspace, Long> {
     List<Workspace> findAllByUser_Id(Long id);
     List<Workspace> findAllByWorkspaceCollaborators_Email(String email);
     Optional<Workspace> findByIdAndWorkspaceCollaborators_Email(Long wpId, String email);
+    //Optional<Workspace> findByIdWithCollaborators(Long wpId);
 }

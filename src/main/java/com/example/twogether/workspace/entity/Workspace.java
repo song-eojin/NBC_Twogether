@@ -77,4 +77,14 @@ public class Workspace extends Timestamped {
             .boards(filteredBoards)
             .build();
     }
+
+    // Lazy Loading을 강제로 발생시켜 workspaceCollaborator 필드를 로드하는 메서드
+    public List<WorkspaceCollaborator> loadWorkspaceCollaborators() {
+        if (this.workspaceCollaborators == null) {
+
+            // Lazy Loading을 발생시키기 위해 size() 메서드를 호출
+            this.workspaceCollaborators.size();
+        }
+        return this.workspaceCollaborators;
+    }
 }

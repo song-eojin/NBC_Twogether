@@ -18,6 +18,7 @@ public class CardCommentEvent extends ApplicationEvent {
     private final User alarmTarget;
     private final Card card;
     private final Comment comment;
+    private final String title;
     private final String content;
 
     @Builder
@@ -28,14 +29,13 @@ public class CardCommentEvent extends ApplicationEvent {
         this.alarmTarget = targetUser;
         this.card = card;
         this.comment = comment;
-        this.content = generateContent(editor, card, comment);
+        this.title = "Added Comment";
+        this.content = generateContent(card, comment);
     }
 
-    private String generateContent(User editor, Card card, Comment comment) {
+    private String generateContent(Card card, Comment comment) {
 
-        return editor.getNickname() + "님이 "
-            + "\'작업자로 할당되어 있는 "
-            + "ID" + card.getId() + ". " + card.getTitle() + " 카드\'에 "
-            + "\'댓글 ID" + comment.getId() + ". " + comment.getContent() + "\'가 달렸습니다.";
+        return "Card Title : " + card.getTitle() + "<br>"
+            + "Comment Content : " + comment.getContent();
     }
 }

@@ -1,0 +1,159 @@
+/*알림 창*/
+#alarm-panel {
+  position: fixed;
+  top: 35px;
+  right: 150px;
+  width: 350px;
+  height: auto;
+  background-color: whitesmoke;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-right: 30px;
+}
+
+.alarm-panel-btn {
+  color: whitesmoke;
+  height: 25px;
+  border: none;
+  background-color: #643d3d;
+}
+
+#alarm-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+#alarm-content {
+  font-size: 15px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+#alarm-list-container ul {
+  list-style-type: none;
+}
+
+#alarm-list li {
+  margin: 20px;
+}
+
+/*개인프로필 창*/
+#userProfile-panel {
+  width: 300px;
+}
+
+#userInfo {
+  margin: 10%;
+}
+
+#edit-nick-input, #edit-intro-input {
+  border: none;
+  background-color: whitesmoke;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+/*실제 정보 앞에 달린 타이틀*/
+#userInfo span {
+  font-size: 0.7rem;
+}
+
+/*실제 정보*/
+#userInfo .user-info-item {
+  font-size: 0.9rem;
+  margin-top: 4%;
+}
+
+#userInfo input, textarea {
+  font-family: 'Russo One', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 0;
+  margin-right: 10%;
+  width: auto;
+  max-width: 90%;
+}
+
+#panel-profileImage {
+  display: block;
+  width: 100%;
+  margin-bottom: 5%;
+}
+
+/*긴 버튼*/
+#change-userImage-btn, #change-userInfo-btn {
+  background-color: whitesmoke;
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 5px;
+  width: 84%;
+  padding: 10px;
+  margin-left: 7%;
+  text-align: center;
+  cursor: pointer;
+}
+#change-userImage-btn:hover, #change-userInfo-btn:hover {
+  color: whitesmoke;
+  background-color: #4e3939;
+}
+
+/*숨겨진 짧은 버튼*/
+#profileImage-btns {
+  margin-left: 5%;
+}
+#profileInfo-btns {
+  margin-left: 10%;
+}
+
+#profileImage-btns button, #profileInfo-btns button {
+  background-color: whitesmoke;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 500;
+  width: 35%;
+  margin: 15px auto 5px 6%;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+#profileImage-btns button:hover, #profileInfo-btns button:hover {
+  color: whitesmoke;
+  background-color: #4e3939;
+}
+
+#change-userImage-btn {
+  margin-bottom: 50px;
+}
+
+#upload-profileImage-input-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+#email {
+  word-wrap: break-word;
+}
+
+.read {
+  color: darkgrey;
+}
+
+.read button {
+  color: darkgrey;
+  border: 1px solid darkgrey;
+}
+
+.hide {
+  display: none;
+}

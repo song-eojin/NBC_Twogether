@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" type="text/css" href="/css/board.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/css/panel.css">
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -15,6 +17,9 @@
             integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="/js/board.js"></script>
+    <script src="/js/profile.js"></script>
+    <script src="/js/alarm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
@@ -29,21 +34,75 @@
 <body>
 <header id="header">
     <div onclick="moveToWorkspace()">
-        <h2 id='title'>Two Gether</h2></div>
+        <h2 id='header-title'>Two Gether</h2>
+    </div>
     <div id="board-box">
         <h3 id="board-title"></h3>
     </div>
     <span id="boardId" th:text="${id}" style="display:none"></span>
-    <div class="user-info">
-        <i class="fas fa-user-circle"></i>
-        Email: <span id="email"></span>
-        Nickname: <span id='nickname'></span>
-        Role: <span id="role"></span>
-        <span id='logout' onclick="logout()"><i class="fas fa-sign-out-alt"></i></span>
+    <div id="header-profileImage-container"><img id="header-profileImage"></div>
+    <div id="alarm-badge"></div>
+    <div id="alarm-button">
+        <i class="fas fa-bell"></i>
     </div>
+    <i id="logout" class="fas fa-sign-out-alt" onclick="logout()"></i>
 </header>
 
+<!--알림-->
+<div id="alarm-panel" style="display: none">
+    <!--        <button id="enable">알림 허용</button>-->
+    <div id="alarm-list-container">
+        <div style="text-align: center">도착한 알림이 없습니다.</div>
+        <ul id="alarm-list">
+            <!-- 알림 목록 추가되는 영역 -->
+        </ul>
+    </div>
+</div>
+
 <div id="content">
+    <div id="userProfile-panel" class="hide">
+        <!--프로필 이미지-->
+        <img id="panel-profileImage" class="close-userProfile-panel">
+
+        <!--프로필 정보-->
+        <div id="userInfo">
+            <span>Email:</span>
+            <div id="email" class="user-info-item"></div>
+            <br><br>
+
+            <span>Nickname:</span>
+            <div id='nickname' class="user-info-item"></div>
+            <input id="edit-nick-input" class="hide" type="text"/>
+            <br><br>
+
+            <span>Introduction:</span>
+            <div id='introduction' class="user-info-item"></div>
+            <textarea id="edit-intro-input" class="hide"></textarea>
+
+            <!--            <span>Role:</span>-->
+            <!--            <div id="role" class="user-info-item"></div>-->
+        </div>
+
+        <div id="profileImage-btns" class="hide">
+            <button id="save-edit-profileImage-btn" onclick="editProfileImage()">Save
+            </button>
+            <button id="cancel-profileImage-btn" >Cancel</button>
+            <button id="default-profileImage-btn" onclick="defaultProfileImage()" style="width: 78%;">Default</button>
+            <div id="upload-profileImage-input-container">
+                <input type="file" id="upload-profileImage-input" accept="image/*">
+            </div>
+        </div>
+
+        <div id="profileInfo-btns">
+            <button id="save-edit-userInfo-btn" onclick="editUserInfo()" class="hide" style="margin-left: 0">Save</button>
+            <button id="cancel-userInfo-btn" onclick="closeEditUserInfoForm()" class="hide">Cancel
+            </button>
+        </div><br>
+
+        <button id="change-userInfo-btn">Edit Info</button><br>
+        <button id="change-userImage-btn">Edit Image</button><br>
+    </div>
+
     <nav id="nav" style="display:none;">
         <ul id="nav-workspaces">
         </ul>
@@ -209,6 +268,5 @@
     </div>
     <span class="open-btn" onclick="openNav()">&#9776;</span>
 </div>
-<script src="/js/board.js"></script>
 </body>
 </html>

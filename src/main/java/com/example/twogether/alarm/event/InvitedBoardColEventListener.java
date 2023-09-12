@@ -30,11 +30,10 @@ public class InvitedBoardColEventListener implements ApplicationListener<Invited
         Alarm alarm = InvitedBoardColRequestDto.toEntity(
             board.getUser(),
             event.getInvitedUser(),
+            event.getTitle(),
             event.getContent(),
             "/api/workspaces/" + board.getWorkspace().getId() + "/boards/" + board.getId() + "/invite",
-            AlarmTrigger.INVITED_BOARD_COLLABORATOR,
-            board.getId(),
-            board.getTitle()
+            AlarmTrigger.INVITED_BOARD_COLLABORATOR
         );
         alarmService.createAlarm(alarm);
     }

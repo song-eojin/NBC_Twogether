@@ -28,6 +28,7 @@ public class CardCommentEventListener implements ApplicationListener<CardComment
         Alarm alarm = CardExtraRequestDto.toEntity(
             event.getEditor(),
             event.getAlarmTarget(),
+            event.getTitle(),
             event.getContent(),
             "/api/boards/" + card.getDeck().getBoard().getId() + "/cards/" + card.getId() + "/comments",
             AlarmTrigger.CARD_COMMENT_CREATE_EVENT

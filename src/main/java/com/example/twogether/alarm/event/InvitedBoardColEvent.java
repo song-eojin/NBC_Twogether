@@ -13,22 +13,22 @@ public class InvitedBoardColEvent extends ApplicationEvent {
     private final User invitingUser;
     private final User invitedUser;
     private final Board board;
+    private final String title;
     private final String content;
 
     @Builder
-    public InvitedBoardColEvent(Object source, User invitingUser, User invitedUser, Board board) {
+    public InvitedBoardColEvent(Object source, User editor, User invitedUser, Board board) {
         super(source);
-        this.invitingUser = invitingUser;
+        this.invitingUser = editor;
         this.invitedUser = invitedUser;
         this.board = board;
-        this.content = generateContent(invitingUser, invitedUser, board);
+        this.title = "Invited to thd Board";
+        this.content = generateContent(board);
     }
 
-    private String generateContent(User invitingUser, User invitedUser, Board board) {
+    private String generateContent(Board board) {
 
-        return "보드 오너(" + invitingUser.getNickname() + ")가 "
-            + "당신(" + invitedUser.getNickname() + ")을 "
-            + "\'ID" + board.getWorkspace().getId() + ". " + board.getWorkspace().getTitle() + "\' 워크스페이스에 포함되어 있는 "
-            + "\'ID" + board.getId() + ". " + board.getTitle() + "\' 보드에 초대했습니다.";
+        return "Workspace Title : " + board.getWorkspace().getTitle() + "<br>"
+            + "Board Title : " + board.getTitle();
     }
 }

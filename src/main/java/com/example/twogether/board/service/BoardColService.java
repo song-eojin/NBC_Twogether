@@ -12,6 +12,7 @@ import com.example.twogether.common.exception.CustomException;
 import com.example.twogether.user.entity.User;
 import com.example.twogether.user.entity.UserRoleEnum;
 import com.example.twogether.user.repository.UserRepository;
+import com.example.twogether.workspace.service.WpColService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +26,21 @@ public class BoardColService {
 
     private final BoardColRepository boardColRepository;
     private final BoardRepository boardRepository;
+    private final WpColService wpColService;
     private final UserRepository userRepository;
     private final TriggerEventPublisher eventPublisher;
   
     // 칸반 보드에 협업자 초대 - 허락받아야 초대되는 로직으로 develop 할지 고민 중
     @Transactional
     public void inviteBoardCol(User user, Long boardId, String email) {
+
         Board board = findBoard(boardId);
         User invitee = findUser(email);
         confirmUser(board, user, email);
 
         BoardCollaborator collaborator = boardColRepository.findByBoardAndEmail(board, email)
             .orElse(null);
+
         // 이미 등록된 사용자 초대당하기 불가
         if (collaborator != null) {
             throw new CustomException(CustomErrorCode.BOARD_COLLABORATOR_ALREADY_EXISTS);
@@ -45,12 +49,16 @@ public class BoardColService {
         // 보드 협업자로 등록
         BoardCollaborator foundBoardCol = BoardColRequestDto.toEntity(invitee, board);
         boardColRepository.save(foundBoardCol);
+
+        // 자동으로 상위 워크스페이스 협업자로도 등록
+        wpColService.autoInviteWpCol(user, board.getWorkspace().getId(), email);
         eventPublisher.publishInviteBoardColEvent(user, invitee, board);
     }
 
     // 칸반 보드에서 협업자 추방
     @Transactional
     public void outBoardCol(User user, Long boardId, String email) {
+
         Board board = findBoard(boardId);
         confirmUser(board, user, email);
 
@@ -77,6 +85,7 @@ public class BoardColService {
     // 초대된 보드 전체 조회
     @Transactional(readOnly = true)
     public BoardsResponseDto getBoardCols(User user) {
+
         List<Board> boards = boardColRepository.findAllByUser_Id(user.getId()).stream()
             .map(BoardCollaborator::getBoard).toList();
 

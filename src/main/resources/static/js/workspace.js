@@ -3,64 +3,67 @@ const BASE_URL = 'http://localhost:8080'
 
 // html 로딩 시 바로 실행되는 로직
 $(document).ready(function () {
-  let auth = Cookies.get('Authorization') ? Cookies.get('Authorization') : ''
-  let refresh = Cookies.get('Refresh-Token') ? Cookies.get('Refresh-Token') : ''
 
-  // access 토큰과 refresh 토큰이 모두 존재하지 않을 때 -- 로그아웃
-  if (auth === '' && refresh === '') {
-    window.location.href = BASE_URL + '/views/login'
-  }
+    let auth = Cookies.get('Authorization') ? Cookies.get('Authorization') : ''
+    let refresh = Cookies.get('Refresh-Token') ? Cookies.get('Refresh-Token') : ''
 
-  // 본인 정보 불러오기
-  getUserInfo()
+    // access 토큰과 refresh 토큰이 모두 존재하지 않을 때 -- 로그아웃
+    if (auth === '' && refresh === '') {
+        window.location.href = BASE_URL + '/views/login'
+    }
+
+    // 헤더 : 사진 클릭 이벤트 핸들러 추가
+    $('#header-profileImage-container').click(function () {
+        if ($('#userProfile-panel').is(':visible')) {
+            $('#userProfile-panel').hide();
+        } else {
+            $('#userProfile-panel').show();
+        }
+    });
+
+    // 헤더 : 알림 버튼 클릭 이벤트 핸들러 추가
+    $('#alarm-button').click(function () {
+        if ($('#alarm-panel').is(':visible')) {
+            $('#alarm-panel').hide();
+        } else {
+            $('#alarm-panel').show();
+        }
+    })
+
+    // 개인 프로필 창 : 사진 클릭 이벤트 핸들러 추가
+    $('.close-userProfile-panel').click(function () {
+        $('#userProfile-panel').hide();
+    });
+
+    // 개인 프로필 창 : 사용자 정보 수정 버튼 클릭 이벤트 핸들러 추가
+    $('#change-userInfo-btn').click(function () {
+        const oldNickname = $('#nickname').text()
+        const oldIntroduction = $('#introduction').text();
+
+        document.getElementById('edit-nick-input').value = oldNickname;
+        document.getElementById('edit-intro-input').value = oldIntroduction;
+
+        $('#nickname, #introduction, #change-userInfo-btn, #change-userImage-btn').hide();
+        $('#edit-nick-input, #edit-intro-input, #save-edit-userInfo-btn, #cancel-userInfo-btn').show();
+    });
+
+    // 개인 프로필 창 : 사용자 이미지 수정 관련 이벤트 핸들러 추가
+    $('#change-userImage-btn').click(function () {
+        $('#profileImage-btns').show();
+        $('#change-userImage-btn, #change-userInfo-btn').hide();
+    });
+    $('#cancel-profileImage-btn').click(function () {
+        $('#profileImage-btns').hide();
+        $('#change-userImage-btn, #change-userInfo-btn').show();
+    })
+
+    // 본인 정보 불러오기
+    callMyUserInfo()
+    callMyAlarms()
 })
 
-// fetch API 로직
-async function logout() {
-  // when
-  await fetch('/api/users/logout', {
-    method: 'DELETE',
-    headers: {
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
-
-  // then
-  .then(() => {
-  resetToken()
-  window.location.href = BASE_URL + '/views/login'
-  })
-}
-
-async function getUserInfo() {
-  // when
-  await fetch('/api/users/info', {
-    method: 'GET',
-    headers: {
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
-
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
-    let user = await res.json()
-    $('#nickname').text(user['nickname'])
-    $('#email').text(user.email)
-    $('#role').text(user.role)
-
-    // 본인이 생성한 workspace 불러오기
-    callMyWorkspaces()
-    // 본인이 초대된 workspace 불러오기
-    callColWorkspaces()
-  })
-}
-
 function callMyWorkspaces() {
+
   // before
   $('#my-workspaces').empty()
 
@@ -97,31 +100,45 @@ function callMyWorkspaces() {
       }
       $(`#workspace-board-list-${wId}`).append(formCreateBoard(wId))
     }
-
-    // 공통 초대 요청란 닫기
-    closeAllInviteCollaborators()
-  })
+        // 공통 초대 요청란 닫기
+        closeAllInviteCollaborators()
+    })
 }
 
 function callColWorkspaces() {
-  // when
-  $('#col-workspaces').empty()
 
-  // when
-  fetch('/api/workspaces/invite', {
-    method: 'GET',
-    headers: {
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
+    $('#col-workspaces').empty()
 
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
+    // when
+    fetch('/api/workspaces/invite', {
+        method: 'GET',
+        headers: {
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
 
-    let workspaces = await res.json()
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        let workspaces = await res.json()
+
+        for (let workspace of workspaces['workspaces']) {
+            let wId = workspace['workspaceId']
+            $('#col-workspaces').append(formColWorkspace(workspace))
+            for (let board of workspace['boards']) {
+                $('#workspace-board-list-' + wId).append(formColBoard(board))
+            }
+        }
+
+        // 공통 초대 요청란 닫기
+        closeAllInviteCollaborators()
+    })
+}
+
+async function createWorkspace() {
 
     for (let workspace of workspaces['workspaces']) {
       let wId = workspace['workspaceId']
@@ -173,132 +190,115 @@ async function createWorkspace() {
 }
 
 function editWorkspace(wId) {
-  // given
-  let title = $('#workspace-title-edited-' + wId).val()
-  if (title === '') {
-    title = null;
-  }
-  let description = $('#workspace-description-edited-' + wId).val()
-  if (description === '') {
-    description = null;
-  }
-  const request = {
-    title: title,
-    icon: description
-  }
 
-  // when
-  fetch('/api/workspaces/' + wId, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    },
-    body: JSON.stringify(request),
-  })
-
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
-    if (res.status !== 200) {
-      let error = await res.json()
-      alert(error['message'])
-      return
+    // given
+    let title = $('#workspace-title-edited-' + wId).val()
+    if (title === '') {
+        title = null;
     }
-    // 생성된 workspace도 노출되도록 하기 위해 함수 호출
-    callMyWorkspaces()
-  });
+    let description = $('#workspace-description-edited-' + wId).val()
+    if (description === '') {
+        description = null;
+    }
+    const request = {
+        title: title,
+        icon: description
+    }
+
+    // when
+    fetch('/api/workspaces/' + wId, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request),
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+            return
+        }
+        // 생성된 workspace도 노출되도록 하기 위해 함수 호출
+        callMyWorkspaces()
+    });
 }
 
 async function createBoard(wId) {
-  // given
-  let title = document.getElementById('board-title-' + wId).value
-  let color = document.getElementById('board-color-' + wId).value
-  let info = document.getElementById('board-info-' + wId).value
-  const request = {
-    title: title,
-    color: color,
-    info: info
-  }
 
-  // when
-  await fetch('/api/workspaces/' + wId + '/boards', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    },
-    body: JSON.stringify(request)
-  })
+    // given
+    let title = document.getElementById('board-title-' + wId).value
+    let color = document.getElementById('board-color-' + wId).value
+    let info = document.getElementById('board-info-' + wId).value
 
-  // then
-  .then(res => {
-    checkTokenExpired(res)
-    refreshToken(res)
+    const request = {
+        title: title,
+        color: color,
+        info: info
+    }
 
-    createBoardOnOff(wId)
-    // 생성된 workspace도 노출되도록 하기 위해 함수 호출
-    callMyWorkspaces()
-  })
+    // when
+    await fetch('/api/workspaces/' + wId + '/boards', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request)
+    })
+
+    // then
+    .then(res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        createBoardOnOff(wId)
+        // 생성된 workspace도 노출되도록 하기 위해 함수 호출
+        callMyWorkspaces()
+    })
 }
 
 function deleteWorkspace(wId) {
-  let check = confirm("워크스페이스를 삭제하시겠습니까?")
-  if (!check) {
-    return
-  }
 
-  // when
-  fetch(`/api/workspaces/${wId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
+    let check = confirm("워크스페이스를 삭제하시겠습니까?")
+    if (!check) { return }
 
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
+    // when
+    fetch(`/api/workspaces/${wId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        }
+    })
 
-    if (res.status !== 200) {
-      let error = await res.json()
-      alert(error['message'])
-      return
-    }
-    // 생성된 workspace도 노출되도록 하기 위해 함수 호출
-    callMyWorkspaces()
-  })
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+            return
+        }
+        // 생성된 workspace도 노출되도록 하기 위해 함수 호출
+        callMyWorkspaces()
+    })
 }
 
 function deleteBoard(bId) {
-  let check = confirm("보드를 삭제하시겠습니까?")
-  if (!check) {
-    return
-  }
 
-  // when
-  fetch(`/api/boards/${bId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': Cookies.get('Authorization'),
-      'Refresh-Token': Cookies.get('Refresh-Token')
-    }
-  })
-
-  // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
-    if (res.status !== 200) {
+  if (res.status !== 200) {
       let error = await res.json()
       alert(error['message'])
       return
@@ -337,8 +337,29 @@ async function inviteWpCollaborator(wId) {
       alert(error['message'])
     }
 
-    closeAllInviteCollaborators()
-  })
+    // when
+    await fetch('/api/workspaces/' + wId + '/invite', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': Cookies.get('Authorization'),
+            'Refresh-Token': Cookies.get('Refresh-Token')
+        },
+        body: JSON.stringify(request)
+    })
+
+    // then
+    .then(async res => {
+        checkTokenExpired(res)
+        refreshToken(res)
+
+        if (res.status !== 200) {
+            let error = await res.json()
+            alert(error['message'])
+        }
+
+        closeAllInviteCollaborators()
+    })
 }
 
 async function cancelWpCollaborator(wId, colId) {
@@ -374,30 +395,30 @@ async function cancelWpCollaborator(wId, colId) {
 }
 
 function moveToBoard(bId) {
-  window.location.href = BASE_URL + '/views/boards/' + bId
+    window.location.href = BASE_URL + '/views/boards/' + bId
 }
 
 function createWorkspaceOnOff() {
-  $('#create-workspace-form').toggle()
+    $('#create-workspace-form').toggle()
 }
 
 function editWorkspaceOnOff(wId) {
-  $('#edit-workspace-form-' + wId).toggle()
+    $('#edit-workspace-form-' + wId).toggle()
 }
 
 function createBoardOnOff(wId) {
-  $('#create-board-btn-' + wId).toggle()
-  $('#create-board-form-' + wId).toggle()
+    $('#create-board-btn-' + wId).toggle()
+    $('#create-board-form-' + wId).toggle()
 }
 
 function editBoardOnOff(boardId) {
-  $('#edit-board-form-' + boardId).toggle()
+    $('#edit-board-form-' + boardId).toggle()
 }
 
 function formMyWorkspace(workspace) {
-  let title = workspace['title']
-  let introduction = workspace['icon']
-  let wId = workspace['workspaceId']
+    let title = workspace['title']
+    let introduction = workspace['icon']
+    let wId = workspace['workspaceId']
 
   return `
     <div id="workspace-${wId}" class="workspace">
@@ -497,9 +518,9 @@ function formNavColWorkspace(workspace) {
     `
 }
 function formMyBoard(board) {
-  let boardId = board['boardId']
-  let title = board['title']
-  let color = board['color']
+    let boardId = board['boardId']
+    let title = board['title']
+    let color = board['color']
 
   return `
     <div id="board-${boardId}" class="board" >
@@ -552,14 +573,14 @@ function formCreateBoard(wId) {
             <button onclick="createBoard(${wId})">생성</button>
             <button onclick="createBoardOnOff(${wId})">취소</button>
           </div>
-        </div>
-        `
+       </div>
+       `
 }
 
 function formColWorkspace(workspace) {
-  let title = workspace['title']
-  let introduction = workspace['icon']
-  let wId = workspace['workspaceId']
+    let title = workspace['title']
+    let introduction = workspace['icon']
+    let wId = workspace['workspaceId']
 
   return `
        <div id="workspace-${wId}" class="col-workspace">
@@ -570,58 +591,34 @@ function formColWorkspace(workspace) {
           <div>
             <div id="workspace-board-list-${wId}" class="workspace-board-list"></div>
           </div>
-        </div>
-        `
+       </div>
+       `
 }
 
 function formColBoard(board) {
-  let boardId = board['boardId']
-  let title = board['title']
-  let color = board['color']
+    let boardId = board['boardId']
+    let title = board['title']
+    let color = board['color']
 
-  return `
+    return `
     <div id="board-${boardId}" class="board" onclick="moveToBoard(${boardId})">
     <div class="move-to-board">
       <h3>${title}</h3>
      </div>
     </div>
-  `
+    `
 }
 
 function openInviteWpCollaborator(wId) {
-  closeAllInviteCollaborators()
-  $('#invite-wp-col-' + wId).show()
+    closeAllInviteCollaborators()
+    $('#invite-wp-col-' + wId).show()
 }
 
 function openInviteBoardCollab(bId) {
-  closeAllInviteCollaborators()
-  $('#invite-board-collaborator-' + bId).show()
+    closeAllInviteCollaborators()
+    $('#invite-board-collaborator-' + bId).show()
 }
 
 function closeAllInviteCollaborators() {
-  $('.invite-collaborator').hide()
-}
-
-// token 관련 재생성, 삭제, 만료 로직
-function refreshToken(response) {
-  let token = response.headers.get('Authorization')
-  if (token !== null) {
-    resetToken()
-    Cookies.set('Authorization', token, {path: '/'})
-    Cookies.set('Refresh-Token', response.headers.get('Refresh-Token'),
-        {path: '/'})
-  }
-}
-
-function resetToken() {
-  Cookies.remove('Authorization', {path: '/'})
-  Cookies.remove('Refresh-Token', {path: '/'})
-}
-
-function checkTokenExpired(res) {
-  if (res.status === 412) {
-    alert('토큰이 만료되었습니다. 다시 로그인해주세요!')
-    resetToken()
-    window.location.href = BASE_URL + '/views/login'
-  }
+    $('.invite-collaborator').hide()
 }

@@ -88,15 +88,6 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserInfo(Long id, User user) {
-        User found = findUser(id);
-        confirmUser(found, user);
-
-        logicallyDelete(user);
-        userRepository.deleteById(found.getId());
-    }
-
-    @Transactional
     public User editUserPassword(EditPasswordRequestDto requestDto, User user) {
         User found = findUser(user.getId());
 
@@ -120,6 +111,26 @@ public class UserService {
         return found;
     }
 
+    @Transactional
+    public void editIcon(MultipartFile multipartFile, User user) throws IOException {
+        try {
+            User target = findUser(user.getId());
+            String icon = s3Uploader.upload(multipartFile, "Icon");
+            target.editIcon(icon);
+        } catch (RejectedExecutionException e) {
+            throw new CustomException(CustomErrorCode.S3_FILE_UPLOAD_FAIL);
+        }
+    }
+
+    public void defaultIcon(User user) {
+        try {
+            user.editIcon("https://twogether.s3.ap-northeast-2.amazonaws.com/Icon/faed91e3-e029-45ee-a407-8efdfb178fce.png");
+            userRepository.save(user);
+        } catch (RejectedExecutionException e) {
+            throw new CustomException(CustomErrorCode.ICON_UPLOAD_FAIL);
+        }
+    }
+
     public void logoutUser(HttpServletRequest req, User user) {
         findUser(user.getId());
 
@@ -133,13 +144,12 @@ public class UserService {
     }
 
     @Transactional
-    public void editIcon(MultipartFile multipartFile, User user) throws IOException {
-        try {
-            String icon = s3Uploader.upload(multipartFile, "Icon");
-            user.editIcon(icon);
-        } catch (RejectedExecutionException e) {
-            throw new CustomException(CustomErrorCode.S3_FILE_UPLOAD_FAIL);
-        }
+    public void deleteUserInfo(Long id, User user) {
+        User found = findUser(id);
+        confirmUser(found, user);
+
+        logicallyDelete(user);
+        userRepository.deleteById(found.getId());
     }
 
     private User findUser(Long id) {

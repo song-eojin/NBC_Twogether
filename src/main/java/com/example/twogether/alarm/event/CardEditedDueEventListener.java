@@ -28,6 +28,7 @@ public class CardEditedDueEventListener implements ApplicationListener<CardEdite
         Alarm alarm = CardExtraRequestDto.toEntity(
             event.getEditor(),
             event.getAlarmTarget(),
+            event.getTitle(),
             event.getContent(),
             "/api/cards/" + card.getId() + "/date",
             AlarmTrigger.CARD_EDITED_DUE_EVENT

@@ -16,22 +16,6 @@ body {
     list-style: none;
 }
 
-/* Header styles */
-#header {
-    background-color: #4d3737; /* Wooden color */
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#title {
-    font-size: 20px;
-    font-weight: 100;
-    color: #ffffff;
-    font-family: 'Russo One', sans-serif;
-}
-
 .default-button {
     padding: 6px 13px;
     font-weight: bold;
@@ -40,16 +24,6 @@ body {
     border-radius: 3px;
     background-color: #84A947;
     cursor: pointer;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    color: #705c3b; /* Dark brown text color */
-}
-
-.user-info i {
-    margin-right: 5px;
 }
 
 /* Content style */

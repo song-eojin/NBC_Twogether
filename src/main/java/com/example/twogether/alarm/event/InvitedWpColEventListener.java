@@ -28,6 +28,7 @@ public class InvitedWpColEventListener implements ApplicationListener<InvitedWpC
         Alarm alarm = InvitedWpColRequestDto.toEntity(
             workspace.getUser(),
             event.getInvitedUser(),
+            event.getTitle(),
             event.getContent(),
             "/api/workspaces/" + workspace.getId() + "/invite",
             AlarmTrigger.INVITED_WORKSPACE_COLLABORATOR,

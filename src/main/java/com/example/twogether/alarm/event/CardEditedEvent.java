@@ -14,26 +14,29 @@ public class CardEditedEvent extends ApplicationEvent {
     private final Card card;
     private final String oldContent;
     private final String newContent;
+    private final String title;
     private final String content;
 
     @Builder
-    public CardEditedEvent(Object source, User user, User targetUser, Card card, String oldContent, String newContent) {
+    public CardEditedEvent(Object source, User editor, User targetUser, Card card, String oldContent, String newContent) {
 
         super(source);
-        this.user = user;
+        this.user = editor;
         this.alarmTarget = targetUser;
         this.card = card;
          this.oldContent = oldContent; // 카드 내용 수정 전
         this.newContent = newContent; // 카드 내용 수정후
-        this.content = generateContent(user, card, newContent); // 알림 내용
+        this.title = "Updated Comment's Content";
+        this.content = generateContent(card, newContent); // 알림 내용
     }
 
-    private String generateContent(User user, Card card, String newContent) {
+    private String generateContent(Card card, String newContent) {
 
-        return user.getNickname() + "님이 "
-            + "\'작업자로 할당되어 있는 "
-            + "카드 ID" + card.getId() + ". " + card.getTitle() + "\'의 내용을 "
-            + newContent + "로 수정하였습니다.";
+        return "Card Title : " + card.getTitle() + "<br>"
+            + "Card Content : <br>"
+            + "<span id='oldContent'>" + oldContent + "</span><br>"
+            + "→<br>"
+            + newContent;
     }
 
     /* (추후 작업) 추가기능 구현 준비 코드 - 자동 취소선, 형광펜 */

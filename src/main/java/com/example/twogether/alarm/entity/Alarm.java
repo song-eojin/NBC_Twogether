@@ -35,6 +35,7 @@ public class Alarm extends Timestamped {
     private Long id;
 
     private String url; // 알림의 대상이 되는 페이지로 이동
+    private String title;
 
     @Column(nullable = false)
     @Lob
@@ -52,26 +53,14 @@ public class Alarm extends Timestamped {
     @JoinColumn(nullable = false)
     private User eventMaker; // event를 만든 사람
 
-
-    /*Collaborator 공통 필드*/
-    private Long wpId;
-    private String wpTitle;
-    private Long boardId;
-    private String boardTitle;
-
-
-    /*Added Card Collaborator Event*/
-    private Long cardId;
-    private String cardTitle;
-
-
-    /*CardEdited Event*/
     @Builder.Default
     @Column
     private Boolean isRead = false;
 
-
     public void read(){
         this.isRead = true;
+    }
+    public void cancelRead(){
+        this.isRead = false;
     }
 }

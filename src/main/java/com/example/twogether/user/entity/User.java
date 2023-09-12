@@ -53,12 +53,14 @@ public class User {
 
     private String nickname;
     private String introduction;
-    private String icon;
+
+    @Builder.Default
+    private String icon = "https://twogether.s3.ap-northeast-2.amazonaws.com/Icon/faed91e3-e029-45ee-a407-8efdfb178fce.png";
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
+    
     /**
      * 연관관계 - Foreign Key 값을 따로 컬럼으로 정의하지 않고 연관 관계로 정의합니다.
      */
@@ -107,6 +109,10 @@ public class User {
         this.introduction = introduction;
     }
 
+    public void editIcon(String icon) {
+        this.icon = icon;
+    }
+
     public void editPassword(String newPassword) {
         this.password = newPassword;
     }
@@ -123,9 +129,5 @@ public class User {
     public User naverIdUpdate(String naverId) {
         this.naverId = naverId;
         return this;
-    }
-
-    public void editIcon(String icon) {
-        this.icon = icon;
     }
 }

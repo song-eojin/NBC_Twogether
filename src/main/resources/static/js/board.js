@@ -12,50 +12,58 @@ $(document).ready(function () {
 		window.location.href = BASE_URL + '/views/login'
 	}
 
-	// 본인 정보 불러오기
-	getUserInfo()
+    // 헤더 : 사진 클릭 이벤트 핸들러 추가
+    $('#header-profileImage-container').click(function () {
+        if ($('#userProfile-panel').is(':visible'))
+            $('#userProfile-panel').hide();
+        else
+            $('#userProfile-panel').show();
+    });
+
+    // 헤더 : 알림 버튼 클릭 이벤트 핸들러 추가
+    $('#alarm-button').click(function () {
+        if ($('#alarm-panel').is(':visible'))
+            $('#alarm-panel').hide();
+        else
+            $('#alarm-panel').show();
+    })
+
+    // 개인 프로필 창 : 사진 클릭 이벤트 핸들러 추가
+    $('.close-userProfile-panel').click(function () {
+        $('#userProfile-panel').hide();
+    });
+
+    // 개인 프로필 창 : 사용자 정보 수정 버튼 클릭 이벤트 핸들러 추가
+    $('#change-userInfo-btn').click(function () {
+        const oldNickname = $('#nickname').text()
+        const oldIntroduction = $('#introduction').text();
+
+        document.getElementById('edit-nick-input').value = oldNickname;
+        document.getElementById('edit-intro-input').value = oldIntroduction;
+
+        $('#nickname, #introduction, #change-userInfo-btn, #change-userImage-btn').hide();
+        $('#edit-nick-input, #edit-intro-input, #save-edit-userInfo-btn, #cancel-userInfo-btn').show();
+    });
+
+    // 개인 프로필 창 : 사용자 이미지 수정 관련 이벤트 핸들러 추가
+    $('#change-userImage-btn').click(function () {
+        $('#profileImage-btns').show();
+        $('#change-userImage-btn, #change-userInfo-btn').hide();
+    });
+    $('#cancel-profileImage-btn').click(function () {
+        $('#profileImage-btns').hide();
+        $('#change-userImage-btn, #change-userInfo-btn').show();
+    })
+
+    // 본인 정보 불러오기
+    callMyUserInfo()
+    callMyAlarms()
+  	callMyBoard()
 })
 
-// fetch API 로직
-async function logout() {
-    // when
-    await fetch('/api/users/logout', {
-        method: 'DELETE',
-        headers: {
-            'Authorization': Cookies.get('Authorization'),
-            'Refresh-Token': Cookies.get('Refresh-Token')
-        }
-    })
-
-    // then
-    .then(() => {
-		resetToken()
-        window.location.href = BASE_URL + '/views/login'
-    })
-}
-
-async function getUserInfo() {
-	// when
-	await fetch('/api/users/info', {
-		method: 'GET',
-		headers: {
-			'Authorization': Cookies.get('Authorization'),
-			'Refresh-Token': Cookies.get('Refresh-Token')
-		}
-	})
-
-	// then
-	.then(async res => {
-		checkTokenExpired(res)
-		refreshToken(res)
-
-		let user = await res.json()
-		$('#nickname').text(user['nickname'])
-		$('#email').text(user.email)
-		$('#role').text(user.role)
-
-		callMyBoard()
-	})
+// 워크스페이스로 이동
+function moveToWorkspace() {
+	window.location.href = BASE_URL + '/views/workspace'
 }
 
 // Board 관련 로직
@@ -113,7 +121,7 @@ async function callMyBoard() {
 				}
 			}
 		}
-	})
+	});
 }
 
 async function callMyCard(cardId) {
@@ -1093,11 +1101,6 @@ async function deleteCard(cardId) {
 
 		$('#archive-card-' + cardId).remove()
 	})
-}
-
-// 순수 javascript 동작
-function moveToWorkspace() {
-	window.location.href = BASE_URL + '/views/workspace'
 }
 
 function toggleCreateWorkspace() {
