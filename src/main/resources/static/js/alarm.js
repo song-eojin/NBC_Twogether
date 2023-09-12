@@ -15,10 +15,10 @@ function callMyAlarms() {
         refreshToken(res)
 
         let alarmsResponse = await res.json();
-        let alarms = alarmsResponse['alarms'];
+        const alarms = alarmsResponse['alarms'];
         let isUnreadAlarmExist = false;
 
-        if(alarms.empty()) {
+        if(alarms.length === 0) {
             $('#alarm-default-msg').text("도착한 알림이 없습니다.")
         }
         for (let alarmId in alarms) {
@@ -28,9 +28,10 @@ function callMyAlarms() {
                 $('#alarm-default-msg').hide();
 
                 // 여기서 알림 객체마다 이벤트 리스너를 추가
-                $('#read-alarm-btn-' + alarmId).click(function () {
-                    readAlarm(alarmId);
-                });
+                // todo : readAlarm이 재귀로 반복되고 있어서 주석 처리
+                // $('#read-alarm-btn-' + alarmId).click(function () {
+                //     readAlarm(alarmId);
+                // });
             }
 
             for (const alarm of alarms) {
@@ -94,9 +95,9 @@ function readAlarm(aId) {
     .then(async res => {
         checkTokenExpired(res)
         refreshToken(res)
-
-        console.log('알림 읽음');
-        alert('알림 읽음');
+        // todo: 편의성 개선을 위해 alert 주석 처리
+        // console.log('알림 읽음');
+        // alert('알림 읽음');
 
         $('#alarm-list').empty();
         callMyAlarms();

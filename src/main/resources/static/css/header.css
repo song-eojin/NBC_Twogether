@@ -15,6 +15,7 @@
   font-family: 'Russo One', sans-serif;
   color:#ffffff;
   padding-left: 20px;
+  cursor: pointer;
 }
 
 #header-profileImage {
