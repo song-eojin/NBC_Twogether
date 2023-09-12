@@ -10,10 +10,12 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
 }
+
 /*리스트안보이게*/
 .ul {
     list-style: none;
 }
+
 /* Header styles */
 #header {
     background-color: #4d3737; /* Wooden color */
@@ -22,18 +24,19 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+
 #title {
-    font-size:20px;
-    font-weight:100;
-    color:#ffffff;
+    font-size: 20px;
+    font-weight: 100;
+    color: #ffffff;
     font-family: 'Russo One', sans-serif;
 }
 
-.default-button{
-    padding:6px 13px;
+.default-button {
+    padding: 6px 13px;
     font-weight: bold;
-    color:#fff;
-    border:0;
+    color: #fff;
+    border: 0;
     border-radius: 3px;
     background-color: #84A947;
     cursor: pointer;
@@ -116,6 +119,7 @@ nav {
     padding: 20px;
     overflow-y: auto;
 }
+
 #main-board-header {
     background-color: blue;
     /*padding: 20px;*/
@@ -148,42 +152,43 @@ nav {
     font-size: 1rem;
     margin-top: 5px;
 }
+
 /*board style*/
-.board-canvas{
+.board-canvas {
     display: flex;
-    flex:1;
+    flex: 1;
     width: 100%;
     /*padding: 0 5px;*/
     box-sizing: border-box;
 }
 
-.add-decklist-button{
+.add-decklist-button {
     width: 100%;
     height: 40px;
     text-align: left;
-    color:#ffffff;
-    padding:10px;
-    border:0;
+    color: #ffffff;
+    padding: 10px;
+    border: 0;
     border-radius: 5px;
-    background-color: rgba(0,0,0,20%);
+    background-color: rgba(0, 0, 0, 20%);
     box-sizing: border-box;
     cursor: pointer;
 }
 
-.add-decklist-form{
+.add-decklist-form {
     width: 100%;
-    padding:5px;
+    padding: 5px;
     border-radius: 3px;
     background-color: #ebecf0;
     box-sizing: border-box;
 }
 
-.add-decklist-form .add-decklist-input{
+.add-decklist-form .add-decklist-input {
     width: 100%;
-    padding:8px 10px;
-    margin-bottom:5px;
-    border:1px solid #C4DB37;
-    box-shadow: inset 0 0 0 2px #C4DB37 ;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border: 1px solid #C4DB37;
+    box-shadow: inset 0 0 0 2px #C4DB37;
     border-radius: 3px;
     background-color: #fff;
     box-sizing: border-box;
@@ -193,7 +198,7 @@ nav {
     margin-right: 5px;
 }
 
-.deck{
+.deck {
     width: 100%;
     font-size: 15px;
     font-weight: bold;
@@ -201,13 +206,13 @@ nav {
     padding: 0 15px;
 }
 
-.add-card-button{
+.add-card-button {
     width: 100%;
     height: 35px;
     text-align: left;
-    color:#44546f;
+    color: #44546f;
     padding: 0 10px;
-    border:0;
+    border: 0;
     border-radius: 3px;
     background-color: transparent;
     box-sizing: border-box;
@@ -243,8 +248,9 @@ nav {
     /*padding: 14px 8px;*/
     box-sizing: border-box;
 }
+
 .deck-list-header .list-header-title {
-    flex:1;
+    flex: 1;
     color: #44546f;
     padding: 14px 10px;
     font-size: 15px;
@@ -286,7 +292,8 @@ nav {
     box-sizing: border-box;
     /*list-style: none;*/
 }
-.deck-list-ul .li{
+
+.deck-list-ul .li {
     width: 100%;
     box-sizing: border-box;
 }
@@ -313,7 +320,7 @@ nav {
 
 .add-card-name-text-area-form {
     width: 100%;
-    padding:5px;
+    padding: 5px;
     box-sizing: border-box;
 }
 
@@ -322,8 +329,8 @@ nav {
     height: 80px;
     padding: 10px;
     margin-bottom: 5px;
-    font-size:14px;
-    border:1px solid #C4DB37;
+    font-size: 14px;
+    border: 1px solid #C4DB37;
     box-sizing: border-box;
 }
 
@@ -333,29 +340,37 @@ nav {
     padding: 0 5px;
     box-sizing: border-box;
 }
+
 .list-card-list {
     width: 100%;
     padding: 3px 10px;
     box-sizing: border-box;
+    background-color: darkgrey;
+    border-radius: 10px;
+    min-height: 30px;
 }
+
 .list-card-list li {
     width: 100%;
-    margin-bottom: 5px;
+    margin: 13px 0;
 }
-.card-list {
+
+.card {
     width: 100%;
     padding: 7px 10px;
     border: 1px solid lightgray;
     border-radius: 8px;
     background-color: #fff;
     box-sizing: border-box;
-    box-shadow: 0 1px 1px #091e4240,0 0 1px #091e424f;
+    box-shadow: 0 1px 1px #091e4240, 0 0 1px #091e424f;
 }
-.card-list-title {
+
+.card-title {
     width: auto;
     font-size: 16px;
     padding: 2px 2px 5px 5px;
 }
+
 /* 팝업 창 스타일링 */
 .card-page-wrapper {
     position: fixed;
@@ -381,6 +396,7 @@ nav {
     border: 1px solid #ccc;
     border-radius: 10px;
 }
+
 .card-page-title {
     /*padding: 12px 0 0;*/
     left: 60px;
@@ -422,6 +438,7 @@ nav {
     font-size: 36px;
     margin-left: 50px;
 }
+
 .nav-archive {
     padding-bottom: 20px;
 }
@@ -431,6 +448,7 @@ nav {
     display: none;
     margin-top: 10px;
 }
+
 .edit-board-content {
     margin: 0;
     box-sizing: border-box;
@@ -445,9 +463,15 @@ nav {
     font-size: 12px;
     cursor: pointer;
 }
+
 @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
 }
 
 .open-btn {
@@ -491,7 +515,7 @@ nav {
     flex-direction: column;
     align-items: center;
     border-radius: 10px;
-    z-index:99;
+    z-index: 99;
 }
 
 .card-detail-page-cancel-button {
@@ -508,7 +532,7 @@ nav {
 }
 
 #close-card {
-    border:none;
+    border: none;
     background-color: transparent;
     color: #44546f;
     height: 32px;
@@ -523,13 +547,13 @@ nav {
 }
 
 /*.card-detail-header {*/
-.card-header{
+.card-header {
     min-height: 32px;
     /*padding: 8px 52px 8px 56px;*/
-    padding:20px 40px 50px 25px;
+    padding: 20px 40px 50px 25px;
     position: relative;
     text-align: left;
-    width:100%;
+    width: 100%;
     z-index: 1;
     font-size: 24px;
 }
@@ -540,17 +564,20 @@ nav {
     position: absolute;
     top: 16px;
 }
+
 .card-detail-header-deck-title {
     margin: 4px 8px 4px 2px
 }
+
 /*.card-detail-header-title h2 {*/
 /*    font-size: 20px;*/
 /*}*/
 .card-detail-header-deck-title p {
     font-size: 14px;
 }
+
 .card-detail-main {
-    width:100%;
+    width: 100%;
     /*width: 500px;*/
     float: left;
     margin: 0;
@@ -558,55 +585,62 @@ nav {
     /*padding: 0 8px 8px 16px;*/
     padding: 0 5px 5px 15px;
     position: relative;
-    display:flex;
+    display: flex;
 }
 
 .card-description {
     padding: 0px 5px 15px 25px;
 }
+
 .card-description-header {
-    display:flex;
+    display: flex;
     min-height: 32px;
-    padding:0px;
+    padding: 0;
     position: relative;
-    width:100%;
+    width: 100%;
     font-size: 24px;
 }
+
 .card-description-header i {
     position: relative;
     top: 5px;
 }
+
 .card-description-header h2 {
     left: 13px;
     position: relative;
 }
+
 .card-page-content {
     font-weight: normal;
     position: relative;
-    left:37px;
+    left: 37px;
 }
+
 .card-comment {
-    position:static;
+    position: static;
     padding: 0 5px 15px 24px;
 }
 
 .card-comment-header {
-    display:flex;
+    display: flex;
     font-size: 24px;
 }
-.card-comment-header i{
+
+.card-comment-header i {
     position: relative;
-    top:16px;
+    top: 16px;
 }
 
-.card-comment-header h2{
+.card-comment-header h2 {
     position: relative;
     left: 13px;
 }
+
 .card-comment-content {
     font-weight: normal;
     position: relative;
-    left:37px;
+    left: 37px;
 }
 
 .comment-item {
@@ -716,6 +750,12 @@ nav {
     background-color: #ccc; /* hover 시 배경색 변경 (선택 사항) */
 }
 
+.drag-over {
+    border: 4px dashed lightgray;
+    background-color: darkgray;
+    transition: border 0.15s, background-color 0.15s;
+}
+
 /*보드초대*/
 .invite-collaborator {
     width: 430px;
@@ -731,9 +771,10 @@ nav {
     flex-direction: column;
     align-items: center;
     border-radius: 10px;
-    z-index:99;
+    z-index: 99;
 
 }
+
 .invite-board-col-header {
     display: flex;
     width: 100%;
@@ -745,6 +786,7 @@ nav {
     font-weight: bold;
     margin: 5px 0 0 0;
 }
+
 .board-col-email {
     width:100%;
     display:grid;
@@ -762,8 +804,9 @@ nav {
     color: #44546f;
     position: relative;
     padding: 3px 1px;
-    display:inline-block;
+    display: inline-block;
 }
+
 .board-col-input {
     /*display: flex;*/
     /*!*max-width: 100%;*!*/
@@ -773,12 +816,13 @@ nav {
     /*background-color: var(--ds-surface, #ffffff);*/
     margin: auto;
 }
+
 .invite-board-col-input {
     width: 100%;
-    padding:8px 10px;
-    margin-bottom:5px;
-    border:1px solid #C4DB37;
-    box-shadow: inset 0 0 0 2px #C4DB37 ;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border: 1px solid #C4DB37;
+    box-shadow: inset 0 0 0 2px #C4DB37;
     border-radius: 3px;
     background-color: #fff;
     box-sizing: border-box;
@@ -799,12 +843,13 @@ nav {
     border:0;
     border-radius: 3px;
     background-color: #705c3b;
-    color:white;
+    color: white;
     cursor: pointer;
     white-space:nowrap;
     position: relative;
     left: 5px;
 }
+
 .invite-board-col-header .invite-board-col-btn:hover {
     background-color: #3e3131;
     color: white;

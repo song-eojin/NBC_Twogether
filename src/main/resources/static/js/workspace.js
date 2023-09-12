@@ -1,5 +1,5 @@
 const BASE_URL = 'http://localhost:8080'
-// const BASE_URL = 'http://52.78.70.219'
+// const BASE_URL = 'http://www.twogetherwork.com'
 
 // html 로딩 시 바로 실행되는 로직
 $(document).ready(function () {
@@ -27,10 +27,7 @@ async function logout() {
   })
 
   // then
-  .then(async res => {
-    checkTokenExpired(res)
-    refreshToken(res)
-
+  .then(() => {
   resetToken()
   window.location.href = BASE_URL + '/views/login'
   })

@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
@@ -82,11 +81,11 @@ public class CardService {
         List<BoardCollaborator> boardCols = findBoardCol(board);
         List<AlarmTarget> alarmTargets = new ArrayList<>();
         for (BoardCollaborator boardCol : boardCols) {
-            if (boardCol.getEmail() != user.getEmail()) {
+            if (!Objects.equals(boardCol.getEmail(), user.getEmail())) {
                 alarmTargets.add(AlarmTargetRequestDto.boardColToEntity(boardCol));
             }
         }
-        if (board.getUser().getEmail() != user.getEmail()) {
+        if (!Objects.equals(board.getUser().getEmail(), user.getEmail())) {
             alarmTargets.add(AlarmTargetRequestDto.userToEntity(board.getUser()));
         }
 
@@ -103,11 +102,11 @@ public class CardService {
         List<BoardCollaborator> boardCols = findBoardCol(board);
         List<AlarmTarget> alarmTargets = new ArrayList<>();
         for (BoardCollaborator boardCol : boardCols) {
-            if (boardCol.getEmail() != user.getEmail()) {
+            if (!Objects.equals(boardCol.getEmail(), user.getEmail())) {
                 alarmTargets.add(AlarmTargetRequestDto.boardColToEntity(boardCol));
             }
         }
-        if (board.getUser().getEmail() != user.getEmail()) {
+        if (!Objects.equals(board.getUser().getEmail(), user.getEmail())) {
             alarmTargets.add(AlarmTargetRequestDto.userToEntity(board.getUser()));
         }
 
@@ -154,8 +153,11 @@ public class CardService {
         if (requestDto.getDeckId() != null) card.moveToDeck(deck);
         if (prev != null && next != null) { // 두 카드 사이로 옮길 때
             card.editPosition((prev.getPosition() + next.getPosition()) / 2f);
-        } else if (prev == null) { // 맨 처음으로 옮길 때
-            card.editPosition(Objects.requireNonNull(next).getPosition() / 2f);
+        } else if (prev == null) {
+            // 맨 처음으로 옮길 때
+            if(next != null) card.editPosition(next.getPosition() / 2f);
+            // 아무것도 없는 공간으로 옮길 때
+            else card.editPosition(CYCLE);
         } else { // 맨 마지막으로 옮길 때
             card.editPosition(prev.getPosition() + CYCLE);
         }

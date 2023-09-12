@@ -1,5 +1,5 @@
 const BASE_URL = 'http://localhost:8080'
-// const BASE_URL = 'http://52.78.70.219'
+// const BASE_URL = 'http://www.twogetherwork.com'
 
 // html 로딩 시 바로 실행되는 로직
 $(document).ready(function () {
@@ -28,11 +28,8 @@ async function logout() {
     })
 
     // then
-    .then(async res => {
-        checkTokenExpired(res)
-        refreshToken(res)
-
-        resetToken()
+    .then(() => {
+		resetToken()
         window.location.href = BASE_URL + '/views/login'
     })
 }
@@ -59,10 +56,6 @@ async function getUserInfo() {
 
 		callMyBoard()
 	})
-}
-// 워크스페이스로 이동
-function moveToWorkspace() {
-	window.location.href = BASE_URL + '/views/workspace'
 }
 
 // Board 관련 로직
@@ -625,6 +618,7 @@ async function editCardTitleC(cardId, newTitle) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+
 		callMyCard(cardId)
 	})
 }
@@ -661,6 +655,7 @@ async function editCardContent(cardId, newContent) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+
 		callMyCard(cardId)
 	})
 }
@@ -731,6 +726,7 @@ async function editComment(cardId, commentId, newComment) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+
 		callMyCard(cardId);
 	})
 }
@@ -793,6 +789,7 @@ async function addCheckList(cardId) {
 			alert(error['message'])
 		}
 
+		console.log(6)
 		callMyCard(cardId).then()
 	})
 }
@@ -827,6 +824,7 @@ async function editCheckListTitle(cardId, chlId, newTitle) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+
 		callMyCard(cardId);
 	})
 }
@@ -912,6 +910,7 @@ async function editChlItem(cardId, chlItemId, newContent) {
 			let error = await res.json()
 			alert(error['message'])
 		}
+
 		callMyCard(cardId);
 	})
 }
@@ -1114,8 +1113,8 @@ function formDeck(deck) {
     let title = deck['title']
 
     return `
-        <li id="${deckId}" class="deck deck-list-content" draggable="true"
-            ondragstart="dragStart(event)">
+        <li id="deck-${deckId}" class="deck deck-list-content" draggable="true"
+            ondragstart="dragDeck(event)" ondragleave="dragleave(event)">
             <ul class="deck-list-ul">
                 <li>
                     <div class="deck-list-header">
@@ -1131,10 +1130,10 @@ function formDeck(deck) {
                     
                     <div class="deck-list-add-card-area">
                         <div class="cards" id="cards-${deckId}">
-                            <ul class="list-card-list" id="list-card-list-${deckId}"></ul>
+                            <ul class="list-card-list" id="list-card-list-${deckId}" ondragover="allowDropCard(event)"
+                             ondragleave="dragLeaveCard(event)" ondrop="dropCard(event)"></ul>
                         </div>
                         
-                        <!-- todo: 카드 추가 기능 활성화 -->
                         <div class="deck-list-add-card-container" id="add-card-button-${deckId}" onclick="toggleCreateCard(${deckId})">
                             <a id="open-add-cardlist-button-${deckId}" class="open-add-cardlist-button" aria-label="카드 생성 열기">
                                 <i class="fa-solid fa-plus fa-xl"></i>
@@ -1142,7 +1141,6 @@ function formDeck(deck) {
                             </a>
                         </div>
                         
-                        <!-- todo: 카드 추가 기능 -->
                         <div id="add-card-name-text-area-form-${deckId}" class="deck-list-add-card-name-text-area" hidden>
                             <div class="add-card-name-text-area-form">
                                 <input type="text" name="add-cardlist-input"
@@ -1204,8 +1202,9 @@ function formCard(card) {
 	let title = card['title']
 
 	return`
-			<li class="card-list" id="card-list-${cardId}" onclick="callMyCard(${cardId})">
-				<div class="card-list-title" id="card-list-title-${cardId}">
+			<li class="card" id="card-${cardId}" onclick="callMyCard(${cardId})"
+			  draggable="true" ondragstart="dragCard(event)">
+				<div class="card-title" id="card-title-${cardId}">
 			    	<span onclick="editTitle(${cardId}, event)">
 						${title}
 					</span>
@@ -1295,7 +1294,7 @@ function formCommentList(comment) {
 		<div class="comment-item" id="comment-${commentId}">
 			<img src=${icon} alt=${writer}>
 			<div class="comment-content" id="comment-content-${commentId}" onclick="editCommentInCP(${cardId}, ${commentId})">${content}</div>
-			<i class="fa-solid fa-circle-xmark cp-delete-button delete-comment" onclick="deleteComment(${cardId}, ${commentId})"></button>
+			<i class="fa-solid fa-circle-xmark cp-delete-button delete-comment" onclick="deleteComment(${cardId}, ${commentId})"></i>
 		<div>
 	`
 }
@@ -1356,7 +1355,7 @@ function closeCard(cardId) {
 function editTitle(cardId, event) {
 	event.stopPropagation();
 	// 클릭한 제목 요소 가져오기
-	const titleElement = document.getElementById(`card-list-title-${cardId}`);
+	const titleElement = document.getElementById(`card-title-${cardId}`);
 
 	// 현재 제목 내용 가져오기
 	const currentTitle = titleElement.innerText;
@@ -1594,42 +1593,93 @@ function closeNav() {
 }
 
 // drag & drop 관련 로직
-let draggedIndex = null;
+let draggedDeckIndex = null;
 
-function dragStart(event) {
+function dragDeck(event) {
     const decks = document.querySelectorAll('.deck');
-    draggedIndex = Array.from(decks).indexOf(event.target);
+    draggedDeckIndex = Array.from(decks).indexOf(event.target);
 }
 
 function allowDrop(event) {
     event.preventDefault();
+}
+function dragleave(event) {
+	event.preventDefault();
 }
 
 function drop(event) {
     event.preventDefault();
 
     const deckList = document.getElementById('deck-list');
-    if (deckList.contains(event.target)) {
+    if (deckList.contains(event.target) && event.target.classList.contains('deck')) {
         const dropIndex = Array.from(deckList.children).indexOf(event.target);
-        let currentDeck = deckList.children[draggedIndex]
+        let currentDeck = deckList.children[draggedDeckIndex]
         let targetDeck = event.target
+		let curId = currentDeck.id.split('-')[1]
+		let tarId = targetDeck.id.split('-')[1]
 
-        if (currentDeck.id !== targetDeck.id &&
+        if (curId !== tarId &&
             currentDeck.classList.contains('deck') &&
             targetDeck.classList.contains('deck')) {
-            if (draggedIndex < dropIndex) {
+            if (draggedDeckIndex < dropIndex) {
                 let nextDeckId = targetDeck.nextElementSibling === null ? 0 : targetDeck.nextElementSibling.id
-                moveDeck(currentDeck.id, targetDeck.id, nextDeckId)
+
+                moveDeck(curId, tarId, nextDeckId)
                 .then(() => deckList.insertBefore(currentDeck, targetDeck.nextElementSibling))
             } else {
                 let prevDeckId = targetDeck.previousElementSibling === null ? 0 : targetDeck.previousElementSibling.id
-                moveDeck(currentDeck.id, prevDeckId, targetDeck.id)
+
+                moveDeck(curId, prevDeckId, tarId)
                 .then(() => deckList.insertBefore(currentDeck, targetDeck))
             }
         }
     }
 
-    draggedIndex = null;
+    draggedDeckIndex = null;
+}
+
+let draggedCard = null;
+
+function dragCard(event) {
+	draggedCard = event.target;
+}
+
+function allowDropCard(event) {
+	event.preventDefault();
+	if (event.target.classList.contains('card') ||
+        event.target.classList.contains('list-card-list')) {
+		event.target.classList.add('drag-over');
+	}
+}
+
+function dragLeaveCard(event) {
+	if (event.target.classList.contains('card') ||
+        event.target.classList.contains('list-card-list')) {
+		event.target.classList.remove('drag-over');
+	}
+}
+
+function dropCard(event) {
+	event.preventDefault();
+	event.target.classList.remove('drag-over');
+
+	if(event.target.classList.contains('card')) {
+		const currCard = draggedCard.id
+		const nextCard = event.target.id
+		const prevCard = event.target.previousElementSibling === null ? '-0' : event.target.previousElementSibling.id
+		const deck = event.target.parentNode.id
+
+		moveCard(deck.split('-')[3], currCard.split('-')[1], prevCard.split('-')[1], nextCard.split('-')[1])
+        .then(() => callMyBoard())
+	} else if (event.target.classList.contains('list-card-list')) {
+		const card = draggedCard.id
+		const cardListId = event.target.id
+
+		moveCard(cardListId.split('-')[3], card.split('-')[1], 0, 0)
+		.then(() => callMyBoard())
+	}
+
+	draggedCard = null
 }
 
 // token 관련 재생성, 삭제, 만료 로직

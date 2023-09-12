@@ -25,12 +25,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 </head>
+
 <body>
 <header id="header">
     <div onclick="moveToWorkspace()">
-    <h2 id='title'>Two Gether</h2></div>
+        <h2 id='title'>Two Gether</h2></div>
     <div id="board-box">
-        <h3 id="board-title">js 보드 제목</h3>
+        <h3 id="board-title"></h3>
     </div>
     <span id="boardId" th:text="${id}" style="display:none"></span>
     <div class="user-info">
@@ -43,13 +44,13 @@
 </header>
 
 <div id="content">
-    <nav id="nav">
+    <nav id="nav" style="display:none;">
         <ul id="nav-workspaces">
-<!--            <ul id="nav-workspaces">-->
         </ul>
 
         <div class="nav-create-workspace-btns">
-            <button class="create-workspace-btns" id="create-workspace" onclick="toggleCreateWorkspace()"><i class="fas fa-plus"></i>
+            <button class="create-workspace-btns" id="create-workspace"
+                    onclick="toggleCreateWorkspace()"><i class="fas fa-plus"></i>
                 워크스페이스 새로 만들기
             </button>
         </div>
@@ -64,7 +65,9 @@
                     <input type="text" id="workspace-description"/>
                 </div>
                 <div>
-                    <button class="create-workspace-submit" id="create-workspace-btn" onclick="createWorkspace()">생성</button>
+                    <button class="create-workspace-submit" id="create-workspace-btn"
+                            onclick="createWorkspace()">생성
+                    </button>
                 </div>
             </div>
         </div>
@@ -127,7 +130,7 @@
                 <span class="icon-edit-board">
                     <i class="fa-solid fa-gear"></i>
                 </span>
-                <span class="text-edit-board">
+                    <span class="text-edit-board">
                     보드 수정
                 </span>
                 </a>
@@ -147,31 +150,33 @@
                         <input type="text" id="board-info-edited"/>
                     </div>
                     <div>
-                        <button class="edit-board-submit" id="edit-board-btn" onclick="editBoard()">수정</button>
+                        <button class="edit-board-submit" id="edit-board-btn" onclick="editBoard()">
+                            수정
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div>
-            <a class="invite-board-col" onclick="openInviteBoardCollab()">
-                <span class="icon-invite-board-col">
-                    <i class="fa-solid fa-gear"></i>
-                </span>
-                <span class="text-invite-board-col">
-                    보드 협업자 초대
-                </span>
-            </a>
+                <a class="invite-board-col" onclick="openInviteBoardCollab()">
+                    <span class="icon-invite-board-col">
+                        <i class="fa-solid fa-gear"></i>
+                    </span>
+                    <span class="text-invite-board-col">
+                        보드 협업자 초대
+                    </span>
+                </a>
             </div>
 
             <div>
-            <a class="board-delete" onclick="deleteBoard()">
+                <a class="board-delete" onclick="deleteBoard()">
                 <span class="icon-board-delete">
                     <i class="fa-solid fa-trash"></i>
                 </span>
-                <span class="text-board-delete">
+                    <span class="text-board-delete">
                     보드 삭제
                 </span>
-            </a>
+                </a>
             </div>
 
             <div class="nav-archive">
@@ -183,7 +188,8 @@
             <div id="invite-board-collaborator" class="invite-collaborator" style="display:none">
                 <div class="invite-board-col-header">
                     <h2>보드에 초대하세요.</h2>
-                    <a class="close-button-invite-board-col" onclick="closeAllInviteCollaborators()">
+                    <a class="close-button-invite-board-col"
+                       onclick="closeAllInviteCollaborators()">
                         <i class="fa-solid fa-xmark fa-xl"></i>
                     </a>
                 </div>
@@ -201,7 +207,7 @@
             </div>
         </div>
     </div>
-        <span class="open-btn" onclick="openNav()">&#9776;</span>
+    <span class="open-btn" onclick="openNav()">&#9776;</span>
 </div>
 <script src="/js/board.js"></script>
 </body>

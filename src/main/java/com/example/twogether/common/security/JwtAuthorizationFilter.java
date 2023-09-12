@@ -41,10 +41,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String refreshToken = req.getHeader(JwtUtil.REFRESH_TOKEN_HEADER);
 
         if (StringUtils.hasText(accessToken)) {
-            boolean isValid = false;
 
             try {
-                isValid = jwtUtil.validateToken(accessToken);
+                if (!jwtUtil.validateToken(accessToken)) {
+                    printAuthenticationFailure(res, true);
+                    return;
+                }
             } catch (ExpiredJwtException e) {
                 log.error("액세스 토큰 만료됨 : " + accessToken);
                 if (!redisRefreshToken.hasKey(refreshToken)) {
@@ -52,7 +54,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                isValid = true;
                 Long memberId = Long.parseLong(redisRefreshToken.getMemberId(refreshToken));
                 UserDetailsImpl userDetails = userDetailsService.loadUserById(memberId);
 
@@ -64,28 +65,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 redisRefreshToken.saveRefreshToken(refreshToken, memberId.toString());
                 res.addHeader(JwtUtil.AUTHORIZATION_HEADER, accessToken);
                 res.addHeader(JwtUtil.REFRESH_TOKEN_HEADER, refreshToken);
-            }
 
-            if (!isValid) {
-                printAuthenticationFailure(res, true);
-                return;
+                accessToken = accessToken.substring(JwtUtil.BEARER_PREFIX.length());
             }
 
             Claims info = jwtUtil.getUserInfoFromToken(accessToken);
-
-            try {
-                setAuthentication(info.getSubject());
-            } catch (Exception e) {
-                // 인증 처리에 실패한 경우 처리
-                log.error(e.getMessage());
-                res.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
-                res.setContentType(contentType);
-                String result = new ObjectMapper().writeValueAsString(
-                    new ErrorResponseDto(CustomErrorCode.USER_NOT_FOUND));
-
-                res.getOutputStream().print(result);
-                return;
-            }
+            setAuthentication(info.getSubject());
         }
 
         filterChain.doFilter(req, res);
