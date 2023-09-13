@@ -18,7 +18,6 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="/js/board.js"></script>
-    <script src="/js/profile.js"></script>
     <script src="/js/alarm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -40,7 +39,7 @@
         <h3 id="board-title"></h3>
     </div>
     <span id="boardId" th:text="${id}" style="display:none"></span>
-    <div id="header-profileImage-container"><img id="header-profileImage"></div>
+    <div id="header-profileImage-container"><img src="" id="header-profileImage" alt=""></div>
     <div id="alarm-badge"></div>
     <div id="alarm-button">
         <i class="fas fa-bell"></i>
@@ -62,7 +61,7 @@
 <div id="content">
     <div id="userProfile-panel" class="hide">
         <!--프로필 이미지-->
-        <img id="panel-profileImage" class="close-userProfile-panel">
+        <img src="" id="panel-profileImage" class="close-userProfile-panel" alt="">
 
         <!--프로필 정보-->
         <div id="userInfo">
@@ -72,12 +71,16 @@
 
             <span>Nickname:</span>
             <div id='nickname' class="user-info-item"></div>
-            <input id="edit-nick-input" class="hide" type="text"/>
+            <label for="edit-nick-input">
+                <input id="edit-nick-input" class="hide" type="text"/>
+            </label>
             <br><br>
 
             <span>Introduction:</span>
             <div id='introduction' class="user-info-item"></div>
-            <textarea id="edit-intro-input" class="hide"></textarea>
+            <label for="edit-intro-input">
+                <textarea id="edit-intro-input" class="hide"></textarea>
+            </label>
 
             <!--            <span>Role:</span>-->
             <!--            <div id="role" class="user-info-item"></div>-->

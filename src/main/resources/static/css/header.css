@@ -50,6 +50,12 @@
 }
 
 /*헤더 알림 관련*/
+#alarm-panel {
+  z-index: 50;
+  max-height: 600px;
+  overflow: auto;
+}
+
 #alarm-badge {
   position: absolute;
   top: 15px;

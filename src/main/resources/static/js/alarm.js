@@ -72,8 +72,6 @@ function deleteAlarm(aId) {
             checkTokenExpired(res);
             refreshToken(res);
 
-            alert('알림이 삭제되었습니다.');
-
             $('#alarm-list').empty();
             callMyAlarms();
         })

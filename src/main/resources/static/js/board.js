@@ -61,6 +61,191 @@ $(document).ready(function () {
   	callMyBoard()
 })
 
+// 사용자 관련
+async function logout() {
+	// when
+	await fetch('/api/users/logout', {
+		method: 'DELETE',
+		headers: {
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+	// then
+	.then(() => {
+		resetToken()
+		window.location.href = BASE_URL + '/views/login'
+	})
+}
+
+async function callMyUserInfo() {
+
+	// when
+	await fetch('/api/users/info', {
+		method: 'GET',
+		headers: {
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		let user = await res.json()
+		$('#nickname').text(user['nickname'])
+		$('#email').text(user.email)
+		$('#introduction').text(user.introduction)
+		$('#role').text(user.role) // 필요한지?
+
+		let imageURL = user.icon;
+		$('#header-profileImage').attr('src', imageURL);
+		$('#panel-profileImage').attr('src', imageURL);
+	})
+}
+
+function editUserInfo() {
+	const oldNickname = $('#nickname').text();
+	const oldIntroduction = $('#introduction').text();
+
+	const newNickname = $('#edit-nick-input').val();
+	const newIntroduction = $('#edit-intro-input').val();
+
+	if (!newNickname && !newIntroduction) {
+		// 두 입력 필드가 모두 비어 있으면 아무 작업도 수행하지 않음
+		closeEditUserInfoForm();
+		return;
+	}
+
+	// 수정된 필드만 업데이트할 객체 생성
+	const request = {
+		nickname: newNickname || oldNickname,
+		introduction: newIntroduction || oldIntroduction,
+	};
+
+	fetch('/api/users/info', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		},
+		body: JSON.stringify(request),
+	})
+	.then(async res => {
+		checkTokenExpired(res);
+		refreshToken(res);
+
+		if (res.status === 200) {
+			// 업데이트 성공 시 UI 업데이트
+			$('#nickname').text(request.nickname);
+			$('#introduction').text(request.introduction);
+
+			// 수정 폼 닫기
+			closeEditUserInfoForm();
+		} else {
+			let error = await res.json();
+			alert(error.message);
+		}
+	});
+}
+
+function editProfileImage() {
+	const fileInput = document.getElementById('upload-profileImage-input');
+	const selectedFile = fileInput.files[0];
+
+	if (!selectedFile) {
+		alert('파일을 선택해주세요.');
+		return;
+	}
+
+	// FormData를 사용하여 파일 전송 준비
+	const formData = new FormData();
+	formData.append('multipartFile', selectedFile);
+
+	fetch(BASE_URL + '/api/users/icon', {
+		method: 'PUT',
+		headers: {
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token'),
+		},
+		body: formData,
+	})
+	.then(async (res) => {
+		checkTokenExpired(res);
+
+		if (res.status === 200) {
+			alert('프로필 이미지가 업데이트되었습니다.');
+			getProfileImage()
+		} else {
+			const errorData = await res.json();
+			alert(errorData.message);
+		}
+	})
+	.catch((error) => {
+		console.error('프로필 이미지 업데이트 실패:', error);
+	});
+}
+
+function getProfileImage() {
+
+	// when
+	fetch('/api/users/info', {
+		method: 'GET',
+		headers: {
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		let user = await res.json()
+		let imageURL = user.icon;
+		$('#header-profileImage').attr('src', imageURL);
+		$('#panel-profileImage').attr('src', imageURL);
+		$('#profileImage-btns').hide();
+		$('#change-userImage-btn, #change-userInfo-btn').show();
+		closeEditUserInfoForm()
+	})
+}
+
+function defaultProfileImage() {
+
+	// when
+	fetch('/api/users/default', {
+		method: 'PUT',
+		headers: {
+			'Authorization': Cookies.get('Authorization'),
+			'Refresh-Token': Cookies.get('Refresh-Token')
+		}
+	})
+
+	// then
+	.then(async res => {
+		checkTokenExpired(res)
+		refreshToken(res)
+
+		let user = await res.json()
+		let imageURL = user.icon;
+		$('#header-profileImage').attr('src', imageURL);
+		$('#panel-profileImage').attr('src', imageURL);
+		$('#profileImage-btns').hide();
+		getProfileImage();
+	})
+}
+
+function closeEditUserInfoForm() {
+	$('#edit-nick-input, #edit-intro-input').val('');
+	$('#edit-nick-input, #edit-intro-input, #save-edit-userInfo-btn, #cancel-userInfo-btn').hide();
+	$('#nickname, #introduction, #change-userInfo-btn, #change-userImage-btn').show();
+}
+
 // 워크스페이스로 이동
 function moveToWorkspace() {
 	window.location.href = BASE_URL + '/views/workspace'
@@ -94,12 +279,14 @@ async function callMyBoard() {
 
 		var decks = $('#deck-list')
 		var archive = $('#archive-container')
+		var boardCol = $('#invite-board-collaborator-list')
 		decks.empty()
 		archive.empty()
+		boardCol.empty()
 		let board = await res.json()
 
 		for(let boardCollaborator of board['boardCollaborators']) {
-			$('#invite-board-collaborator-list').append(formBoardCollaborator(boardId,boardCollaborator))
+			boardCol.append(formBoardCollaborator(boardId,boardCollaborator))
 		}
 
 		for (let deck of board['decks']) {
@@ -188,8 +375,6 @@ async function createWorkspace() {
 		checkTokenExpired(res)
 		refreshToken(res)
 
-		// 생성된 workspace도 노출되도록 하기 위해 함수 호출
-		callMyWorkspaces()
 	})
 }
 
