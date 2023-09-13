@@ -51,7 +51,7 @@ public class BoardColService {
         boardColRepository.save(foundBoardCol);
 
         // 자동으로 상위 워크스페이스 협업자로도 등록
-        wpColService.autoInviteWpCol(user, board.getWorkspace().getId(), email);
+        wpColService.autoInviteWpCol(board.getWorkspace().getId(), email);
         eventPublisher.publishInviteBoardColEvent(user, invitee, board);
     }
 

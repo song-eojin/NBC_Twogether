@@ -1,11 +1,8 @@
 package com.example.twogether.alarm.event;
 
-import com.example.twogether.board.entity.Board;
 import com.example.twogether.card.entity.Card;
-import com.example.twogether.card.entity.CardCollaborator;
 import com.example.twogether.user.entity.User;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
@@ -35,8 +32,7 @@ public class CardEditedDueEvent extends ApplicationEvent {
 
     private String generateContent(Card card, LocalDateTime oldDue, LocalDateTime newDue) {
 
-        return "[ Updated Comment's Due Date ]\n\n\n"
-            + "Card Title : " + card.getTitle() + "\n"
-            + "Comment's Due Date : " + oldDue + " → " + newDue + "\n";
+        return "Card Title : " + card.getTitle() + "<br>"
+            + "Comment's Due Date : " + oldDue + " → " + newDue;
     }
 }
