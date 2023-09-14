@@ -330,6 +330,10 @@ function moveToWorkspace() {
     window.location.reload();
 }
 
+function moveToGuide() {
+    var link = 'https://pond-relish-9ef.notion.site/TwoGether-c8524c2626524547a5d6833609c7799d?pvs=4';
+    window.open(link);
+}
 async function createWorkspace() {
     // given
     let title = $('#workspace-title').val()

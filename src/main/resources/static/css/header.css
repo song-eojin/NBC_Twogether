@@ -17,6 +17,12 @@
   padding-left: 20px;
   cursor: pointer;
 }
+#header-guide {
+  position: absolute;
+  top: 25px;
+  left: 150px;
+  font-size:13px;
+}
 
 #header-profileImage {
   color: whitesmoke;
@@ -42,6 +48,8 @@
 #alarm-button {
   font: icon;
 }
+/*#header-guide-icon {*/
+/*}*/
 
 #logout {
   position: absolute;
@@ -73,3 +81,4 @@
   right: 45px;
   cursor: pointer;
 }
+
