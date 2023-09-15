@@ -55,15 +55,24 @@
 
 * 주제 : `칸반 보드 기반의 협업 도구 만들기`
 * 선정 배경 : 최종 프로젝트 이전 마지막 프로젝트가 협업 도구 만들기였는데, 해당 프로젝트가 짧은 기간만 하고 지나치기에는 너무 아쉽고 `나중에 직접 사용하고 싶을 정도의 협업 도구를 만들어보자!` 라는 마음에서 이 주제를 선정하게 되었습니다.
-
-* 사이트 바로가기 : www.twogetherwork.com
-
 * ERD :
-* Swagger : 
+* Swagger : http://www.twogetherwork.com/swagger-ui/index.html
+* 사이트 바로가기 : www.twogetherwork.com
 
 <br><br>
 
-<h3>02. 구현 기능</h3>
+<h3>02. 팀 구성 및 담당</h3>
+
+| 팀 구성 | 역할 | 담당한 업무 |
+|------|------|--------------------------------------------------------|
+| 김희열 | 팀장 | GithubAction CI/CD, Redis - RefreshToken, 프론트 드래그&드랍 |
+| 한지훈 | 부팀장 | 덱, 카드, 테스트 코드 |
+| 송어진 | 팀원 | 협업자, 보드, 프로필, 알림, Github Readme |
+| 양소영 | 팀원 | 워크스페이스, CSS, 발표자료 |
+
+<br><br>
+
+<h3>03. 구현 기능</h3>
 
 <details>
 <summary>워크스페이스 기본 기능</summary>
@@ -168,21 +177,21 @@
 
 <br><br>
 
-<h3>03. 트러블 슈팅</h3>
+<h3>04. 트러블 슈팅</h3>
 
 <details>
 <summary>더미 데이터를 통한 테스트 코드 실행</summary>
 <div markdown="1">
+  <br>
   
-    - 문제 발생
+* ❗문제 발생
+  * 각 메서드를 실행할 때마다 발생하는 공통 로직이 존재하여 이를 @BeforeEach 로 각 메서드를 실행할 때마다 실행하고자 함.      
+  * 이를 해결하기 위해 기존에는 아래의 방식으로 데이터를 DB에 저장함.
+  * 단일 인스턴스를 생성할 때야 편하지만 복수의 인스턴스를 생성해야 할 때는 코드의 길이가 길어지고 번잡해지는 문제를 발견함.
+  * e.g. 보드 관련된 로직을 테스트하기 위해선 회원 가입과 워크스페이스 생성 작업이 사전에 이루어져야 한다.
         
-        <aside>
-        ❗ 각 메서드를 실행할 때마다 발생하는 공통 로직이 존재하여 이를 @BeforeEach 로 각 메서드를 실행할 때마다 실행하고자 함.
-        
-        이를 해결하기 위해 기존에는 아래의 방식으로 데이터를 DB에 저장함.
-        
-        ```java
         // UserServiceTest.java
+
         @BeforeEach
         void signUp() {
             // given
@@ -204,29 +213,20 @@
             Assertions.assertEquals(UserRoleEnum.USER, signed.getRole());
             user = signed;
         }
-        ```
+    
+<br>
         
-        위의 방식이 단일 인스턴스를 생성할 때야 편하지만 복수의 인스턴스를 생성해야 할 때는 코드의 길이가 길어지고 번잡해지는 문제를 발견함.
+* ❓ 해결책 탐구
+  * 더미 데이터 : 대용량 데이터를 테스트 실행 전에 준비할 필요가 있거나 연쇄적으로 매핑된 객체들을 순서대로 미리 만들어 놓기에 편리함.
+
+<br>
         
-        e.g. 보드 관련된 로직을 테스트하기 위해선 회원 가입과 워크스페이스 생성 작업이 사전에 이루어져야 한다.
+* ➡️ 결과
         
-        </aside>
+  * 첫째, 테스트 전에 SQL을 통해 더미 데이터 생성하고, h2에 저장
         
-    - 해결책 탐구
-        
-        <aside>
-        ❓ 더미 데이터 : 대용량 데이터를 테스트 실행 전에 준비할 필요가 있거나 연쇄적으로 매핑된 객체들을 순서대로 미리 만들어 놓기에 편리함.
-        
-        </aside>
-        
-    - 결과
-        
-        <aside>
-        ➡️ 1. 테스트 전에 SQL을 통해 더미 데이터 생성하고, h2에 저장
-        
-        ```sql
-        -- data.sql
-        ...
+           // data.sql
+       
         	-- workspace 테이블 생성
         	CREATE TABLE IF NOT EXISTS workspace (
         	    id LONG PRIMARY KEY,
@@ -243,14 +243,11 @@
         	(1, 'Workspace 1', 'test', 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
         	(2, 'Workspace 2', 'test', 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
         	(3, 'Workspace 1', 'test', 2, '2023-01-01 00:00:00', '2023-01-01 00:00:00');
-        ...
-        ```
         
-        2. 테스트 코드에서 더미 데이터 호출
+  * 둘째, 테스트 코드에서 더미 데이터 호출
         
-        ```java
-        // BoardServiceTest.java
-        ...
+            // BoardServiceTest.java
+    
         		@BeforeEach
             void setUp() {
                 user = userRepository.findById(1L).orElse(null);
@@ -258,26 +255,23 @@
                 wp2 = wpRepository.findById(2L).orElse((null));
                 wp3 = wpRepository.findById(3L).orElse((null));
             }
-        ...
-        ```
+</div>
+</details>
         
-        </aside>
+<details>
+<summary>CI/CD</summary>
+<div markdown="1">
+
+* ❗제안
+
+  1. Github Actions로 빌드-테스트 자동화하는 CI를 구축한 것에서 더 나아가 배포 자동화까지 해보는 것이 좋을 것 같아 Githuh Actions를 통한 CD 사용을 제안
+  2. 배포를 담당할 서버가 AWS EC2 서비스라는 점에서 연동이 잘 되어 배포가 쉽고 빠른 AWS CodeDeploy 사용을 결정
+
+<br>        
         
-    
-- CI/CD
-    - 제안
+* ❓해결책 탐구
         
-        <aside>
-        ➡️ 1. Github Actions로 빌드-테스트 자동화하는 CI를 구축한 것에서 더 나아가 배포 자동화까지 해보는 것이 좋을 것 같아 Githuh Actions를 통한 CD 사용을 제안
-        
-        2. 배포를 담당할 서버가 AWS EC2 서비스라는 점에서 연동이 잘 되어 배포가 쉽고 빠른 AWS CodeDeploy 사용을 결정
-        
-        </aside>
-        
-    - 해결책 탐구
-        
-        <aside>
-        ⛵ 1. Github Actions CD yml 준비
+        1. Github Actions CD yml 준비
         
         2. 빌드를 위한 application-key.yml과 배포 동작을 위한 appspec.yml 준비
         
@@ -286,24 +280,23 @@
         4. Github Actions에서 전송된 zip 파일을 보관하고 전달할 AWS S3 버킷 생성
         
         5. 배포를 담당할 EC2 서버에 CodeDeploy 역할 부여 및 CodeDeploy-agent 설치
+  
+  <br>            
+  
+* ➡️ 결과 : AWS CodeDeploy 적용 완료!
+
+  <br>            
+
+</div>
+</details>
+
+<details>
+<summary>Lazy Loading 방식</summary>
+<div markdown="1">
+  
+* ❗문제 발생
+  : 보드 협업자로 초대된 경우, 자동으로 워크스페이스 협업자로도 등록하는 로직에서 `WorkspaceCollaborator DB(워크스페이스 협업자)`에 데이터가 담기지 않는 문제 발생
         
-        </aside>
-        
-    - 결과
-        
-        <aside>
-        ✅ AWS CodeDeploy 적용 완료!
-        
-        </aside>
-        
-    
-- Lazy Loading 방식
-    - 문제 발생
-        
-        <aside>
-        ❗ 보드 협업자로 초대된 경우, 자동으로 워크스페이스 협업자로도 등록하는 로직에서 `WorkspaceCollaborator DB(워크스페이스 협업자)`에 데이터가 담기지 않는 문제 발생
-        
-        ```java
         // 문제가 발생한 코드
         
             public void autoInviteWpCol(User user, Long wpId) {
@@ -322,51 +315,28 @@
                 newWpCol.assignNewId();
                 wpColRepository.save(newWpCol);
             }
-        ```
-        
-        https://github.com/proLmpa/NBC_Twogether/assets/122079064/17f35dcf-4308-43f6-aeab-1587a7bfa82e
-        
-        </aside>
-        
+
+<br>    
     
-    - 해결책 탐구
+* ❓해결책 탐구
+  * `의심 01.` <br>아래의 코드에서 foundWorkspace 변수와 invitedUser 변수의 필드에 null 값이 담기고, $$_hibernate_interceptor 안에 실제 데이터가 담기는 현상이 발생했다. <br><br>우선 Hibernate Interceptor가 무엇인지 알아보았다. Hibernate가 엔티티의 상태를 추적하고 데이터베이스 작업 전/후에 사용자 정의 로직을 실행하는 역할을 한다고 한다. 현 문제 상황과 연관이 있을 가능성이 높아 보이지는 않는다..!
+
+  <br><br>
         
-        <aside>
-        ❓ 의심 01. 아래의 코드에서 foundWorkspace 변수와 invitedUser 변수의 필드에 null 값이 담기고, $$_hibernate_interceptor 안에 실제 데이터가 담기는 현상이 발생했다.
+  * `의심 02.` Lazy Loading과 관련된 문제일 수 있다는 가정 하에 해결책을 탐구하기 시작했다. 우선 Lazy Loading은 연관된 엔티티를 필요한 시점에 데이터베이스에서 로드 하는 방식으로, 현 문제 상황과 관련이 있을 지도 모른다고 생각한 이유는 다음과 같다.<br><br>둘의 연관성을 살펴보면.. JPA Entity를 로드할 때 연관된 엔티티를 FetchType.LAZY로 설정한 경우, FetchType.LAZY로 설정된 연관 엔티티는 실제로 필요한 시점에 데이터베이스에서 가져오기 때문에 해당 필드에 접근이 생기기 전에는 초기화되지 않는다.<br><br>즉, Lazy Loading 방식을 사용하면 JPA는 연관 관계를 맺고 있는 Workspace Collaborator db에 접근하는 것을 지연시키고..<br><br>이로 인해, workspace를 통해 연관된 엔티티를 거쳐서 wpColRepository에 직접 user를 save 시키더라도, workspace와 연관 관계를 맺고 있는 WorkspaceCollaborator 필드에 접근하는 로직이 없어서, Lazy Loading에 의해 WorkspaceCollaborator db 접근이 지연될 수 있을 거라 생각한 것이다.
         
-        https://github.com/proLmpa/NBC_Twogether/assets/122079064/d079b14f-9071-4659-85b4-57b1d0009351
-        
-        우선 Hibernate Interceptor가 무엇인지 알아보았다. Hibernate가 엔티티의 상태를 추적하고 데이터베이스 작업 전/후에 사용자 정의 로직을 실행하는 역할을 한다고 한다. 현 문제 상황과 연관이 있을 가능성이 높아 보이지는 않는다..!
-        
-        </aside>
-        
-        <aside>
-        ❓ 의심 02. Lazy Loading과 관련된 문제일 수 있다는 가정 하에 해결책을 탐구하기 시작했다. 우선 Lazy Loading은 연관된 엔티티를 필요한 시점에 데이터베이스에서 로드 하는 방식으로, 현 문제 상황과 관련이 있을 지도 모른다고 생각한 이유는 다음과 같다.
-        
-        둘의 연관성을 살펴보면.. JPA Entity를 로드할 때 연관된 엔티티를 FetchType.LAZY로 설정한 경우, FetchType.LAZY로 설정된 연관 엔티티는 실제로 필요한 시점에 데이터베이스에서 가져오기 때문에 해당 필드에 접근이 생기기 전에는 초기화되지 않는다.
-        
-        즉, Lazy Loading 방식을 사용하면 JPA는 연관 관계를 맺고 있는 Workspace Collaborator db에 접근하는 것을 지연시키고.. 
-        
-        이로 인해, workspace를 통해 연관된 엔티티를 거쳐서 wpColRepository에 직접 user를 save 시키더라도, workspace와 연관 관계를 맺고 있는 WorkspaceCollaborator 필드에 접근하는 로직이 없어서, Lazy Loading에 의해 WorkspaceCollaborator db 접근이 지연될 수 있을 거라 생각한 것이다.
-        
-        </aside>
-        
+<br><br>
     
-    - 문제 확인
-        
-        <aside>
-        ❓ Lazy Loading 방식을 사용하면 JPA는 연관 관계를 맺고 있는 WorkspaceCollaborator DB에 접근하는 것을 지연시킨다.
-        
-        </aside>
-        
+* ✅ 문제 확인 <br>Lazy Loading 방식을 사용하면 JPA는 연관 관계를 맺고 있는 WorkspaceCollaborator DB에 접근하는 것을 지연시킨다.
+
+<br><br>
     
-    - 첫 번째 해결 방법 :  `Eager Loading 방식으로 바꾸기`
+* 💡 첫 번째 해결 방법 :  `Eager Loading 방식으로 바꾸기`
         
-        <aside>
-        💡 최종적으로 워크스페이스 협업자를 DB에 저장하고 싶은 것이므로, Workspace를 통해 연관 Entity인 WorkspaceCollaborator를 즉시 로드할 수 있도록 Eager Loading 방식을 사용하였다.
+  최종적으로 워크스페이스 협업자를 DB에 저장하고 싶은 것이므로, Workspace를 통해 연관 Entity인 WorkspaceCollaborator를 즉시 로드할 수 있도록 Eager Loading 방식을 사용하였다.
         
-        ```java
         // 수정한 코드
+  
         @Builder
         @Entity
         @Getter
@@ -379,62 +349,43 @@
             @Builder.Default
             @OneToMany(mappedBy = "workspace", fetch = FetchType.EAGER)
             private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
-        ```
         
         성공적으로 DB에 협업자가 등록된다! 
+
         
-        https://github.com/proLmpa/NBC_Twogether/assets/122079064/26b4be95-89f6-4286-b1b0-e5ec12894702
+* ⚠️ 첫 번째 해결방법의 문제점<br><br> : 위와 같이 WorkspaceCollaborator Entity를 Eager Loading 방식으로 설정했을 때 `JPA N+1 문제`로 인한 성능 이슈가 발생할 수 있다.<br>즉, 아래의 예시처럼 하나의 Workspace만 조회를 해도 각각의 Workspace가 가진 WorkspaceCollaborator 모두를 조회하는 것이다.
         
-        </aside>
-        
-        <aside>
-        ⚠️ 문제점 : 위와 같이 WorkspaceCollaborator Entity를 Eager Loading 방식으로 설정했을 때 `JPA N+1 문제`로 인한 성능 이슈가 발생할 수 있다.
-        
-        즉, 아래의 예시처럼 하나의 Workspace만 조회를 해도 각각의 Workspace가 가진 WorkspaceCollaborator 모두를 조회하는 것이다.
-        
-        ```java
         // N+1 Problem Ex.
         Hibernate: select team0_.id as id1_0_, team0_.name as name2_0_ from team team0_
         Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
         Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
         Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
         Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
-        ```
-        
-        </aside>
-        
+
+<br>
     
-    - 두 번째 해결책 : `JPQL의 JOIN FETCH 및 Fetch Join 전략 사용하기`
+* 💡 두 번째 해결책 : `JPQL의 JOIN FETCH 및 Fetch Join 전략 사용하기`
+  
+  연관 엔티티와 함께 현재 엔티티를 로딩함으로, Lazy Loading 방식을 사용하면서 발생한 `WorkspaceCollaborator DB에 접근하는 것을 지연되어 협업 멤버가 DB에 Save되지 않는 문제`를 해결할 수 있다.
         
-        <aside>
-        💡 연관 엔티티와 함께 현재 엔티티를 로딩함으로, Lazy Loading 방식을 사용하면서 발생한 `WorkspaceCollaborator DB에 접근하는 것을 지연되어 협업 멤버가 DB에 Save되지 않는 문제`를 해결할 수 있다.
+  다소 쿼리 문이 복잡해질 가능성이 있지만 우리가 직면한 상황에서는 이것이 문제가 되지는 않는다.
         
-        다소 쿼리 문이 복잡해질 가능성이 있지만 우리가 직면한 상황에서는 이것이 문제가 되지는 않는다.
-        
-        ```java
         public Workspace findWpById(Long wpId) {
             return wpRepository.findByIdWithCollaborators(wpId).orElseThrow(() ->
                 new CustomException(CustomErrorCode.WORKSPACE_NOT_FOUND));
         }
-        ```
         
-        뿐만 아니라 Eager Loading 방식을 사용하였을 때 발생하는 불필요한 데이터까지 로딩되는 문제, 그리고 아래와 같이 JOIN을 통해 하나의 쿼리 문으로 작동하기 때문에 N+1 쿼리 문제까지 해결이 된다.
+  뿐만 아니라 Eager Loading 방식을 사용하였을 때 발생하는 불필요한 데이터까지 로딩되는 문제, 그리고 아래와 같이 JOIN을 통해 하나의 쿼리 문으로 작동하기 때문에 N+1 쿼리 문제까지 해결이 된다.
         
-        ```java
         SELECT w FROM Workspace w
         JOIN FETCH w.workspaceCollaborators
         WHERE w.id = :wpId
-        ```
-        
-        </aside>
-        
+                
     
-    - 세 번째 해결책 : `Lazy Loading 방식을 사용하면서 Transaction 내에서 필드에 접근하기`
+* 💡 세 번째 해결책 : `Lazy Loading 방식을 사용하면서 Transaction 내에서 필드에 접근하기`
         
-        <aside>
-        💡 성능을 높이기 위해 필요한 경우에만 데이터를 로드하는 Lazy Loading 방식을 유지하면서, workspaceCollaborator 필드에 접근하는 로직 추가하면 어떨까?
+        성능을 높이기 위해 필요한 경우에만 데이터를 로드하는 Lazy Loading 방식을 유지하면서, workspaceCollaborator 필드에 접근하는 로직 추가하면 어떨까?
         
-        ```java
         // 수정한 코드
         @Builder
         @Entity
@@ -460,11 +411,9 @@
                 return this.workspaceCollaborators;
             }
         }
-        ```
         
-        loadWorkspaceCollaborators 메서드 호출이 Lazy Loading을 강제로 발생시켜 데이터베이스에서 연관된 workspaceCollaborators 정보를 로드하고 성공적으로 workspaceCollaborator db에 접근할 수 있게 된다.
+  loadWorkspaceCollaborators 메서드 호출이 Lazy Loading을 강제로 발생시켜 데이터베이스에서 연관된 workspaceCollaborators 정보를 로드하고 성공적으로 workspaceCollaborator db에 접근할 수 있게 된다.
         
-        ```jsx
         @Service
         @RequiredArgsConstructor
         public class WpColService {
@@ -490,35 +439,21 @@
                 newWpCol.assignNewId();
                 wpColRepository.save(newWpCol);
             }
-        ```
         
-        </aside>
-        
+<br>
     
-    - ⚠️ 고민 :
-      연관 엔티티를 단순히 저장하고자 하는 상황에서 Fetch Join 방식과 Transaction 내에서 필드에 접근하여 데이터를 로드하는 방식 중 무엇이 더 우리 프로젝트에 적합한 방법일까?
-        
-      둘의 차이점은 코드가 실행되는 위치가 다르다는 것이다
-        
-      우선 Fetch Join 방식은 데이터 레벨에서 동작하며 속도가 빠르다는 장점이 있다. 반면, 트랜잭션 내 필드 접근을 통한 Lazy Loading 방식은 JVM에서 동작한다는 차이가 있다. 
-        
-    - ➡️ 결론 :
+* ⚠️ 고민<br>
+      연관 엔티티를 단순히 저장하고자 하는 상황에서 Fetch Join 방식과 Transaction 내에서 필드에 접근하여 데이터를 로드하는 방식 중 무엇이 더 우리 프로젝트에 적합한 방법일까?<br><br>둘의 차이점은 코드가 실행되는 위치가 다르다는 것이다.<br><br>우선 Fetch Join 방식은 데이터 레벨에서 동작하며 속도가 빠르다는 장점이 있다. 반면, 트랜잭션 내 필드 접근을 통한 Lazy Loading 방식은 JVM에서 동작한다는 차이가 있다.
+  
+<br>
 
-      첫째, 연관 엔티티를 단순히 저장하는 행위는 빠른 처리 속도가 필요하지 않다.
-      
-      둘째, 우리 프로젝트는 추후 작업될 동시성 문제와 관련하여 프로젝트의 전체적인 처리 속도가 중요하므로, 다른 작업에서는 최대한 데이터베이스에 부하를 주지 않는 것이 좋다.
-      
-      Lazy Loading 방식을 사용함으로써 발생한 문제를 해결하기 위해, 앞선 두 가지 논거를 들어 세 번째 해결 방법에 해당하는 트랜잭션 내 필드 접근을 통한 방식을 사용하겠다는 결론을 내렸다.
-        
-<br><br>
-
-<h3>04. 팀 구성 및 담당</h3>
-
-| 팀 구성 | 역할 | 담당한 업무 |
-|------|------|--------------------------------------------------------|
-| 김희열 | 팀장 | GithubAction CI/CD, Redis - RefreshToken, 프론트 드래그&드랍 |
-| 한지훈 | 부팀장 | 덱, 카드, 테스트 코드 |
-| 송어진 | 팀원 | 협업자, 보드, 프로필, 알림, Github Readme |
-| 양소영 | 팀원 | 워크스페이스, CSS, 발표자료 |
-
+* ➡️ 결론<br>
+      첫째, 연관 엔티티를 단순히 저장하는 행위는 빠른 처리 속도가 필요하지 않다.<br><br>
+      둘째, 우리 프로젝트는 추후 작업될 동시성 문제와 관련하여 프로젝트의 전체적인 처리 속도가 중요하므로, 다른 작업에서는 최대한 데이터베이스에 부하를 주지 않는 것이 좋다.<br><br>Lazy Loading 방식을 사용함으로써 발생한 문제를 해결하기 위해, 앞선 두 가지 논거를 들어 세 번째 해결 방법에 해당하는 트랜잭션 내 필드 접근을 통한 방식을 사용하겠다는 결론을 내렸다.
+  
+  <br>
+  
+</div>
+</details>
+  
 <br><br>
