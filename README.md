@@ -55,9 +55,12 @@
 
 * 주제 : `칸반 보드 기반의 협업 도구 만들기`
 * 선정 배경 : 최종 프로젝트 이전 마지막 프로젝트가 협업 도구 만들기였는데, 해당 프로젝트가 짧은 기간만 하고 지나치기에는 너무 아쉽고 `나중에 직접 사용하고 싶을 정도의 협업 도구를 만들어보자!` 라는 마음에서 이 주제를 선정하게 되었습니다.
-* ERD :
-* Swagger : http://www.twogetherwork.com/swagger-ui/index.html
 * 사이트 바로가기 : www.twogetherwork.com
+* Swagger : http://www.twogetherwork.com/swagger-ui/index.html
+* ERD :
+  <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/683a5763-d601-4755-83e6-43327bf9e403">
+* Architecture : 
+  <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/2ea42782-53d6-4875-932a-67c07654d584">
 
 <br><br>
 
@@ -80,6 +83,8 @@
   
  * 사용자가 회원 가입 시 생성 가능한 가장 큰 작업 공간입니다. 
  * 큰 단위의 작업을 모아두기 위해 필요한 공간입니다. (ex. 프로젝트, 일정)
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/65dbf30e-f264-444c-a806-82a0661cf59b">
+
 </div>
 </details>
 
@@ -89,6 +94,8 @@
   
  * 워크스페이스 내에서 생성 가능한 작업 공간입니다. 
  * 워크스페이스 내 작업을 구분하기 위해 필요한 공간입니다. (ex. 백엔드/프론트엔드/기획, 회사 일정/개인 일정)
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/0b763c0f-ceef-4b6f-bc9d-dd4e6deb493c">
+ 
 </div>
 </details>
         
@@ -99,6 +106,7 @@
  * 보드 내에서 생성 가능한 작업 공간입니다.
  * 보드 내 작업을 정리하기 위해 필요한 공간입니다. (ex. To do/In progress/Done, 첫째 주/둘째 주/셋째 주/넷째 주/다섯째 주)
  * 각 덱의 순서를 중요도, 편의 상의 배치를 위해 순서를 임의로 바꿀 수 있습니다.
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/199b7ea8-5818-49bb-ba88-6002bdc41be2">
 </div>
 </details>
 
@@ -111,6 +119,8 @@
  * 각 카드의 순서도 임의로 바꿀 수 있으며, 다른 보드로 이동도 가능합니다.
  * 각 카드 내 작업 현황을 알기 쉽게 만들어 주는 체크 리스트가 있습니다.
  * 각 카드를 덱 외의 방법으로 분류하기 위한 라벨 기능, 카드 작업자 할당 기능, 마감일 기능도 있으나 아직 프론트에는 구현이 안되어 있습니다.
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/3d730d4a-9913-4539-8d06-b7acfdae38dc">
+   
 </div>
 </details>
 
@@ -121,6 +131,7 @@
  * 카드와 덱은 실질적으로 작업할 때 가장 많이 생성되고, 삭제되는 요소입니다.
  * 하지만 ‘협업’ 프로젝트 도구인 만큼 여러 사람이 같이 관리하다 보니 실수로, 소통 오류로 삭제되는 일이 빈번하고, 협의 하에 삭제했으나 나중에 다시 필요해지는 경우도 생기기 때문에 해당 요소들을 바로 삭제하는 것이 아닌, 보관 과정을 거치게 합니다.
  * 보관된 덱과 카드는 실제 작업 환경에서는 보이지 않지만 설정 창에서 쉽게 조회하고, 복구할 수 있습니다.
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/eaa3fc92-5261-46ea-9df5-ef394b3f6732">
 </div>
 </details>
         
@@ -131,6 +142,11 @@
  * 워크스페이스, 보드에는 각각의 초대 기능이 있습니다.
  * 워크스페이스에서 초대된 유저는 해당 워크스페이스 내 보드들을 전부 조회할 수 있으며, 작업할 수 있습니다.
  * `보드에서 초대된 유저는 해당 보드만 작업할 수 있으며, 해당 보드가 포함된 워크스페이스의 다른 보드들에는 접근 권한이 없습니다.`
+   * 워크스페이스 협업자 초대 기능   
+     <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/9e1da668-a44e-4666-b405-1f511c774512">
+   * 보드 협업자 초대 기능 : 권한 제어 목적
+     <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/5a717342-76d4-45c5-948a-879a1f9b5b75">
+   
 </div>
 </details> 
   
@@ -140,6 +156,7 @@
   
  * 상단의 프로필 이미지를 클릭하면 좌측에 개인 프로필 창이 나타납니다. 
  * 프로필 정보, 이미지 수정 버튼을 눌러 자신의 문구와 멋진 사진을 등록하면 정보와 사진과 업데이트 됩니다.
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/a5a21234-299b-47b1-9004-f89fe356aa0b">
 </div>
 </details> 
 
@@ -148,8 +165,9 @@
 <div markdown="1">
   
  * `특정 이벤트`가 발생했을 때 이벤트를 전송하고, 읽지 않은 이벤트가 있다면 프로필에 초록색 불이 들어옵니다.
-
-
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/fd9b5ddf-8913-40f6-a1b7-74a61760a4ac">
+   <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/0b564e67-1529-4148-a11c-2102147129a4">
+   
     <details>
     <summary>특정 이벤트의 종류</summary>
     <div markdown="1">
@@ -160,6 +178,9 @@
     * 카드 작업자 할당 이벤트
     * 보드 협업자 초대 이벤트
     * 워크스페이스 협업자 초대 이벤트
+      <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/db77ff55-134b-49c3-98d3-3a9912f8a7c7">
+      <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/dbb50d18-6564-4783-a78c-9df65a2371cd">
+      
     </div>
     </details>      
 
@@ -168,8 +189,14 @@
     <div markdown="1">
       
     * 만약 알림을 모두 읽음 상태로 바꾸면 아래와 같이, 알림 배지의 형광 초록 불이 꺼집니다.
+      <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/1e3d610b-4e94-49a2-9fc1-ac4eb159abd9">
+      
     * 알림 삭제 버튼을 누르면 “알림을 삭제하시겠습니까?”라는 문구를 통해 확인을 받은 후, 확인을 누르면 알림이 삭제 됩니다.
+      <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/3104cb3b-a5bf-441c-af52-380818d21cf5">
+      
     * 알림이 없거나 알림을 모두 삭제한 경우에는 아래와 같이 “도착한 알림이 없습니다.”라는 문구로 대체됩니다.
+      <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/01364406-4d7a-4b1c-91b7-a1b50810addc">
+      
     </div>
     </details>      
 </div>
@@ -284,6 +311,7 @@
   <br>            
   
 * ➡️ 결과 : AWS CodeDeploy 적용 완료!
+  <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/8ca5e5f3-4aac-4fb9-af96-7e54d7ecaf10">
 
   <br>            
 
@@ -350,17 +378,11 @@
             @OneToMany(mappedBy = "workspace", fetch = FetchType.EAGER)
             private List<WorkspaceCollaborator> workspaceCollaborators = new ArrayList<>();
         
-        성공적으로 DB에 협업자가 등록된다! 
+        성공적으로 DB에 협업자가 등록된다!
+        <img src="https://github.com/song-eojin/song-eojin.github.io/assets/122079064/b3f78952-a6ab-46d7-bf95-d02421a374c4">
 
         
-* ⚠️ 첫 번째 해결방법의 문제점<br><br> : 위와 같이 WorkspaceCollaborator Entity를 Eager Loading 방식으로 설정했을 때 `JPA N+1 문제`로 인한 성능 이슈가 발생할 수 있다.<br>즉, 아래의 예시처럼 하나의 Workspace만 조회를 해도 각각의 Workspace가 가진 WorkspaceCollaborator 모두를 조회하는 것이다.
-        
-        // N+1 Problem Ex.
-        Hibernate: select team0_.id as id1_0_, team0_.name as name2_0_ from team team0_
-        Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
-        Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
-        Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
-        Hibernate: select users0_.team_id as team_id1_1_0_, users0_.users_id as users_id2_1_0_, user1_.id as id1_2_1_, user1_.first_name as first_na2_2_1_, user1_.last_name as last_nam3_2_1_, user1_.team_id as team_id4_2_1_ from team_users users0_ inner join user user1_ on users0_.users_id=user1_.id where users0_.team_id=?
+* ⚠️ 첫 번째 해결방법의 문제점<br><br> : 위와 같이 WorkspaceCollaborator Entity를 Eager Loading 방식으로 설정했을 때 `JPA N+1 문제`로 인한 성능 이슈가 발생할 수 있다.<br>즉, 하나의 Workspace만 조회를 해도 각각의 Workspace가 가진 WorkspaceCollaborator 모두를 조회하는 것이다.
 
 <br>
     
