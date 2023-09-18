@@ -67,11 +67,11 @@
 <h3>02. 팀 구성 및 담당</h3>
 
 | 팀 구성 | 역할 | 담당한 업무 |
-|------|------|--------------------------------------------------------|
-| 김희열 | 팀장 | GithubAction CI/CD, Redis - RefreshToken, 프론트 드래그&드랍 |
-| 한지훈 | 부팀장 | 덱, 카드, 테스트 코드 |
-| 송어진 | 팀원 | 협업자, 보드, 프로필, 알림, Github Readme |
-| 양소영 | 팀원 | 워크스페이스, CSS, 발표자료 |
+|------|---------|------------------------------------------------------|
+| 김희열 | 팀장 | GithubAction CI/CD, Redis - RefreshToken, 프론트 드래그&드랍, 카드 댓글, 라벨링 백엔드 기능 구현 |
+| 한지훈 | 부팀장 | 덱, 카드 백엔드 ~ 프론트 기능 구현, 통합 테스트 코드 H2 환경 설정 및 작성 |
+| 송어진 | 팀원 | 보드 백엔드 기능 구현, 협업자, 개인프로필, 알림 백엔드 ~ 프론트 기능 구현 |
+| 양소영 | 팀원 | 워크스페이스, 카드 체크리스트 백엔드 기능 구현, 모든 CSS 작업 |
 
 <br><br>
 
@@ -296,17 +296,19 @@
 
 <br>        
         
-* ❓해결책 탐구
-        
-        1. Github Actions CD yml 준비
-        
-        2. 빌드를 위한 application-key.yml과 배포 동작을 위한 appspec.yml 준비
-        
-        3. AWS CodeDeploy에 배포 애플리케이션과 배포 그룹 생성 후 역할 부여
-        
-        4. Github Actions에서 전송된 zip 파일을 보관하고 전달할 AWS S3 버킷 생성
-        
-        5. 배포를 담당할 EC2 서버에 CodeDeploy 역할 부여 및 CodeDeploy-agent 설치
+* ⛵ 적용 과정 <br>
+  1. 파일이 배포될 AWS 서버 환경 준비
+        - AWS EC2, RDS, ElastiCache 서비스 구매
+        - 서버에 mysql, redis-cli, codedeploy-agent 등 필요한 서비스 설치
+        - 각 서비스에 보안 그룹 및 IAM 역할 설정하기
+      
+  2. AWS CodeDeploy 설정
+        - 배포 애플리케이션 및 배포 그룹 생성
+      
+  3. Github Actions CD 환경 준비
+        - CD 환경을 위한 Github Actions secrets 추가
+        - AWS CodeDeploy 배포를 위한 yml 파일 준비
+        - AWS EC2가 배포 파일을 실행하도록 yml과 sh 파일 준비
   
   <br>            
   
